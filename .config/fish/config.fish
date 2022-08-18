@@ -27,4 +27,6 @@ function rm --wraps mv --description "rm to trash"
     mv $argv ~/.trash
 end
 
+zoxide init fish | source
+
 status --is-interactive; and rbenv init - fish | source
