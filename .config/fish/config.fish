@@ -23,7 +23,7 @@ function fish_user_key_bindings
     end
 end
 
-function rm --wraps mv --description "rm to trash"
+function trash --wraps mv --description "rm to trash"
     mv $argv ~/.trash
 end
 
