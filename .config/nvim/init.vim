@@ -20,7 +20,7 @@ Plug 'lervag/vimtex'
 
 "misc
 Plug 'fladson/vim-kitty' "kitty config file highlighting
-
+Plug 'frenzyexists/aquarium-vim', { 'branch': 'develop' }
 
 call plug#end()
 
@@ -37,9 +37,14 @@ set nu
 
 "colors
 set termguicolors
-colorscheme melange
 
+colorscheme aquarium
+let g:aquarium_style="dark"
+let g:airline_theme="base16_aquarium_dark"
+let g:aqua_bold = 1
+let g:aqua_transparency = 1
 " Enable folding with spacebar
+
 set foldmethod=indent
 set foldlevel=99
 nnoremap <space> za
