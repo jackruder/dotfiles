@@ -31,4 +31,4 @@ zoxide init fish | source
 
 bass source ~/dev/qmk_firmware/util/qmk_tab_complete.sh
 
-status --is-interactive; and rbenv init - fish | source
+status --is-interactive;
