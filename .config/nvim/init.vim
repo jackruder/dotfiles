@@ -22,6 +22,8 @@ Plug 'lervag/vimtex'
 Plug 'fladson/vim-kitty' "kitty config file highlighting
 Plug 'frenzyexists/aquarium-vim', { 'branch': 'develop' }
 
+Plug 'goerz/jupytext.vim'
+
 call plug#end()
 
 
@@ -262,6 +264,8 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 
 " jupyter support
 " Jupytext
+let g:jupytext_enable = 1
+let g:jupytext_command = 'jupytext'
 let g:jupytext_fmt = 'py'
 let g:jupytext_style = 'hydrogen'
 nmap ]x ctrih/^# %%<CR><CR>
