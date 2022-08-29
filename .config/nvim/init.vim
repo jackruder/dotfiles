@@ -154,11 +154,9 @@ let g:coc_snippet_next = '<tab>'
 
 """Snippets
 """
-" Use <C-j> for select text for visual placeholder of snippet.
-vmap <C-j> <Plug>(coc-snippets-select)
 
-inoremap <silent><expr> <A-l> coc#pum#visible() ? coc#pum#next(1) : "\<A-l>"
-inoremap <silent><expr> <A-h> coc#pum#visible() ? coc#pum#prev(1) : "\<A-h>"
+inoremap <silent><expr> <C-j> coc#pum#visible() ? coc#pum#next(1) : "\<C-j>"
+inoremap <silent><expr> <C-k> coc#pum#visible() ? coc#pum#prev(1) : "\<C-k>"
 inoremap <silent><expr> <down> coc#pum#visible() ? coc#pum#next(1) : "\<down>"
 inoremap <silent><expr> <up> coc#pum#visible() ? coc#pum#prev(1) : "\<up>"
 
