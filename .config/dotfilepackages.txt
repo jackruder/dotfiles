@@ -5,6 +5,8 @@ fd
 fzf
 zoxide
 
+r-languageserver
+python-jupytext
 
 
 install fisher
