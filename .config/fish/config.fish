@@ -32,3 +32,6 @@ zoxide init fish | source
 bass source ~/dev/qmk_firmware/util/qmk_tab_complete.sh
 
 status --is-interactive;
+
+set CLASSPATH /usr/lib/jvm/jogl-joml
+export CLASSPATH=.:$CLASSPATH

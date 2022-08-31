@@ -5,15 +5,9 @@ fd
 fzf
 zoxide
 
-vim stuff:
 
-Plug 'frenzyexists/aquarium-vim', { 'branch': 'develop' }
-colorscheme aquarium
-let g:aquarium_style="dark"
-let g:airline_theme="base16_aquarium_dark"
-let g:aqua_bold = 1
-let g:aqua_transparency = 1
 
+install fisher
 
 TODO:: figure out fzf keybindings
 
