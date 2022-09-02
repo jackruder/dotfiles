@@ -2,8 +2,9 @@ call plug#begin('~/.config/nvim/plugged')
 
 "style
 Plug 'savq/melange'
+Plug 'frenzyexists/aquarium-vim', { 'branch': 'develop' }
 
-"ide support
+"""ide support
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } 
 Plug 'tmhedberg/SimpylFold'
@@ -13,16 +14,22 @@ Plug 'tpope/vim-fugitive' " git
 "Snippets
 Plug 'honza/vim-snippets'
 
-"language specific
+""""language specific
+"Python
 Plug 'vim-scripts/indentpython.vim'
 Plug 'nvie/vim-flake8'
+Plug 'goerz/jupytext.vim'
+
+"latex
 Plug 'lervag/vimtex'
+
+"R
+Plug 'jalvesaq/Nvim-R'
+Plug 'chrisbra/csv.vim'
 
 "misc
 Plug 'fladson/vim-kitty' "kitty config file highlighting
-Plug 'frenzyexists/aquarium-vim', { 'branch': 'develop' }
 
-Plug 'goerz/jupytext.vim'
 
 call plug#end()
 

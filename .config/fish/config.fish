@@ -33,4 +33,7 @@ bass source ~/dev/qmk_firmware/util/qmk_tab_complete.sh
 
 status --is-interactive;
 
+set -gx CLASSPATH /usr/lib/jvm/jogl-joml/jogl-all.jar $CLASSPATH
+set -gx CLASSPATH /usr/lib/jvm/jogl-joml/gluegen-rt.jar $CLASSPATH
 
+#export JDK_JAVA_OPTIONS="--add-exports java.base/java.lang=ALL-UNNAMED --add-exports java.base/java.lang=ALL-UNNAMED --add-exports java.desktop/sun.java2d=ALL-UNNAMED"
