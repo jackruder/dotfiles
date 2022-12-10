@@ -30,6 +30,10 @@ Plug 'chrisbra/csv.vim'
 "misc
 Plug 'fladson/vim-kitty' "kitty config file highlighting
 
+" eww 
+Plug 'elkowar/yuck.vim'
+Plug 'gpanders/nvim-parinfer'
+
 
 call plug#end()
 
