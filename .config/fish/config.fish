@@ -29,14 +29,15 @@ end
 
 zoxide init fish | source
 
-bass source ~/dev/qmk_firmware/util/qmk_tab_complete.sh
+#bass source ~/dev/qmk_firmware/util/qmk_tab_complete.sh
 
 status --is-interactive;
 
-set -gx CLASSPATH /usr/lib/jvm/jogl-joml/jogl-all.jar $CLASSPATH
-set -gx CLASSPATH /usr/lib/jvm/jogl-joml/gluegen-rt.jar $CLASSPATH
-set -gx CLASSPATH /usr/lib/jvm/jogl-joml/joml-1.10.5.jar $CLASSPATH
-set -gx CLASSPATH /usr/lib/jvm/jogl-joml/Utils.class $CLASSPATH
-set -gx CLASSPATH /usr/lib/jvm/jogl-joml/Utils.java $CLASSPATH
+#set -gx CLASSPATH /usr/lib/jvm/jogl-joml/jogl-all.jar $CLASSPATH
+#set -gx CLASSPATH /usr/lib/jvm/jogl-joml/gluegen-rt.jar $CLASSPATH
+#set -gx CLASSPATH /usr/lib/jvm/jogl-joml/joml-1.10.5.jar $CLASSPATH
+#set -gx CLASSPATH /usr/lib/jvm/jogl-joml/Utils.java $CLASSPATH
+#set -gx CLASSPATH ~/School/Graphics/hw6/Body.java $CLASSPATH
+#set -gx CLASSPATH ~/School/Graphics/hw6/Sphere.java $CLASSPATH
 
 #export JDK_JAVA_OPTIONS="--add-exports java.base/java.lang=ALL-UNNAMED --add-exports java.base/java.lang=ALL-UNNAMED --add-exports java.desktop/sun.java2d=ALL-UNNAMED"

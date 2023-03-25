@@ -45,5 +45,6 @@
 	"snippets.extends": {
 		"latex": ["tex", "texmath"]
   },
-  "java.format.settings.url": "/home/jack/.config/coc/extensions/node_modules/redhat.java/eclipse-formatter.xml"
+  "java.format.settings.url": "/home/jack/.config/coc/extensions/node_modules/redhat.java/eclipse-formatter.xml",
+  "snippets.ultisnips.pythonPrompt": false
 }

@@ -1,8 +1,7 @@
 call plug#begin('~/.config/nvim/plugged')
 
 "style
-Plug 'savq/melange'
-Plug 'frenzyexists/aquarium-vim', { 'branch': 'develop' }
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 
 """ide support
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -50,14 +49,13 @@ set nu
 
 "colors
 set termguicolors
+augroup user_colors
+  autocmd!
+  autocmd ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
+augroup END
+colorscheme catppuccin-mocha
 
-colorscheme aquarium
-let g:aquarium_style="dark"
-let g:airline_theme="base16_aquarium_dark"
-let g:aqua_bold = 1
-let g:aqua_transparency = 1
 " Enable folding with spacebar
-
 set foldmethod=indent
 set foldlevel=99
 nnoremap <space> za
