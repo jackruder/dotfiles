@@ -36,9 +36,9 @@
         "interface": "wlp166s0",
 	"format": "{ifname}",
 	"format-wifi": "{signalStrength}% ",
-	"format-ethernet": "{ipaddr}/{cidr} ",
+	"format-ethernet": "{ipaddr}/{cidr} 󰈀",
 	"format-disconnected": "", //An empty format will hide the module.
-	"tooltip-format": "{ifname} via {gwaddr} ",
+	"tooltip-format": "{ifname} via {gwaddr} 󰖟",
 	"tooltip-format-wifi": "{essid} ({signalStrength}%) ",
 	"tooltip-format-ethernet": "{ifname} ",
 	"tooltip-format-disconnected": "Disconnected",
@@ -66,14 +66,14 @@
         "reverse-scrolling": 1,
         "format": "{volume}% {icon} {format_source}",
         "format-bluetooth": "{volume}% {icon} {format_source}",
-        "format-bluetooth-muted": " {icon} {format_source}",
-        "format-muted": "婢 {format_source}",
+        "format-bluetooth-muted": "󰝟 {icon} {format_source}",
+        "format-muted": "󰝟 {format_source}",
         "format-source": "{volume}% ",
         "format-source-muted": "",
         "format-icons": {
             "headphone": "",
-            "hands-free": "",
-            "headset": "",
+            "hands-free": "󰋎",
+            "headset": "󰋎",
             "phone": "",
             "portable": "",
             "car": "",
@@ -84,7 +84,7 @@
     },
 
     "custom/mem": {
-        "format": "{} ",
+        "format": "{} 󰍛",
         "interval": 3,
         "exec": "free -h | awk '/Mem:/{printf $3}'",
         "tooltip": false,
@@ -104,7 +104,7 @@
     "backlight": {
         "device": "intel_backlight",
         "format": "{percent}% {icon}",
-        "format-icons": ["","","","", "", "", ""],
+        "format-icons": ["󰃚","󰃛","󰃜","󰃞", "󰃟", "󰃝", "󰃠"],
         "min-length": 7,
 	"on-scroll-up": "brightnessctl s +200",
 	"on-scroll-down": "brightnessctl s 200-"
@@ -116,10 +116,10 @@
             "critical": 15
         },
         "format": "{capacity}% {icon}",
-        "format-charging": "{capacity}% ",
+        "format-charging": "{capacity}% 󰂄",
         "format-plugged": "{capacity}% ",
         "format-alt": "{time} {icon}",
-        "format-icons": ["", "", "", "", "", "", "", "", "", ""],
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂"],
     },
 
     "tray": {
