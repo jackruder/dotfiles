@@ -39,6 +39,7 @@ vim.opt.wrap = false -- Disable line wrapping
 vim.opt.cursorline = true
 vim.opt.colorcolumn = "79"
 
+vim.opt.autochdir =true
 --
 vim.opt.spell = true
 vim.opt.spelllang = { "en_us" }

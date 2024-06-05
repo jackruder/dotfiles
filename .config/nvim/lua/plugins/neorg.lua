@@ -11,7 +11,7 @@ require("neorg").setup({
             config = {
                 workspaces = {
                     notes = "~/notes",
-                    comptag = "~/compTaG/"
+                    comptag = "~/compTaG/notes"
                 },
             },
         },
@@ -21,7 +21,13 @@ require("neorg").setup({
 
             }
         },
-        ["core.latex.renderer"] = {},
+        ["core.export"] = {},
+        ["core.latex.renderer"] = {
+            config = {
+                conceal = true,
+                scale = 0.8,
+            }
+        },
 
         ["core.keybinds"] = {
             config = {
