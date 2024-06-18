@@ -27,17 +27,47 @@ function trash --wraps mv --description "rm to trash"
     mv $argv ~/.trash
 end
 
+# include following in .bashrc / .bash_profile / .zshrc
+# usage
+# $ mkvenv myvirtualenv # creates venv under ~/.virtualenvs/
+# $ venv myvirtualenv   # activates venv
+# $ deactivate          # deactivates venv
+# $ rmvenv myvirtualenv # removes venv
+
+export VENV_HOME="$HOME/.virtualenvs"
+
+function lsvenv
+    ls -1 $VENV_HOME
+end
+
+function venv
+    if set -q argv[1]
+        source $VENV_HOME/$argv[1]/bin/activate.fish
+    else
+        echo "Please provide venv name"
+    end
+end
+
+function mkvenv
+    if set -q argv[1]
+        python3 -m venv $VENV_HOME/$argv[1]
+    else
+        echo "Please provide venv name"
+    end
+end
+
+function rmvenv
+    if set -q argv[1]
+        rm -r $VENV_HOME/$argv[1]
+    else
+        echo "Please provide venv name"
+    end
+end
+#### END VENV wrapper
+
 zoxide init fish | source
 
-#bass source ~/dev/qmk_firmware/util/qmk_tab_complete.sh
 
 status --is-interactive;
 
-#set -gx CLASSPATH /usr/lib/jvm/jogl-joml/jogl-all.jar $CLASSPATH
-#set -gx CLASSPATH /usr/lib/jvm/jogl-joml/gluegen-rt.jar $CLASSPATH
-#set -gx CLASSPATH /usr/lib/jvm/jogl-joml/joml-1.10.5.jar $CLASSPATH
-#set -gx CLASSPATH /usr/lib/jvm/jogl-joml/Utils.java $CLASSPATH
-#set -gx CLASSPATH ~/School/Graphics/hw6/Body.java $CLASSPATH
-#set -gx CLASSPATH ~/School/Graphics/hw6/Sphere.java $CLASSPATH
 
-#export JDK_JAVA_OPTIONS="--add-exports java.base/java.lang=ALL-UNNAMED --add-exports java.base/java.lang=ALL-UNNAMED --add-exports java.desktop/sun.java2d=ALL-UNNAMED"
