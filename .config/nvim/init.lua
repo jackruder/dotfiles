@@ -48,8 +48,9 @@ vim.opt.spelllang = { "en_us" }
 vim.opt.termguicolors = true
 
 -- popup notifications
-vim.notify = require("notify")
+-- vim.notify = require("notify")
 
+vim.g.vimtex_view_method = 'zathura'
 
 vim.opt.splitbelow = true
 vim.opt.splitright = true
