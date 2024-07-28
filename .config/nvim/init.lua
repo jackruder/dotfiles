@@ -15,11 +15,6 @@ package.path = package.path .. ";" .. table.concat(luarocks_path, ";")
 local luarocks_cpath = {
 vim.fs.joinpath(rocks_config.rocks_path, "lib", "lua", "5.1", "?.so"),
 vim.fs.joinpath(rocks_config.rocks_path, "lib64", "lua", "5.1", "?.so"),
--- Remove the dylib and dll paths if you do not need macos or windows support
-vim.fs.joinpath(rocks_config.rocks_path, "lib", "lua", "5.1", "?.dylib"),
-vim.fs.joinpath(rocks_config.rocks_path, "lib64", "lua", "5.1", "?.dylib"),
-vim.fs.joinpath(rocks_config.rocks_path, "lib", "lua", "5.1", "?.dll"),
-vim.fs.joinpath(rocks_config.rocks_path, "lib64", "lua", "5.1", "?.dll"),
 }
 package.cpath = package.cpath .. ";" .. table.concat(luarocks_cpath, ";")
 

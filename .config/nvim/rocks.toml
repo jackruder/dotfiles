@@ -27,7 +27,7 @@ luasnip = "2.3.0"
 "comment.nvim" = "0.8.0"
 "oil.nvim" = "2.11.0"
 "telescope.nvim" = "scm"
-"rocks-config.nvim" = "2.1.4"
+"rocks-config.nvim" = "2.1.5"
 nvim-lspconfig = "0.1.8"
 nvim-cmp = "scm"
 cmp-nvim-lsp = "scm"
@@ -65,7 +65,6 @@ tree-sitter-css = "0.0.2"
 tree-sitter-cpp = "0.0.3"
 tree-sitter-cmake = "0.0.2"
 tree-sitter-c = "0.0.3"
-tree-sitter-toml = "0.0.2"
 
 [plugins.stcursorword ]
 git = "sontungexpt/stcursorword"
@@ -174,41 +173,3 @@ items = [
 ]
 
 
-[treesitter]
-# auto_highlight = "all"
-# NOTE: These are parsers, not filetypes.
-auto_highlight = [
-    "rust",
-    "python",
-    "lua",
-    "c",
-    "r",
-    "cpp",
-    "java",
-    "julia",
-    "fortran",
-    "cmake",
-    "html",
-    "yaml",
-    "javascript",
-    "css",
-    "json",
-    "fish",
-    "bash",
-    "bibtex",
-    "vim",
-    "vimdoc",
-    "gitignore",
-    "gitcommit",
-    "norg",
-    ]
-    auto_install = "prompt" # true | false
-
-    [treesitter.parser_map]
-# You can add custom filetype to parser mappings.
-# Determine the filetype with ':lua =vim.bo[0].filetype'.
-# NOTE: You don't actually have to add these examples.
-# They are added by default.
-    PKGBUILD = "bash"
-    cls = "latex"
-    sty = "latex"
