@@ -67,7 +67,10 @@ end
 
 zoxide init fish | source
 
+poetry completions fish > ~/.config/fish/completions/poetry.fish
 
 status --is-interactive;
 
+set -gx PATH /opt/cuda/bin $PATH
+set -gx LD_LIBRARY_PATH /opt/cuda/lib64 $LD_LIBRARY_PATH
 
