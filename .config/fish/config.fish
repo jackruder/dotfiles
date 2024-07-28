@@ -67,6 +67,7 @@ end
 
 zoxide init fish | source
 
+poetry completions fish > ~/.config/fish/completions/poetry.fish
 
 status --is-interactive;
 

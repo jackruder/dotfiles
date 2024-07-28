@@ -93,22 +93,14 @@ cmp.setup({
         end,
     },
     window = {
-        -- completion = cmp.config.window.bordered(),
-        -- documentation = cmp.config.window.bordered(),
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
     },
     mapping = cmp.mapping.preset.insert({
         ["<C-b>"] = cmp.mapping.scroll_docs(-4),
         ["<C-f>"] = cmp.mapping.scroll_docs(4),
         ["<C-Space>"] = cmp.mapping.complete(),
         ["<C-e>"] = cmp.mapping.abort(),
-        ["<C-g>"] = cmp.mapping(
-            cmp.mapping.complete({
-                config = {
-                    sources = cmp.config.sources({ { name = "cmp_ai" } }),
-                },
-            }),
-            { "i" }
-        ),
         ["<C-t>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 if ls.expandable() then
@@ -186,26 +178,6 @@ capabilities.textDocument.foldingRange = {
     dynamicRegistration = false,
     lineFoldingOnly = true,
 }
-
-local cmp_ai = require("cmp_ai.config")
-
-cmp_ai:setup({
-    max_lines = 1000,
-    provider = "OpenAI",
-    provider_options = {
-        model = "gpt-4-turbo",
-    },
-    notify = true,
-    notify_callback = function(msg)
-        vim.notify(msg)
-    end,
-    run_on_every_keystroke = true,
-    ignored_file_types = {
-        -- default is not to ignore
-        -- uncomment to ignore in lua:
-        -- lua = true
-    },
-})
 
 -- MANAGE DEPENDENCIES FOR LSP SERVERS AND LINTERS --
 require("mason").setup({
