@@ -88,7 +88,7 @@
         "interval": 3,
         "exec": "free -h | awk '/Mem:/{printf $3}'",
         "tooltip": false,
-        "on-click": "kitty bpytop"
+        "on-click": "kitty btop"
     },
 
     "temperature": {
