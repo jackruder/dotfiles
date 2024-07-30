@@ -1,0 +1,3 @@
+#!/bin/bash
+
+protonmail-bridge && thunderbird-beta-bin
