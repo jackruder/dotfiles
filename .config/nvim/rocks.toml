@@ -43,6 +43,7 @@ nvim-treesitter = "0.9.2"
 "rocks-treesitter.nvim" = "1.0.2"
 "copilot.lua" = "scm"
 tree-sitter-kdl = "0.0.2"
+tree-sitter-latex = "0.0.1"
 
 [plugins.stcursorword ]
 git = "sontungexpt/stcursorword"
@@ -158,33 +159,33 @@ items = [
 ]
 
 [treesitter]
-    auto_highlight = "all"
+    #auto_highlight = "all"
 # NOTE: These are parsers, not filetypes.
-# auto_highlight = [
-#     "rust",
-#     "python",
-#     "lua",
-#     "c",
-#     "r",
-#     "cpp",
-#     "java",
-#     "julia",
-#     "fortran",
-#     "cmake",
-#     "html",
-#     "yaml",
-#     "javascript",
-#     "css",
-#     "json",
-#     "fish",
-#     "bash",
-#     "bibtex",
-#     "vim",
-#     "vimdoc",
-#     "gitignore",
-#     "gitcommit",
-#     "norg",
-#     ]
+auto_highlight = [
+    "rust",
+    "python",
+    "lua",
+    "c",
+    "r",
+    "cpp",
+    "java",
+    "julia",
+    "fortran",
+    "cmake",
+    "html",
+    "yaml",
+    "javascript",
+    "css",
+    "json",
+    "fish",
+    "bash",
+    "bibtex",
+    "vim",
+    "vimdoc",
+    "gitignore",
+    "gitcommit",
+    "norg",
+    ]
     auto_install = "prompt" # true | false
 
     [treesitter.parser_map]

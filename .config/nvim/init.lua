@@ -49,18 +49,18 @@ vim.g.vimtex_view_method = "zathura"
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 -- convert the above keymappings to the lua equivalents
-vim.keymap.set("t", "<A-h>", "<C-\\><C-N><C-w>h", { noremap = true })
-vim.keymap.set("t", "<A-j>", "<C-\\><C-N><C-w>j", { noremap = true })
-vim.keymap.set("t", "<A-k>", "<C-\\><C-N><C-w>k", { noremap = true })
-vim.keymap.set("t", "<A-l>", "<C-\\><C-N><C-w>l", { noremap = true })
-vim.keymap.set("i", "<A-h>", "<C-\\><C-N><C-w>h", { noremap = true })
-vim.keymap.set("i", "<A-j>", "<C-\\><C-N><C-w>j", { noremap = true })
-vim.keymap.set("i", "<A-k>", "<C-\\><C-N><C-w>k", { noremap = true })
-vim.keymap.set("i", "<A-l>", "<C-\\><C-N><C-w>l", { noremap = true })
-vim.keymap.set("n", "<A-h>", "<C-w>h", { noremap = true })
-vim.keymap.set("n", "<A-j>", "<C-w>j", { noremap = true })
-vim.keymap.set("n", "<A-k>", "<C-w>k", { noremap = true })
-vim.keymap.set("n", "<A-l>", "<C-w>l", { noremap = true })
+vim.keymap.set("t", "<A-S-h>", "<C-\\><C-N><C-w>h", { noremap = true })
+vim.keymap.set("t", "<A-S-j>", "<C-\\><C-N><C-w>j", { noremap = true })
+vim.keymap.set("t", "<A-S-k>", "<C-\\><C-N><C-w>k", { noremap = true })
+vim.keymap.set("t", "<A-S-l>", "<C-\\><C-N><C-w>l", { noremap = true })
+vim.keymap.set("i", "<A-S-h>", "<C-\\><C-N><C-w>h", { noremap = true })
+vim.keymap.set("i", "<A-S-j>", "<C-\\><C-N><C-w>j", { noremap = true })
+vim.keymap.set("i", "<A-S-k>", "<C-\\><C-N><C-w>k", { noremap = true })
+vim.keymap.set("i", "<A-S-l>", "<C-\\><C-N><C-w>l", { noremap = true })
+vim.keymap.set("n", "<A-S-h>", "<C-w>h", { noremap = true })
+vim.keymap.set("n", "<A-S-j>", "<C-w>j", { noremap = true })
+vim.keymap.set("n", "<A-S-k>", "<C-w>k", { noremap = true })
+vim.keymap.set("n", "<A-S-l>", "<C-w>l", { noremap = true })
 
 -- misc
 --require("hardtime").setup()
