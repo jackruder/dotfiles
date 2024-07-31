@@ -26,7 +26,7 @@ require("deadcolumn").setup()
 require("lualine").setup({
 	options = {
 		icons_enabled = true,
-		theme = "catpuccin",
+		theme = "rose-pine",
 		component_separators = { left = "", right = "" },
 		section_separators = { left = "", right = "" },
 		disabled_filetypes = {
@@ -92,10 +92,28 @@ require("lualine").setup({
 	inactive_winbar = {},
 	extensions = {},
 })
+vim.g.rose_pine_enable_italics = true
+vim.cmd.colorscheme("rose-pine")
 
-vim.cmd.colorscheme("catppuccin-mocha")
-local theme_colors = require("catppuccin.palettes").get_palette("mocha")
-
+local theme_colors = require("catppuccin.palettes").get_palette("macchiato")
+local rose_pine_colors = {
+	"#191724", -- rgb(25, 23, 36), hsl(249deg, 22%, 12%)
+	"#1f1d2e", -- rgb(31, 29, 46), hsl(247deg, 23%, 15%)
+	"#26233a", -- rgb(38, 35, 58), hsl(248deg, 25%, 18%)
+	"#6e6a86", -- rgb(110, 106, 134), hsl(249deg, 12%, 47%)
+	"#908caa", -- rgb(144, 140, 170), hsl(248deg, 15%, 61%)
+	"#e0def4", -- rgb(224, 222, 244), hsl(245deg, 50%, 91%)
+	"#eb6f92", -- rgb(235, 111, 146), hsl(343deg, 76%, 68%)
+	"#f6c177", -- rgb(246, 193, 119), hsl(35deg, 88%, 72%)
+	"#ebbcba", -- rgb(235, 188, 186), hsl(2deg, 55%, 83%)
+	"#31748f", -- rgb(49, 116, 143), hsl(197deg, 49%, 38%)
+	"#9ccfd8", -- rgb(156, 207, 216), hsl(189deg, 43%, 73%)
+	"#c4a7e7", -- rgb(196, 167, 231), hsl(267deg, 57%, 78%)
+	"#21202e", -- rgb(33, 32, 46), hsl(244deg, 18%, 15%)
+	"#403d52", -- rgb(64, 61, 82), hsl(249deg, 15%, 28%)
+	"#524f67", -- (no rgb and hsl provided)
+}
 require("tiny-devicons-auto-colors").setup({
-	colors = theme_colors,
+	-- concatenate the colors from the theme and the colors from the palette
+	colors = vim.tbl_flatten({ rose_pine_colors, theme_colors }),
 })

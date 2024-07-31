@@ -1,18 +1,18 @@
 if status is-interactive
-	# Set the normal and visual mode cursors to a block
-	set fish_cursor_default block
-	# Set the insert mode cursor to a line
-	set fish_cursor_insert line
-	# Set the replace mode cursor to an underscore
-	set fish_cursor_replace_one underscore
-	# The following variable can be used to configure cursor shape in
-	# visual mode, but due to fish_cursor_default, is redundant here
-	set fish_cursor_visual block
+    # Set the normal and visual mode cursors to a block
+    set fish_cursor_default block
+    # Set the insert mode cursor to a line
+    set fish_cursor_insert line
+    # Set the replace mode cursor to an underscore
+    set fish_cursor_replace_one underscore
+    # The following variable can be used to configure cursor shape in
+    # visual mode, but due to fish_cursor_default, is redundant here
+    set fish_cursor_visual block
 end
 
 function fish_greeting
-	echo "Fish taste weird"
-	# Emulates vim's cursor shape behavior
+    echo "Fish taste weird"
+    # Emulates vim's cursor shape behavior
 
 
 end
@@ -65,10 +65,46 @@ function rmvenv
 end
 #### END VENV wrapper
 
+
 zoxide init fish | source
 
-poetry completions fish > ~/.config/fish/completions/poetry.fish
+poetry completions fish >~/.config/fish/completions/poetry.fish
 
-status --is-interactive;
+status --is-interactive
 
 
+### Colors
+
+function toggle-theme-light
+    fish_config theme choose "Rosé Pine Dawn"
+    set -U THEME "Rosé Pine Dawn"
+    set -Ux FZF_DEFAULT_OPTS "
+    --color=fg:#797593,bg:#faf4ed,hl:#d7827e
+    --color=fg+:#575279,bg+:#f2e9e1,hl+:#d7827e
+    --color=border:#dfdad9,header:#286983,gutter:#faf4ed
+    --color=spinner:#ea9d34,info:#56949f
+    --color=pointer:#907aa9,marker:#b4637a,prompt:#797593"
+    kitty +kitten themes --reload-in=all $THEME
+end
+
+function toggle-theme-dark
+    fish_config theme choose "Rosé Pine"
+    set -U THEME "Rosé Pine"
+    set -Ux FZF_DEFAULT_OPTS "
+    --color=fg:#908caa,bg:#191724,hl:#ebbcba
+    --color=fg+:#e0def4,bg+:#26233a,hl+:#ebbcba
+    --color=border:#403d52,header:#31748f,gutter:#191724
+    --color=spinner:#f6c177,info:#9ccfd8
+    --color=pointer:#c4a7e7,marker:#eb6f92,prompt:#908caa"
+    kitty +kitten themes --reload-in=all $THEME
+end
+
+# Default to dark theme
+toggle-theme-dark
+
+# ~/.config/fish/functions/fzf.fish
+function fzf --wraps="fzf"
+    # Paste contents of preferred variant here
+
+    command fzf
+end
