@@ -1,4 +1,4 @@
-@import "./rose-pine.css";
+@import "./rose-foam.css";
 * {
   border: none;
   border-radius: 10;
@@ -36,7 +36,7 @@ window#waybar.hidden {
 
 #tags button {
   transition: none;
-  color: @foam;
+  color: @pine;
   background: transparent;
   font-size: 16px;
   border-radius: 2px;
@@ -101,17 +101,17 @@ window#waybar.hidden {
   border-radius: 10px;
   transition: none;
   color: @base;
-  background: @pine;
+  background: @foam;
 }
 
 #battery.charging,
 #battery.plugged {
   color: @base;
-  background-color: @pine;
+  background-color: @foam;
 }
 
 #battery.critical:not(.charging) {
-  background-color: @pine;
+  background-color: @foam;
   color: @base;
   animation-name: blink;
   animation-duration: 0.5s;
@@ -123,7 +123,7 @@ window#waybar.hidden {
 @keyframes blink {
   to {
     background-color: @love;
-    color: @pine;
+    color: @foam;
   }
 }
 
@@ -147,7 +147,7 @@ window#waybar.hidden {
   border-radius: 10px;
   transition: none;
   color: @base;
-  background: @foam;
+  background: @pine;
   /*background: #1A1826;*/
 }
 
@@ -171,7 +171,7 @@ window#waybar.hidden {
   border-radius: 10px;
   transition: none;
   color: @base;
-  background: @foam;
+  background: @pine;
 }
 
 #tray {
@@ -182,7 +182,7 @@ window#waybar.hidden {
   padding-right: 10px;
   border-radius: 10px;
   transition: none;
-  color: @foam;
+  color: @pine;
   background: @base;
 }
 
@@ -194,7 +194,7 @@ window#waybar.hidden {
   padding-right: 5px;
   border-radius: 10px;
   transition: none;
-  color: @pine;
+  color: @foam;
   background: @base;
 }
 
