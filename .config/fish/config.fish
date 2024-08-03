@@ -27,6 +27,10 @@ function trash --wraps mv --description "rm to trash"
     mv $argv ~/.trash
 end
 
+function ls --wraps eza --description "Remaps ls to exa"
+    eza -l --total-size --no-permissions $argv
+end
+
 # include following in .bashrc / .bash_profile / .zshrc
 # usage
 # $ mkvenv myvirtualenv # creates venv under ~/.virtualenvs/
@@ -69,6 +73,7 @@ end
 zoxide init fish | source
 
 poetry completions fish >~/.config/fish/completions/poetry.fish
+pixi completion --shell fish | source
 
 status --is-interactive
 
@@ -76,8 +81,8 @@ status --is-interactive
 ### Colors
 
 function toggle-theme-light
-    fish_config theme choose "Rosé Pine Dawn"
     set -U THEME "Rosé Pine Dawn"
+    fish_config theme choose "Rosé Pine Dawn"
     set -Ux FZF_DEFAULT_OPTS "
     --color=fg:#797593,bg:#faf4ed,hl:#d7827e
     --color=fg+:#575279,bg+:#f2e9e1,hl+:#d7827e
@@ -108,3 +113,4 @@ function fzf --wraps="fzf"
 
     command fzf
 end
+fish_add_path /home/jack/.pixi/bin
