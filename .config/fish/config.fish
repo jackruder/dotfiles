@@ -113,4 +113,3 @@ function fzf --wraps="fzf"
 
     command fzf
 end
-fish_add_path /home/jack/.pixi/bin
