@@ -211,7 +211,6 @@ require("mason-lspconfig").setup({
 		"basedpyright",
 		"ruff",
 		-- "r_language_server", -- mason no likey
-		"rust_analyzer",
 		"lua_ls",
 		"efm",
 	},
@@ -239,19 +238,26 @@ local lspconfig = require("lspconfig")
 
 require("lsp-format").setup({})
 
-local on_attach = function(client, bufnr)
+local common_attach = function(client, bufnr)
 	require("lsp-format").on_attach(client, bufnr)
+	vim.api.nvim_buf_set_keymap(
+		bufnr,
+		"n",
+		"<leader>od",
+		"<cmd>lua vim.diagnostic.open_float(0, {scope='line'})<CR>",
+		{ noremap = true, silent = true }
+	)
 end
 vim.cmd([[cabbrev wq execute "Format sync" <bar> wq]])
 
 -- fish
--- lspconfig.fish_lsp.setup({ capabilities = capabilities, on_attach = on_attach })
+-- lspconfig.fish_lsp.setup({ capabilities = capabilities, on_attach = common_attach })
 
 -- grammar
-lspconfig.ltex.setup({ capabilities = capabilities, on_attach = on_attach })
+lspconfig.ltex.setup({ capabilities = capabilities, on_attach = common_attach })
 
 -- latex
-lspconfig.texlab.setup({ capabilities = capabilities, on_attach = on_attach })
+lspconfig.texlab.setup({ capabilities = capabilities, on_attach = common_attach })
 
 lspconfig.basedpyright.setup({
 	capabilities = capabilities,
@@ -286,16 +292,33 @@ lspconfig.ruff.setup({
 	},
 })
 
--- r
-lspconfig.r_language_server.setup({
-	capabilities = capabilities,
-	on_attach = on_attach,
-})
-
 -- rust
 lspconfig.rust_analyzer.setup({
 	capabilities = capabilities,
-	on_attach = on_attach,
+	on_attach = common_attach,
+	root_dir = lspconfig.util.root_pattern("Cargo.toml"),
+	settings = {
+		["rust-analyzer"] = {
+			cargo = {
+				allFeatures = true,
+			},
+			add_return_type = {
+				enable = true,
+			},
+			inlayHints = {
+				enable = true,
+				showParameterNames = true,
+				parameterHintsPrefix = "<- ",
+				otherHintsPrefix = "=> ",
+			},
+		},
+	},
+})
+
+-- r
+lspconfig.r_language_server.setup({
+	capabilities = capabilities,
+	on_attach = common_attach,
 })
 
 -- LUA
@@ -308,7 +331,7 @@ lspconfig.lua_ls.setup({
 			},
 		},
 	},
-	on_attach = on_attach,
+	on_attach = common_attach,
 })
 
 -- FORMATTING AND LINTING --
@@ -370,6 +393,32 @@ local efmls_config = {
 }
 
 lspconfig.efm.setup(vim.tbl_extend("force", efmls_config, {
-	on_attach = on_attach,
+	on_attach = common_attach,
 	capabilities = capabilities,
 }))
+
+--- RUST ---
+-- vim.g.rustaceanvim = {
+-- 	-- Plugin configuration
+-- 	tools = {},
+-- 	-- LSP configuration
+-- 	server = {
+-- 		on_attach = function(client, bufnr)
+-- 			common_attach(client, bufnr)
+-- 			if client.server_capabilities.inlayHintProvider then
+-- 				vim.lsp.inlay_hint.enable(true)
+-- 			end
+-- 		end,
+-- 		capabilities = capabilities,
+-- 		default_settings = {
+-- 			-- rust-analyzer language server configuration
+-- 			["rust-analyzer"] = {
+-- 				cargo = {
+-- 					all_features = true,
+-- 				},
+-- 			},
+-- 		},
+-- 	},
+-- 	-- DAP configuration
+-- 	dap = {},
+-- }

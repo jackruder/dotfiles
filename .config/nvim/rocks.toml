@@ -41,6 +41,7 @@ nvim-treesitter = "scm"
 "mason.nvim" = "1.10.0"
 "mason-lspconfig.nvim" = "1.29.0"
 "rocks-treesitter.nvim" = "1.0.2"
+nvim-dap = "0.8.0"
 
 [plugins."copilot.lua" ]
 git = "zbirenbaum/copilot.lua"
