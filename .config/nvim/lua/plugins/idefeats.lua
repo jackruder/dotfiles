@@ -1,38 +1,9 @@
-function telescope_setup()
-    -- configure telescope bindings
-    local builtin = require('telescope.builtin')
-    vim.keymap.set('n', "<leader>ff", builtin.find_files, {})
-    vim.keymap.set('n', "<leader>fg", builtin.live_grep, {})
-    vim.keymap.set('n', "<leader>fb", builtin.buffers, {})
-    vim.keymap.set('n', "<leader>fh", builtin.help_tags, {})
-
-    vim.keymap.set('x', "ga", ":EasyAlign<CR>", {})
-    vim.keymap.set('n', "ga", ":EasyAlign<CR>", {})
-
-    local actions = require "telescope.actions"
-    require('telescope').setup {
-        defaults = {
-            -- Default configuration for telescope goes here:
-            -- config_key = value,
-            mappings = {
-                i = {
-                    ["<C-h>"] = actions.select_horizontal,
-                },
-
-                n = {
-                    ["<C-h>"] = actions.select_horizontal,
-                }
-            }
-        },
-    }
-end
-
 return {
     {
         "rmagatti/goto-preview",
         event = "BufEnter",
-        config = function() 
-        require("goto-preview").setup({
+        config = function()
+            require("goto-preview").setup({
                 width = 120, -- Width of the floating window
                 height = 15, -- Height of the floating window
                 border = { "↖", "─", "┐", "│", "┘", "─", "└", "│" }, -- Border characters of the floating window
@@ -54,7 +25,7 @@ return {
                 preview_window_title = { enable = true, position = "left" }, -- Whether to set the preview window title as the filename
             })
         end,
-        config = true,                                                   -- necessary as per https://github.com/rmagatti/goto-preview/issues/88
+        config = true, -- necessary as per https://github.com/rmagatti/goto-preview/issues/88
     },
 
     {
@@ -73,11 +44,46 @@ return {
         tag = '0.1.8',
         -- or                              , branch = '0.1.x',
         dependencies = { 'nvim-lua/plenary.nvim' },
-        config = telescope_setup,
+        keys = { -- with desc
+            { '<leader>ff', '<cmd>Telescope find_files<CR>', desc = 'Find File' },
+            { '<leader>fg', '<cmd>Telescope live_grep<CR>',  desc = 'Grep' },
+            { '<leader>fb', '<cmd>Telescope buffers<CR>',    desc = 'Buffers' },
+            { '<leader>fh', '<cmd>Telescope help_tags<CR>',  desc = 'Help' },
+            { "<leader>fc", "<cmd>Telescope commands<cr>",   desc = "Commands" },
+            { "<leader>fq", "<cmd>Telescope quickfix<cr>",   desc = "Quickfix List" },
+        },
+        config = function()
+            -- configure telescope bindings
+            local builtin = require('telescope.builtin')
+            local actions = require "telescope.actions"
+            require('telescope').setup {
+                defaults = {
+                    -- Default configuration for telescope goes here:
+                    -- config_key = value,
+                    mappings = {
+                        i = {
+                            ["<C-h>"] = actions.select_horizontal,
+                        },
+
+                        n = {
+                            ["<C-h>"] = actions.select_horizontal,
+                        }
+                    }
+                },
+                pickers = {
+                    find_files = {
+                        hidden = true,
+                    },
+                }
+            }
+        end,
     },
 
     {
         'stevearc/oil.nvim',
+        keys = {
+            { '<leader>o', '<cmd>Oil<CR>', desc = 'Open in Lua' },
+        },
         opts = {
             keymaps = {
                 ["g?"] = "actions.show_help",
@@ -108,8 +114,14 @@ return {
         }
     },
     { 'machakann/vim-sandwich' }, -- TODO: learn
-    { 'junegunn/vim-easy-align' },
+    {
+        'junegunn/vim-easy-align',
+        keys = {
+            { 'x', 'ga', ':EasyAlign<CR>' },
+            { 'n', 'ga', ':EasyAlign<CR>' },
+        },
 
+    },
     {
         "doctorfree/cheatsheet.nvim", -- TODO: setup configure
         event = "VeryLazy",
@@ -121,7 +133,3 @@ return {
     },
     { 'tpope/vim-fugitive' }, -- TODO: figure out staging
 }
-
-
-
---require('Comment').setup()

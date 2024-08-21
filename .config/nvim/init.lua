@@ -42,4 +42,6 @@ vim.keymap.set("n", "<A-S-j>", "<C-w>j", { noremap = true })
 vim.keymap.set("n", "<A-S-k>", "<C-w>k", { noremap = true })
 vim.keymap.set("n", "<A-S-l>", "<C-w>l", { noremap = true })
 
+
+-- TODO: gitsigns.nvim trouble.nvim todo-comments.nvim,
 require("config.lazy")
