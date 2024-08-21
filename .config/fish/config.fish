@@ -72,7 +72,7 @@ end
 
 zoxide init fish | source
 
-poetry completions fish >~/.config/fish/completions/poetry.fish
+#poetry completions fish >~/.config/fish/completions/poetry.fish
 pixi completion --shell fish | source
 
 status --is-interactive
@@ -90,6 +90,7 @@ function toggle-theme-light
     --color=spinner:#ea9d34,info:#56949f
     --color=pointer:#907aa9,marker:#b4637a,prompt:#797593"
     kitty +kitten themes --reload-in=all $THEME
+    gsettings set org.gnome.desktop.interface color-scheme prefer-light
 end
 
 function toggle-theme-dark
@@ -102,9 +103,8 @@ function toggle-theme-dark
     --color=spinner:#f6c177,info:#9ccfd8
     --color=pointer:#c4a7e7,marker:#eb6f92,prompt:#908caa"
     kitty +kitten themes --reload-in=all $THEME
+    gsettings set org.gnome.desktop.interface color-scheme prefer-dark
 end
-
-# Default to dark theme
 toggle-theme-dark
 
 # ~/.config/fish/functions/fzf.fish
@@ -113,3 +113,4 @@ function fzf --wraps="fzf"
 
     command fzf
 end
+fish_add_path /home/jack/.pixi/bin
