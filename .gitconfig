@@ -1,3 +1,26 @@
 [user]
 	name = Jack Ruder
 	email = contact@jackruder.xyz
+
+[credential "https://github.com"]
+	helper = !/usr/bin/gh auth git-credential
+[core]
+	editor = nvim
+	pager = delta
+
+[interactive]
+	diffFilter = delta --color-only
+[add.interactive]
+	useBuiltin = false
+
+[delta] 
+	navigate = true
+	syntax-theme = TwoDark
+	line-numbers = true
+	zero-style = dim syntax
+
+[merge]
+	conflictstyle = diff3
+
+[diff]
+	colorMoved = default
