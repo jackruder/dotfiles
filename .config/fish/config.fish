@@ -121,5 +121,3 @@ if lsmod | grep -q nvidia
     set -gx LD_LIBRARY_PATH /opt/TensorRT-8.6.1.6 $LD_LIBRARY_PATH
     set -gx PATH /opt/cuda $PATH
 end
-
-status --is-interactive; and rbenv init - fish | source
