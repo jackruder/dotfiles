@@ -1,4 +1,6 @@
-monitor=,highres,auto,1.6
+monitor=DP-1,highres,auto-left,1.25
+monitor=DP-2,highres,auto-right,1.25
+monitor=HDMI-A-3,disable
 
 # See https://wiki.hyprland.org/Configuring/Keywords/ for more
 

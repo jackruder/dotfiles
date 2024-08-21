@@ -113,3 +113,12 @@ function fzf --wraps="fzf"
 
     command fzf
 end
+
+
+# EXPORT NVIDIA VARS
+if lsmod | grep -q nvidia
+    set -gx LD_LIBRARY_PATH /opt/cuda/lib64/ $LD_LIBRARY_PATH
+    set -gx LD_LIBRARY_PATH /opt/TensorRT-8.6.1.6 $LD_LIBRARY_PATH
+    set -gx PATH /opt/cuda $PATH
+end
+fish_add_path /home/jackman/.pixi/bin
