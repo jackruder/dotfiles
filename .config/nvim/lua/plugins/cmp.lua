@@ -1,4 +1,4 @@
-function luasnip_setup()
+local function luasnip_setup()
     local ls = require("luasnip")
 
     ls.config.set_config({
@@ -28,10 +28,11 @@ function luasnip_setup()
     end, { silent = true })
 end
 
-function cmp_setup()
+local function cmp_setup()
+    local ls = require("luasnip")
     local lspkind = require("lspkind")
     --vim.o.completeopt = "menuone,noselect,preview"
-    cmp = require("cmp")
+    local cmp = require("cmp")
     cmp.setup({
         --preselect = cmp.PreselectMode.None,
         snippet = {
@@ -151,6 +152,7 @@ function cmp_setup()
         matching = { disallow_symbol_nonprefix_matching = false },
     })
 end
+
 return {
     {
         'hrsh7th/nvim-cmp',
@@ -176,4 +178,3 @@ return {
     },
     { 'onsails/lspkind.nvim' },
 }
-

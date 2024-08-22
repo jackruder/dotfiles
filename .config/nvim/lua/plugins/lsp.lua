@@ -1,4 +1,4 @@
-function lsp_setup()
+local function lsp_setup()
     local capabilities = vim.tbl_deep_extend(
         "force",
         vim.lsp.protocol.make_client_capabilities(),

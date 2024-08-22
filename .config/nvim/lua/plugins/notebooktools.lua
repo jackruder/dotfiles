@@ -1,4 +1,4 @@
-function molten_setup()
+local function molten_setup()
     vim.g.python3_host_prog = vim.fn.expand("~/.virtualenvs/neovim/bin/python3")
 
     vim.g.molten_image_provider = "image.nvim"

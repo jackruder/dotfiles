@@ -25,7 +25,6 @@ return {
                 preview_window_title = { enable = true, position = "left" }, -- Whether to set the preview window title as the filename
             })
         end,
-        config = true, -- necessary as per https://github.com/rmagatti/goto-preview/issues/88
     },
 
     {
@@ -132,4 +131,95 @@ return {
         },
     },
     { 'tpope/vim-fugitive' }, -- TODO: figure out staging
+    {
+        "folke/trouble.nvim",
+        opts = {}, -- for default options, refer to the configuration section for custom setup.
+        cmd = "Trouble",
+        keys = {
+            {
+                "<leader>xx",
+                "<cmd>Trouble diagnostics toggle<cr>",
+                desc = "Diagnostics (Trouble)",
+            },
+            {
+                "<leader>xX",
+                "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+                desc = "Buffer Diagnostics (Trouble)",
+            },
+            {
+                "<leader>cs",
+                "<cmd>Trouble symbols toggle focus=false<cr>",
+                desc = "Symbols (Trouble)",
+            },
+            {
+                "<leader>cl",
+                "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+                desc = "LSP Definitions / references / ... (Trouble)",
+            },
+            {
+                "<leader>xL",
+                "<cmd>Trouble loclist toggle<cr>",
+                desc = "Location List (Trouble)",
+            },
+            {
+                "<leader>xQ",
+                "<cmd>Trouble qflist toggle<cr>",
+                desc = "Quickfix List (Trouble)",
+            },
+        },
+    },
+    {
+        "lewis6991/gitsigns.nvim",
+        cmd = { "Gitsigns" },
+        keys = {
+            {
+                "<leader>gd",
+                "<cmd>Gitsigns diffthis<CR>",
+            },
+            {
+                "<leader>gj",
+                "<cmd>Gitsigns next_hunk<CR>",
+                desc = "Next Hunk",
+            },
+            {
+                "<leader>gk",
+                "<cmd>Gitsigns prev_hunk<CR>",
+                desc = "Previous Hunk",
+            },
+            {
+                "<leader>gsh",
+                "<cmd>Gitsigns stage_hunk<CR>",
+                desc = "Stage Hunk",
+            },
+            {
+                "<leader>guh",
+                "<cmd>Gitsigns undo_stage_hunk<CR>",
+                desc = "Undo Stage Hunk",
+            },
+            {
+                "<leader>grh",
+                "<cmd>Gitsigns reset_hunk<CR>",
+                desc = "Reset Hunk",
+            },
+            {
+                "<leader>gsb",
+                "<cmd>Gitsigns stage_buffer<CR>",
+                desc = "Stage Buffer"
+            },
+            {
+                "<leader>gub",
+                "<cmd>Gitsigns undo_stage_buffer<CR>",
+                desc = "Undo Stage Buffer",
+            },
+            {
+                "<leader>grb",
+                "<cmd>Gitsigns reset_buffer<CR>",
+                desc = "Reset Buffer",
+            },
+            { 'ih', ':<C-U>Gitsigns select_hunk<CR>', mode = { "o", "x" }, desc = 'Select Hunk' },
+        },
+        config = function()
+            local gitsigns = require("gitsigns").setup()
+        end,
+    }
 }
