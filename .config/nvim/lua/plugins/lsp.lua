@@ -323,13 +323,6 @@ return {
     { 'lukas-reineke/lsp-format.nvim' },
     { 'mfussenegger/nvim-dap' },
     {
-        "lervag/vimtex",
-        lazy = false,
-        init = function()
-            vim.g.vimtex_view_method = "zathura"
-        end
-    },
-    {
         'creativenull/efmls-configs-nvim',
         version = 'v1.x.x', -- version is optional, but recommended
         dependencies = { 'neovim/nvim-lspconfig' },
