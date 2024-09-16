@@ -24,8 +24,8 @@ local function lsp_setup()
     })
     require("mason-lspconfig").setup({
         ensure_installed = {
-            -- "fish_lsp",
-            "ltex",
+            "fish_lsp",
+            -- "ltex",
             "texlab",
             "basedpyright",
             "ruff",
@@ -191,7 +191,7 @@ local function lsp_setup()
         markdown = { markdownlint },
         python = {}, -- use ruff directly from lsp
         rust = { rustfmt },
-        -- latex = { }, -- use texlab instead, not compatib
+        -- latex = { },
         yaml = { yamllint, prettier },
     })
     -- Or use the defaults provided by this plugin
@@ -312,23 +312,10 @@ return {
             },
         }
     },
-    {
-        'williamboman/mason-lspconfig.nvim',
-        opts = {
-            ensure_installed = {
-                "fish_lsp", "ltex", "texlab", "basedpyright", "ruff", "lua_ls", "efm" }
-        }
-    },
-    { 'creativenull/efmls-configs-nvim', version = 'v1.x.x', dependencies = { 'neovim/nvim-lspconfig' } },
+    { 'williamboman/mason-lspconfig.nvim', },
+    { 'creativenull/efmls-configs-nvim',   version = 'v1.x.x', dependencies = { 'neovim/nvim-lspconfig' } },
     { 'lukas-reineke/lsp-format.nvim' },
     { 'mfussenegger/nvim-dap' },
-    {
-        "lervag/vimtex",
-        lazy = false,
-        init = function()
-            vim.g.vimtex_view_method = "zathura"
-        end
-    },
     {
         'creativenull/efmls-configs-nvim',
         version = 'v1.x.x', -- version is optional, but recommended
