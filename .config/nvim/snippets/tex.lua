@@ -33,103 +33,103 @@ local function math()
 end
 
 return { -- can also return two lists, one list of reg one auto
-    -- [[ MATH MODE SNIPPETS ]] -- 
+    -- [[ MATH MODE SNIPPETS ]] --
     s(
         {
             name = "ldots", -- TODO change so
             trig = "...",
-            snippetType="autosnippet",
-            condition=math,
+            snippetType = "autosnippet",
+            condition = math,
         },
-        { t("\\ldots")}
+        { t("\\ldots") }
     ),
     s(
         {
             name = "implies",
             trig = "=>",
-            snippetType="autosnippet",
-            condition=math,
+            snippetType = "autosnippet",
+            condition = math,
         },
-        { t("\\implies")}
+        { t("\\implies") }
     ),
     s(
         {
             name = "implied by",
             trig = "<=",
-            snippetType="autosnippet",
-            condition=math,
+            snippetType = "autosnippet",
+            condition = math,
         },
-        { t("\\impliedby")}
+        { t("\\impliedby") }
     ),
     s(
         {
             name = "iff",
             trig = "iff",
-            snippetType="autosnippet",
-            condition=math,
+            snippetType = "autosnippet",
+            condition = math,
         },
-        { t("\\iff")}
+        { t("\\iff") }
     ),
 
     s(
         {
             name = "frac",
             trig = "//",
-            snippetType="autosnippet",
-            condition=math,
+            snippetType = "autosnippet",
+            condition = math,
         },
-        fmta("\\frac{<>}{<>}", {i(1),i(2)})
+        fmta("\\frac{<>}{<>}", { i(1), i(2) })
     ),
 
     s(
         {
             name = "equals",
             trig = "==",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        fmta("&= <> \\\\", {i(1)})
+        fmta("&= <> \\\\", { i(1) })
     ),
     s(
         {
             name = "align continue",
             trig = "&&",
-            snippetType="autosnippet",
-            condition=math,
+            snippetType = "autosnippet",
+            condition = math,
         },
-        fmta("&<> \\\\", {i(1)})
+        fmta("&<> \\\\", { i(1) })
     ),
     s(
         {
             name = "sqrt",
             trig = "sq",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        fmta("\\sqrt{<>}", {i(1)})
+        fmta("\\sqrt{<>}", { i(1) })
     ),
     s(
         {
             name = "subscript",
             trig = "__",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        fmta("_{<>}", {i(1)})
+        fmta("_{<>}", { i(1) })
     ),
 
     s(
         {
             name = "infinity",
             trig = "ooo",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\infty")}
+        { t("∞") }
     ),
 
     s(
@@ -157,295 +157,764 @@ return { -- can also return two lists, one list of reg one auto
     s(
         {
             name = "union",
+            trig = "uu",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("\\cup_{"), i(1), t("}^{\\infty}"), i(0) }
+    ),
+    s(
+        {
+            name = "infinite union",
             trig = "UU",
             snippetType = "autosnippet",
             wordTrig = false,
             condition = math,
         },
-        { t("\\cup") }
+        { t("\\bigcup_{"), i(1), t("}^{\\infty}"), i(0) }
+    ),
+
+    s(
+        {
+            name = "intersection",
+            trig = "nn",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("\\cap_{"), i(1), t("}^{\\infty}"), i(0) }
+    ),
+
+    s(
+        {
+            name = "lr parens",
+            trig = "lr(",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("\\left("), i(1), t("\\right)"), i(0) }
+    ),
+
+    s(
+        {
+            name = "lr brackets",
+            trig = "lr[",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("\\left["), i(1), t("\\right]"), i(0) }
+    ),
+
+    s(
+        {
+            name = "lr braces",
+            trig = "lr{",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("\\left\\{"), i(1), t("\\right\\}"), i(0) }
+    ),
+
+    s(
+        {
+            name = "infinite intersection",
+            trig = "NN",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("\\bigcap_{"), i(1), t("}^{\\infty}"), i(0) }
     ),
 
     s(
         {
             name = "alpha",
             trig = ";a",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\alpha")}
+        { t("α") }
     ),
     s(
         {
             name = "beta",
             trig = ";b",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\beta")}
+        { t("β") }
     ),
     s(
         {
             name = "delta",
             trig = ";d",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\delta")}
+        { t("δ") }
     ),
     -- repeat the above three for epsilon, gamma, kappa, ell, nu, rho, sigma, tau, omega
-        s(
+    s(
         {
             name = "epsilon",
             trig = ";e",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\epsilon")}
+        { t("ε") }
     ),
     s(
         {
             name = "gamma",
             trig = ";g",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\gamma")}
+        { t("γ") }
     ),
     s(
         {
             name = "kappa",
             trig = ";k",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\kappa")}
+        { t("κ") }
     ),
     s(
         {
-            name = "ell",
+            name = "lambda",
             trig = ";l",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\ell")}
+        { t("λ") }
+    ),
+    s(
+        {
+            name = "mu",
+            trig = ";m",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("μ") }
     ),
     s(
         {
             name = "nu",
             trig = ";n",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\nu")}
+        { t("ν") }
     ),
     s(
         {
             name = "rho",
             trig = ";r",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\rho")}
+        { t("ρ") }
     ),
     s(
         {
             name = "sigma",
             trig = ";s",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\sigma")}
+        { t("σ") }
     ),
     s(
         {
             name = "tau",
             trig = ";t",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\tau")}
+        { t("τ") }
     ),
     s(
         {
             name = "omega",
-            trig = ";o",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            trig = ";w",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\omega")}
+        { t("ω") }
     ),
-        s(
+    s(
         {
             name = "capital alpha",
             trig = ";A",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\Alpha")}
+        { t("Α") }
     ),
     s(
         {
             name = "capital beta",
             trig = ";B",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\Beta")}
+        { t("Β") }
     ),
     s(
         {
             name = "capital delta",
             trig = ";D",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\Delta")}
+        { t("Δ") }
     ),
     s(
         {
             name = "capital epsilon",
             trig = ";E",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\Epsilon")}
+        { t("Ε") }
     ),
     s(
         {
             name = "capital gamma",
             trig = ";G",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\Gamma")}
+        { t("Γ") }
     ),
     s(
         {
             name = "capital kappa",
             trig = ";K",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\Kappa")}
+        { t("Κ") }
     ),
     s(
         {
             name = "capital lambda",
             trig = ";L",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\Lambda")}
+        { t("Λ") }
+    ),
+
+    s(
+        {
+            name = "capital mu",
+            trig = ";M",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("Μ") }
     ),
     s(
         {
             name = "capital nu",
             trig = ";N",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\Nu")}
+        { t("Ν") }
     ),
     s(
         {
             name = "capital rho",
             trig = ";R",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\Rho")}
+        { t("Ρ") }
     ),
     s(
         {
             name = "capital sigma",
             trig = ";S",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\Sigma")}
+        { t("Σ") }
     ),
     s(
         {
             name = "capital tau",
             trig = ";T",
-            snippetType="autosnippet",
-            wordTrig=false,
-            condition=math,
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
         },
-        {t("\\Tau")}
+        { t("Τ") }
     ),
-
-
     ms({
-        common = {
-            name = "capital omega",
-            trig = ";O",
-            snippetType="autosnippet",
-            wordTrig=false,
-        },
-        {condition=math},
-        {filetype="norg"},
+            common = {
+                name = "capital omega",
+                trig = ";W",
+                snippetType = "autosnippet",
+                wordTrig = false,
+            },
+            { condition = math },
+            { filetype = "norg" },
         },
 
-        {t("\\Omega")}
+        { t("Ω") }
     ),
-    --[ REGULAR MODE SNIPPETS ]-- 
+    s(
+        {
+            name = "real numbers",
+            trig = ":R",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("ℝ") }
+    ),
+
+    s(
+        {
+            name = "natural numbers",
+            trig = ":N",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("ℕ") }
+    ),
+
+    s(
+        {
+            name = "rational numbers",
+            trig = ":Q",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("ℚ") }
+    ),
+
+    s(
+        {
+            name = "complex numbers",
+            trig = ":C",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("ℂ") }
+    ),
+
+    s(
+        {
+            name = "integers",
+            trig = ":Z",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("ℤ") }
+    ),
+
+    s(
+        {
+            name = "empty set",
+            trig = ":0",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("∅") }
+    ),
+
+    s(
+        {
+            name = "partial",
+            trig = "partial",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("∂") }
+    ),
+
+    s(
+        {
+            name = "forall",
+            trig = "forall",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("∀") }
+    ),
+
+    s(
+        {
+            name = "exists",
+            trig = "exists",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("∃") }
+    ),
+
+    s(
+        {
+            name = "Script A",
+            trig = ":a",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("𝒜") }
+    ),
+
+    s(
+        {
+            name = "Script B",
+            trig = ":b",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("ℬ") }
+    ),
+
+    s(
+        {
+            name = "Script C",
+            trig = ":c",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("𝒞") }
+    ),
+
+    s(
+        {
+            name = "Script D",
+            trig = ":d",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("𝒟") }
+    ),
+
+    s(
+        {
+            name = "Script E",
+            trig = ":e",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("ℰ") }
+    ),
+
+    s(
+        {
+            name = "Script F",
+            trig = ":f",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("ℱ") }
+    ),
+
+    s(
+        {
+            name = "Script G",
+            trig = ":g",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("𝒢") }
+    ),
+
+    s(
+        {
+            name = "Script H",
+            trig = ":h",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("ℋ") }
+    ),
+
+    s(
+        {
+            name = "Script I",
+            trig = ":i",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("ℐ") }
+    ),
+
+    s(
+        {
+            name = "Script J",
+            trig = ":j",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("𝒥") }
+    ),
+
+    s(
+        {
+            name = "Script K",
+            trig = ":k",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("𝒦") }
+    ),
+
+    s(
+        {
+            name = "Script L",
+            trig = ":l",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("ℒ") }
+    ),
+
+    s(
+        {
+            name = "Script M",
+            trig = ":m",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("ℳ") }
+    ),
+
+    s(
+        {
+            name = "Script N",
+            trig = ":n",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("𝒩") }
+    ),
+
+    s(
+        {
+            name = "Script O",
+            trig = ":o",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("𝒪") }
+    ),
+
+    s(
+        {
+            name = "Script P",
+            trig = ":p",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("𝒫") }
+    ),
+
+    s(
+        {
+            name = "Script Q",
+            trig = ":q",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("𝒬") }
+    ),
+
+    s(
+        {
+            name = "Script R",
+            trig = ":r",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("ℛ") }
+    ),
+
+    s(
+        {
+            name = "Script S",
+            trig = ":s",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("𝒮") }
+    ),
+
+    s(
+        {
+            name = "Script T",
+            trig = ":t",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("𝒯") }
+    ),
+
+    s(
+        {
+            name = "Script U",
+            trig = ":u",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("𝒰") }
+    ),
+
+    s(
+        {
+            name = "Script V",
+            trig = ":v",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("𝒱") }
+    ),
+
+    s(
+        {
+            name = "Script W",
+            trig = ":w",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("𝒲") }
+    ),
+
+    s(
+        {
+            name = "Script X",
+            trig = ":x",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("𝒳") }
+    ),
+
+    s(
+        {
+            name = "Script Y",
+            trig = ":y",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("𝒴") }
+    ),
+
+    s(
+        {
+            name = "Script Z",
+            trig = ":z",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("𝒵") }
+    ),
+
+    --[ REGULAR MODE SNIPPETS ]--
     s(
         {
             name = "inline math",
             trig = "mk",
-            snippetType="autosnippet"
+            snippetType = "autosnippet"
         },
-        {t("\\("), i(1), t("\\)"), i(0)}
+        { t("\\("), i(1), t("\\)"), i(0) }
     ),
     s(
         {
             name = "environment",
-            trig="begin",
-            snippetType="autosnippet",
-            condition=conds.line_begin,
+            trig = "begin",
+            snippetType = "autosnippet",
+            condition = conds.line_begin,
         },
-          fmta(
+        fmta(
             [[
               \begin{<>}
                   <>
               \end{<>}
             ]],
             {
-              i(1),
-              i(2),
-              rep(1),  -- this node repeats insert node i(1)
+                i(1),
+                i(2),
+                rep(1), -- this node repeats insert node i(1)
             }
-          )
+        )
     ),
     s(
         {
             name = "align",
             trig = "ali",
-            snippetType="autosnippet",
-            condition=conds.line_begin,
+            snippetType = "autosnippet",
+            condition = conds.line_begin,
         },
         fmta(
             [[
@@ -460,8 +929,8 @@ return { -- can also return two lists, one list of reg one auto
         {
             name = "eq",
             trig = "eq",
-            snippetType="autosnippet",
-            condition=conds.line_begin,
+            snippetType = "autosnippet",
+            condition = conds.line_begin,
         },
         fmta(
             [[
@@ -476,46 +945,76 @@ return { -- can also return two lists, one list of reg one auto
         {
             name = "sec",
             trig = "sec",
-            snippetType="autosnippet",
-            condition=conds.line_begin,
+            snippetType = "autosnippet",
+            condition = conds.line_begin,
         },
         fmta(
             [[
             \section{<>}
             <>
             ]],
-            { i(1),i(0) }
+            { i(1), i(0) }
         )
     ),
     s(
         {
             name = "sub",
             trig = "sub",
-            snippetType="autosnippet",
-            condition=conds.line_begin,
+            snippetType = "autosnippet",
+            condition = conds.line_begin,
         },
         fmta(
             [[
             \subsection{<>}
             <>
             ]],
-            { i(1),i(0) }
+            { i(1), i(0) }
         )
     ),
     s(
         {
             name = "ssub",
             trig = "ssub",
-            snippetType="autosnippet",
-            condition=conds.line_begin,
+            snippetType = "autosnippet",
+            condition = conds.line_begin,
         },
         fmta(
             [[
             \subsubsection{<>}
             <>
             ]],
-            { i(1),i(0) }
+            { i(1), i(0) }
         )
-    )
-}
+    ),
 
+    s(
+        {
+            name = "template",
+            trig = "template",
+            snippetType = "autosnippet",
+            condition = conds.line_begin,
+        },
+        fmta(
+            [[
+            %! TeX program = lualatex
+
+            \documentclass[12pt, a4paper]{article}
+            \usepackage[margin=0.5in]{geometry}
+            \usepackage{unicode-math}
+            \setmainfont{STIXTwoText}
+            \setmathfont{STIXTwoMath}
+            \usepackage{amsmath}
+
+            \title{<>}
+            \author{Jack Ruder}
+
+            \begin{document}
+            \maketitle
+            <>
+            \end{document}
+            ]],
+            { i(1), i(0) }
+        )
+    ),
+
+}

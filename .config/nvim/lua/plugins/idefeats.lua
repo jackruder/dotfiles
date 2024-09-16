@@ -116,8 +116,7 @@ return {
     {
         'junegunn/vim-easy-align',
         keys = {
-            { 'x', 'ga', ':EasyAlign<CR>' },
-            { 'n', 'ga', ':EasyAlign<CR>' },
+            { 'ga', ':EasyAlign<CR>', mode = { 'x', 'n' }, desc = 'Easy Align' },
         },
 
     },

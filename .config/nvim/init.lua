@@ -8,6 +8,7 @@ vim.opt.shiftwidth = 4
 vim.opt.wrap = false -- Disable line wrapping
 vim.opt.cursorline = true
 vim.opt.colorcolumn = "79"
+vim.opt.conceallevel = 2
 
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 vim.opt.autochdir = false
@@ -20,8 +21,6 @@ vim.opt.termguicolors = true
 
 -- popup notifications
 -- vim.notify = require("notify")
-
-vim.g.vimtex_view_method = "zathura" -- TODO: move this to vimtex lazy load
 
 vim.opt.splitbelow = true
 vim.opt.splitright = true
@@ -41,6 +40,5 @@ vim.keymap.set("n", "<A-S-h>", "<C-w>h", { noremap = true })
 vim.keymap.set("n", "<A-S-j>", "<C-w>j", { noremap = true })
 vim.keymap.set("n", "<A-S-k>", "<C-w>k", { noremap = true })
 vim.keymap.set("n", "<A-S-l>", "<C-w>l", { noremap = true })
-
 
 require("config.lazy")
