@@ -119,5 +119,7 @@ end
 if lsmod | grep -q nvidia
     set -gx LD_LIBRARY_PATH /opt/cuda/lib64/ $LD_LIBRARY_PATH
     set -gx LD_LIBRARY_PATH /opt/TensorRT-8.6.1.6 $LD_LIBRARY_PATH
+    set -gx LD_LIBRARY_PATH /opt/oneapi_dpcpp_sycl_cuda/lib $LD_LIBRARY_PATH
+    set -gx PATH /opt/oneapi_dpcpp_sycl_cuda/bin $PATH
     set -gx PATH /opt/cuda $PATH
 end
