@@ -260,7 +260,7 @@ return { -- can also return two lists, one list of reg one auto
         },
         { t("δ") }
     ),
-    -- repeat the above three for epsilon, gamma, kappa, ell, nu, rho, sigma, tau, omega
+
     s(
         {
             name = "epsilon",
@@ -269,8 +269,20 @@ return { -- can also return two lists, one list of reg one auto
             wordTrig = false,
             condition = math,
         },
+        { t("ϵ") }
+    ),
+
+    s(
+        {
+            name = "varepsilon",
+            trig = "v;e",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
         { t("ε") }
     ),
+
     s(
         {
             name = "gamma",
@@ -360,6 +372,17 @@ return { -- can also return two lists, one list of reg one auto
             condition = math,
         },
         { t("ω") }
+    ),
+
+    s(
+        {
+            name = "chi",
+            trig = ";x",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("χ") }
     ),
     s(
         {
@@ -592,6 +615,95 @@ return { -- can also return two lists, one list of reg one auto
             condition = math,
         },
         { t("∃") }
+    ),
+
+    s(
+        {
+            name = "integral",
+            trig = "int",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("∫") }
+    ),
+
+    s(
+        {
+            name = "to",
+            trig = "to",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("→") }
+    ),
+
+    s(
+        {
+            name = "elem",
+            trig = "elem",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("∈") }
+    ),
+
+    s(
+        {
+            name = "not in",
+            trig = "notin",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("∉") }
+    ),
+
+    s(
+        {
+            name = "subset",
+            trig = "subset",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("⊂") }
+
+    ),
+
+    s(
+        {
+            name = "not subset",
+            trig = "notsubset",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("⊄") }
+    ),
+
+    s(
+        {
+            name = "geq",
+            trig = ">=",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("≥") }
+    ),
+
+    s(
+        {
+            name = "leq",
+            trig = "<=",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("≤") }
     ),
 
     s(
