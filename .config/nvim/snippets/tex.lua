@@ -32,6 +32,7 @@ local function math()
     return vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1
 end
 
+
 return { -- can also return two lists, one list of reg one auto
     -- [[ MATH MODE SNIPPETS ]] --
     s(
@@ -120,6 +121,62 @@ return { -- can also return two lists, one list of reg one auto
         },
         fmta("_{<>}", { i(1) })
     ),
+
+    s(
+        {
+            name = "superscript",
+            trig = "^^",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        fmta("^{<>}", { i(1) })
+    ),
+
+    s(
+        {
+            name = "subsup",
+            trig = "_^",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        fmta("_{<>}^{<>}", { i(1), i(2) })
+    ),
+
+    s(
+        {
+            name = "sum",
+            trig = "sum",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        t("∑")
+    ),
+
+    s(
+        {
+            name = "product",
+            trig = "prod",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        t("∏")
+    ),
+
+    s(
+        {
+            name = "sim",
+            trig = "~",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        t("∼")
+    ),
+
 
     s(
         {
@@ -222,12 +279,50 @@ return { -- can also return two lists, one list of reg one auto
     s(
         {
             name = "infinite intersection",
-            trig = "NN",
-            snippetType = "autosnippet",
-            wordTrig = false,
+            trig = "nn",
+            snippettype = "autosnippet",
+            wordtrig = false,
             condition = math,
         },
         { t("\\bigcap_{"), i(1), t("}^{\\infty}"), i(0) }
+    ),
+
+    s({
+            trig = "(.)%.%,", -- Pattern for ".,"
+            name = "mathbf symbol (.,)",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            trigEngine = "pattern",
+            condition = math,
+        },
+        {
+            t("\\mathbf{"),
+            f(function(_, snip)
+                return snip.captures[1]
+            end),
+            t("}"),
+            -- Optionally, remove the trailing punctuation by not including it
+            i(0),
+        }
+    ),
+
+    s({
+            trig = "(.)%,%.", -- Pattern for ",."
+            name = "mathbf symbol (,.)",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            trigEngine = "pattern",
+            condition = math,
+        },
+        {
+            t("\\mathbf{"),
+            f(function(_, snip)
+                return snip.captures[1]
+            end),
+            t("}"),
+            -- Optionally, remove the trailing punctuation by not including it
+            i(0),
+        }
     ),
 
     s(
@@ -333,6 +428,39 @@ return { -- can also return two lists, one list of reg one auto
         },
         { t("ν") }
     ),
+    s(
+        {
+            name = "omicron",
+            trig = ";o",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("ο") }
+    ),
+
+    s(
+        {
+            name = "pi",
+            trig = ";p",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("π") }
+    ),
+
+    s(
+        {
+            name = "phi",
+            trig = ";q",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("φ") }
+    ),
+
     s(
         {
             name = "rho",
@@ -467,13 +595,13 @@ return { -- can also return two lists, one list of reg one auto
     ),
     s(
         {
-            name = "capital nu",
+            name = "nabla",
             trig = ";N",
             snippetType = "autosnippet",
             wordTrig = false,
             condition = math,
         },
-        { t("Ν") }
+        { t("∇") }
     ),
     s(
         {
@@ -999,7 +1127,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "mk",
             snippetType = "autosnippet"
         },
-        { t("\\("), i(1), t("\\)"), i(0) }
+        { t("\\( "), i(1), t(" \\)"), i(0) }
     ),
     s(
         {

@@ -189,7 +189,7 @@ local function lsp_setup()
         lua = { luacheck, stylua },
         gitcommit = { gitlint },
         markdown = { markdownlint },
-        -- python = { ruff_l, ruff_f }, -- use ruff directly from lsp
+        python = {}, -- use ruff directly from lsp
         rust = { rustfmt },
         -- latex = { },
         yaml = { yamllint, prettier },
