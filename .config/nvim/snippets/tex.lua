@@ -380,6 +380,17 @@ return { -- can also return two lists, one list of reg one auto
 
     s(
         {
+            name = "theta",
+            trig = ";h",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("θ") }
+    ),
+
+    s(
+        {
             name = "gamma",
             trig = ";g",
             snippetType = "autosnippet",
@@ -491,6 +502,7 @@ return { -- can also return two lists, one list of reg one auto
         },
         { t("τ") }
     ),
+
     s(
         {
             name = "omega",
@@ -511,6 +523,27 @@ return { -- can also return two lists, one list of reg one auto
             condition = math,
         },
         { t("χ") }
+    ),
+    s(
+        {
+            name = "psi",
+            trig = ";y",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("ψ") }
+    ),
+
+    s(
+        {
+            name = "zeta",
+            trig = ";z",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        { t("ζ") }
     ),
     s(
         {
@@ -1256,5 +1289,108 @@ return { -- can also return two lists, one list of reg one auto
             { i(1), i(0) }
         )
     ),
+
+    s({ trig = "summary", snippetType = "autosnippet", condition = line_begin },
+        fmta(
+            [[
+            \papersummary
+            {<>} % Title
+            {<>} % Citation
+            {<>} % Abstract
+            {%
+              <>
+            } % Contributions
+            {%
+              <>
+            } % Informal Notes
+            {%
+              <>
+            } % Discussion and Critique
+            ]], {
+                i(1, "Title"),
+                i(2, "Citation"),
+                i(3, "Abstract"),
+                i(4, "Contributions"),
+                i(5, "Informal Notes"),
+                i(6, "Discussion and Critique")
+            })
+    ),
+
+    s({ trig = "thm", snippetType = "autosnippet", condition = line_begin },
+        fmta(
+            [[
+            \begin{theorem}{<>}{<>}
+            <>
+            \end{theorem}
+            ]],
+            { i(1, "Title"), i(2, "Label"), i(0) })
+    ),
+
+    -- Lemma snippet: \begin{lemma}{Title}{Label} ... \end{lemma}
+    s({ trig = "lem", snippetType = "autosnippet", condition = line_begin },
+        fmta(
+            [[
+            \begin{lemma}{<>}{<>}
+            <>
+            \end{lemma}
+            ]],
+            { i(1, "Title"), i(2, "Label"), i(0) })
+    ),
+
+    -- Corollary snippet: \begin{corollary}{Title}{Label} ... \end{corollary}
+    s({ trig = "cor", snippetType = "autosnippet", condition = line_begin },
+        fmta(
+            [[
+            \begin{corollary}{<>}{<>}
+            <>
+            \end{corollary}
+            ]],
+            { i(1, "Title"), i(2, "Label"), i(0) })
+    ),
+
+    -- Definition snippet: \begin{definition}{Title}{Label} ... \end{definition}
+    s({ trig = "def", snippetType = "autosnippet", condition = line_begin },
+        fmta(
+            [[
+            \begin{definition}{<>}{<>}
+            <>
+            \end{definition}
+            ]],
+            { i(1, "Title"), i(2, "Label"), i(0) })
+    ),
+
+    -- Note snippet: \begin{note}{Title}{Label} ... \end{note}
+    s({ trig = "note", snippetType = "autosnippet", condition = line_begin },
+        fmta(
+            [[
+            \begin{note}{<>}{<>}
+            <>
+            \end{note}
+            ]],
+            { i(1, "Title"), i(2, "Label"), i(0) })
+    ),
+
+    -- Example snippet: \begin{example}{Title}{Label} ... \end{example}
+    s({ trig = "exa", snippetType = "autosnippet", condition = line_begin },
+        fmta(
+            [[
+            \begin{example}{<>}{<>}
+            <>
+            \end{example}
+            ]],
+            { i(1, "Title"), i(2, "Label"), i(0) })
+    ),
+
+    -- Objective snippet: \begin{objective}{Title}{Label} ... \end{objective}
+    s({ trig = "obj", snippetType = "autosnippet", condition = line_begin },
+        fmta(
+            [[
+            \begin{objective}{<>}{<>}
+            <>
+            \end{objective}
+            ]],
+            { i(1, "Title"), i(2, "Label"), i(0) })
+    ),
+
 
 }
