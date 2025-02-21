@@ -89,7 +89,7 @@ function toggle-theme-light
     --color=border:#dfdad9,header:#286983,gutter:#faf4ed
     --color=spinner:#ea9d34,info:#56949f
     --color=pointer:#907aa9,marker:#b4637a,prompt:#797593"
-    kitty +kitten themes --reload-in=all $THEME
+    # kitty +kitten themes --reload-in=all $THEME
     gsettings set org.gnome.desktop.interface color-scheme prefer-light
 end
 
@@ -102,7 +102,7 @@ function toggle-theme-dark
     --color=border:#403d52,header:#31748f,gutter:#191724
     --color=spinner:#f6c177,info:#9ccfd8
     --color=pointer:#c4a7e7,marker:#eb6f92,prompt:#908caa"
-    kitty +kitten themes --reload-in=all $THEME
+    # kitty +kitten themes --reload-in=all $THEME
     gsettings set org.gnome.desktop.interface color-scheme prefer-dark
 end
 toggle-theme-dark
