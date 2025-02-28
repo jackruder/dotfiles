@@ -306,22 +306,879 @@ return { -- can also return two lists, one list of reg one auto
         }
     ),
 
-    s({
-            trig = "(.)%,%.", -- Pattern for ",."
-            name = "mathbf symbol (,.)",
+    s(
+        {
+            name = "bold a",
+            trig = "a,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            trigEngine = "pattern",
             condition = math,
         },
         {
-            t("\\mathbf{"),
-            f(function(_, snip)
-                return snip.captures[1]
-            end),
-            t("}"),
-            -- Optionally, remove the trailing punctuation by not including it
-            i(0),
+            t("𝐚"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold b",
+            trig = "b,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐛"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold c",
+            trig = "c,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐜"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold d",
+            trig = "d,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐝"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold e",
+            trig = "e,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐞"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold f",
+            trig = "f,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐟"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold g",
+            trig = "g,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐠"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold h",
+            trig = "h,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐡"),
+        }
+
+    ),
+    s(
+        {
+            name = "bold i",
+            trig = "i,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐢"),
+        }
+
+    ),
+    s(
+        {
+            name = "bold j",
+            trig = "j,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐣"),
+        }
+
+    ),
+    s(
+        {
+            name = "bold k",
+            trig = "k,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐤"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold l",
+            trig = "l,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐥"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold m",
+            trig = "m,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐦"),
+        }
+    ),
+
+    s(
+        {
+            name = "bold n",
+            trig = "n,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐧"),
+        }
+    ),
+
+    s(
+        {
+            name = "bold o",
+            trig = "o,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐨"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold p",
+            trig = "p,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐩"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold q",
+            trig = "q,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐪"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold r",
+            trig = "r,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐫"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold s",
+            trig = "s,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐬"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold t",
+            trig = "t,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐭"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold u",
+            trig = "u,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐮"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold v",
+            trig = "v,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐯"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold w",
+            trig = "w,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐰"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold x",
+            trig = "x,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐱"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold y",
+            trig = "y,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐲"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold z",
+            trig = "z,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐳"),
+        }
+
+    ),
+
+    -- now all the capital letters
+    s(
+        {
+            name = "bold A",
+            trig = "A,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐀"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold B",
+            trig = "B,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐁"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold C",
+            trig = "C,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐂"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold D",
+            trig = "D,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐃"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold E",
+            trig = "E,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐄"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold F",
+            trig = "F,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐅"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold G",
+            trig = "G,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐆"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold H",
+            trig = "H,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐇"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold I",
+            trig = "I,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐈"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold J",
+            trig = "J,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐉"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold K",
+            trig = "K,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐊"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold L",
+            trig = "L,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐋"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold M",
+            trig = "M,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐌"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold N",
+            trig = "N,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐍"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold O",
+            trig = "O,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐎"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold P",
+            trig = "P,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐏"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold Q",
+            trig = "Q,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐐"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold R",
+            trig = "R,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐑"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold S",
+            trig = "S,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐒"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold T",
+            trig = "T,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐓"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold U",
+            trig = "U,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐔"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold V",
+            trig = "V,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐕"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold W",
+            trig = "W,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐖"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold X",
+            trig = "X,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐗"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold Y",
+            trig = "Y,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐘"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold Z",
+            trig = "Z,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝐙"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold alpha",
+            trig = "α,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝛂"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold beta",
+            trig = "β,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝛃"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold gamma",
+            trig = "γ,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝛄"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold delta",
+            trig = "δ,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝛅"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold epsilon",
+            trig = "𝜖,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝛜"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold mu",
+            trig = "μ,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝛍"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold eta",
+            trig = "η,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝜂"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold sigma",
+            trig = "σ,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝛔"),
+        }
+    ),
+
+    s(
+        {
+            name = "bold theta",
+            trig = "θ,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝛉"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold omega",
+            trig = "ω,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝛚"),
+        }
+
+    ),
+
+    s(
+        {
+            name = "bold 0",
+            trig = "0,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = math,
+        },
+        {
+            t("𝟎"),
         }
     ),
 
@@ -364,13 +1221,13 @@ return { -- can also return two lists, one list of reg one auto
             wordTrig = false,
             condition = math,
         },
-        { t("ϵ") }
+        { t("𝜖") }
     ),
 
     s(
         {
             name = "varepsilon",
-            trig = "v;e",
+            trig = ";ve",
             snippetType = "autosnippet",
             wordTrig = false,
             condition = math,
@@ -1290,7 +2147,7 @@ return { -- can also return two lists, one list of reg one auto
         )
     ),
 
-    s({ trig = "summary", snippetType = "autosnippet", condition = line_begin },
+    s({ trig = "summary", snippetType = "autosnippet", condition = conds.line_begin },
         fmta(
             [[
             \papersummary
@@ -1316,7 +2173,7 @@ return { -- can also return two lists, one list of reg one auto
             })
     ),
 
-    s({ trig = "thm", snippetType = "autosnippet", condition = line_begin },
+    s({ trig = "thm", snippetType = "autosnippet", condition = conds.line_begin },
         fmta(
             [[
             \begin{theorem}{<>}{<>}
@@ -1327,7 +2184,7 @@ return { -- can also return two lists, one list of reg one auto
     ),
 
     -- Lemma snippet: \begin{lemma}{Title}{Label} ... \end{lemma}
-    s({ trig = "lem", snippetType = "autosnippet", condition = line_begin },
+    s({ trig = "lem", snippetType = "autosnippet", condition = conds.line_begin },
         fmta(
             [[
             \begin{lemma}{<>}{<>}
@@ -1338,7 +2195,7 @@ return { -- can also return two lists, one list of reg one auto
     ),
 
     -- Corollary snippet: \begin{corollary}{Title}{Label} ... \end{corollary}
-    s({ trig = "cor", snippetType = "autosnippet", condition = line_begin },
+    s({ trig = "cor", snippetType = "autosnippet", condition = conds.line_begin },
         fmta(
             [[
             \begin{corollary}{<>}{<>}
@@ -1349,7 +2206,7 @@ return { -- can also return two lists, one list of reg one auto
     ),
 
     -- Definition snippet: \begin{definition}{Title}{Label} ... \end{definition}
-    s({ trig = "def", snippetType = "autosnippet", condition = line_begin },
+    s({ trig = "def", snippetType = "autosnippet", condition = conds.line_begin },
         fmta(
             [[
             \begin{definition}{<>}{<>}
@@ -1360,7 +2217,7 @@ return { -- can also return two lists, one list of reg one auto
     ),
 
     -- Note snippet: \begin{note}{Title}{Label} ... \end{note}
-    s({ trig = "note", snippetType = "autosnippet", condition = line_begin },
+    s({ trig = "note", snippetType = "autosnippet", condition = conds.line_begin },
         fmta(
             [[
             \begin{note}{<>}{<>}
@@ -1371,7 +2228,7 @@ return { -- can also return two lists, one list of reg one auto
     ),
 
     -- Example snippet: \begin{example}{Title}{Label} ... \end{example}
-    s({ trig = "exa", snippetType = "autosnippet", condition = line_begin },
+    s({ trig = "exa", snippetType = "autosnippet", condition = conds.line_begin },
         fmta(
             [[
             \begin{example}{<>}{<>}
@@ -1382,7 +2239,7 @@ return { -- can also return two lists, one list of reg one auto
     ),
 
     -- Objective snippet: \begin{objective}{Title}{Label} ... \end{objective}
-    s({ trig = "obj", snippetType = "autosnippet", condition = line_begin },
+    s({ trig = "obj", snippetType = "autosnippet", condition = conds.line_begin },
         fmta(
             [[
             \begin{objective}{<>}{<>}
