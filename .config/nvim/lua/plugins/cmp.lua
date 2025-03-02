@@ -85,6 +85,7 @@ local function cmp_setup()
             },
             { name = "neorg" },
             { name = "otter" },
+            { name = "cmp_r" },
             -- { name = "copilot" },
         }),
         sorting = {
@@ -120,6 +121,7 @@ local function cmp_setup()
                 -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
             }),
         },
+
     })
 
     -- To use git you need to install the plugin petertriho/cmp-git and uncomment lines below
@@ -151,6 +153,10 @@ local function cmp_setup()
         }),
         matching = { disallow_symbol_nonprefix_matching = false },
     })
+
+    ls.filetype_extend("markdown", { "tex" })
+    ls.filetype_extend("quarto", { "tex" })
+    ls.filetype_extend("norg", { "tex" })
 end
 
 return {

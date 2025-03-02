@@ -25,13 +25,31 @@ local types = require("luasnip.util.types")
 local parse = require("luasnip.util.parser").parse_snippet
 local ms = ls.multi_snippet
 local k = require("luasnip.nodes.key_indexer").new_key
+local ts_utils = require("nvim-treesitter.ts_utils")
 
 
 
-local function math()
-    return vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1
+local function in_mathzone_ts()
+    local node = ts_utils.get_node_at_cursor()
+    while node do
+        if node:type() == "displayed_equation" or node:type() == "inline_formula" then
+            return true
+        end
+        node = node:parent()
+    end
+    return false
 end
 
+local function in_mathzone()
+    local ft = vim.bo.filetype
+    if ft == "tex" or ft == "latex" then
+        return vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1
+    elseif ft == "markdown" or ft == "quarto" or ft == "norg" then
+        return in_mathzone_ts()
+    else
+        return false
+    end
+end
 
 return { -- can also return two lists, one list of reg one auto
     -- [[ MATH MODE SNIPPETS ]] --
@@ -40,7 +58,7 @@ return { -- can also return two lists, one list of reg one auto
             name = "ldots", -- TODO change so
             trig = "...",
             snippetType = "autosnippet",
-            condition = math,
+            condition = in_mathzone,
         },
         { t("\\ldots") }
     ),
@@ -49,7 +67,7 @@ return { -- can also return two lists, one list of reg one auto
             name = "implies",
             trig = "=>",
             snippetType = "autosnippet",
-            condition = math,
+            condition = in_mathzone,
         },
         { t("\\implies") }
     ),
@@ -58,7 +76,7 @@ return { -- can also return two lists, one list of reg one auto
             name = "implied by",
             trig = "<=",
             snippetType = "autosnippet",
-            condition = math,
+            condition = in_mathzone,
         },
         { t("\\impliedby") }
     ),
@@ -67,7 +85,7 @@ return { -- can also return two lists, one list of reg one auto
             name = "iff",
             trig = "iff",
             snippetType = "autosnippet",
-            condition = math,
+            condition = in_mathzone,
         },
         { t("\\iff") }
     ),
@@ -77,7 +95,7 @@ return { -- can also return two lists, one list of reg one auto
             name = "frac",
             trig = "//",
             snippetType = "autosnippet",
-            condition = math,
+            condition = in_mathzone,
         },
         fmta("\\frac{<>}{<>}", { i(1), i(2) })
     ),
@@ -88,7 +106,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "==",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         fmta("&= <> \\\\", { i(1) })
     ),
@@ -97,7 +115,7 @@ return { -- can also return two lists, one list of reg one auto
             name = "align continue",
             trig = "&&",
             snippetType = "autosnippet",
-            condition = math,
+            condition = in_mathzone,
         },
         fmta("&<> \\\\", { i(1) })
     ),
@@ -107,7 +125,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "sq",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         fmta("\\sqrt{<>}", { i(1) })
     ),
@@ -117,7 +135,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "__",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         fmta("_{<>}", { i(1) })
     ),
@@ -128,7 +146,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "^^",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         fmta("^{<>}", { i(1) })
     ),
@@ -139,7 +157,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "_^",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         fmta("_{<>}^{<>}", { i(1), i(2) })
     ),
@@ -150,7 +168,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "sum",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         t("∑")
     ),
@@ -161,7 +179,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "prod",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         t("∏")
     ),
@@ -172,7 +190,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "~",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         t("∼")
     ),
@@ -184,7 +202,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "ooo",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("∞") }
     ),
@@ -195,7 +213,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "xx",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("\\times") }
     ),
@@ -206,7 +224,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "**",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("\\cdot") }
     ),
@@ -217,7 +235,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "uu",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("\\cup_{"), i(1), t("}^{\\infty}"), i(0) }
     ),
@@ -227,7 +245,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "UU",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("\\bigcup_{"), i(1), t("}^{\\infty}"), i(0) }
     ),
@@ -238,7 +256,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "nn",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("\\cap_{"), i(1), t("}^{\\infty}"), i(0) }
     ),
@@ -249,7 +267,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "lr(",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("\\left("), i(1), t("\\right)"), i(0) }
     ),
@@ -260,7 +278,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "lr[",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("\\left["), i(1), t("\\right]"), i(0) }
     ),
@@ -271,7 +289,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "lr{",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("\\left\\{"), i(1), t("\\right\\}"), i(0) }
     ),
@@ -282,7 +300,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "nn",
             snippettype = "autosnippet",
             wordtrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("\\bigcap_{"), i(1), t("}^{\\infty}"), i(0) }
     ),
@@ -293,7 +311,7 @@ return { -- can also return two lists, one list of reg one auto
             snippetType = "autosnippet",
             wordTrig = false,
             trigEngine = "pattern",
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("\\mathbf{"),
@@ -312,7 +330,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "a,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐚"),
@@ -326,7 +344,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "b,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐛"),
@@ -340,7 +358,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "c,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐜"),
@@ -354,7 +372,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "d,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐝"),
@@ -368,7 +386,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "e,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐞"),
@@ -382,7 +400,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "f,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐟"),
@@ -396,7 +414,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "g,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐠"),
@@ -410,7 +428,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "h,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐡"),
@@ -423,7 +441,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "i,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐢"),
@@ -436,7 +454,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "j,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐣"),
@@ -449,7 +467,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "k,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐤"),
@@ -463,7 +481,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "l,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐥"),
@@ -477,7 +495,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "m,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐦"),
@@ -490,7 +508,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "n,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐧"),
@@ -503,7 +521,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "o,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐨"),
@@ -517,7 +535,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "p,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐩"),
@@ -531,7 +549,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "q,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐪"),
@@ -545,7 +563,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "r,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐫"),
@@ -559,7 +577,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "s,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐬"),
@@ -573,7 +591,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "t,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐭"),
@@ -587,7 +605,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "u,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐮"),
@@ -601,7 +619,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "v,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐯"),
@@ -615,7 +633,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "w,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐰"),
@@ -629,7 +647,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "x,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐱"),
@@ -643,7 +661,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "y,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐲"),
@@ -657,7 +675,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "z,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐳"),
@@ -672,7 +690,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "A,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐀"),
@@ -686,7 +704,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "B,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐁"),
@@ -700,7 +718,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "C,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐂"),
@@ -714,7 +732,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "D,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐃"),
@@ -728,7 +746,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "E,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐄"),
@@ -742,7 +760,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "F,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐅"),
@@ -756,7 +774,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "G,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐆"),
@@ -770,7 +788,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "H,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐇"),
@@ -784,7 +802,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "I,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐈"),
@@ -798,7 +816,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "J,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐉"),
@@ -812,7 +830,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "K,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐊"),
@@ -826,7 +844,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "L,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐋"),
@@ -840,7 +858,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "M,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐌"),
@@ -854,7 +872,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "N,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐍"),
@@ -868,7 +886,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "O,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐎"),
@@ -882,7 +900,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "P,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐏"),
@@ -896,7 +914,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "Q,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐐"),
@@ -910,7 +928,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "R,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐑"),
@@ -924,7 +942,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "S,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐒"),
@@ -938,7 +956,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "T,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐓"),
@@ -952,7 +970,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "U,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐔"),
@@ -966,7 +984,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "V,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐕"),
@@ -980,7 +998,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "W,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐖"),
@@ -994,7 +1012,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "X,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐗"),
@@ -1008,7 +1026,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "Y,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐘"),
@@ -1022,7 +1040,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "Z,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝐙"),
@@ -1036,7 +1054,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "α,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝛂"),
@@ -1050,7 +1068,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "β,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝛃"),
@@ -1064,7 +1082,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "γ,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝛄"),
@@ -1078,7 +1096,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "δ,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝛅"),
@@ -1092,7 +1110,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "𝜖,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝛜"),
@@ -1106,7 +1124,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "μ,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝛍"),
@@ -1120,7 +1138,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "η,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝜂"),
@@ -1134,7 +1152,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "σ,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝛔"),
@@ -1147,7 +1165,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "θ,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝛉"),
@@ -1161,7 +1179,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "ω,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝛚"),
@@ -1175,7 +1193,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "0,.",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         {
             t("𝟎"),
@@ -1188,7 +1206,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";a",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("α") }
     ),
@@ -1198,7 +1216,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";b",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("β") }
     ),
@@ -1208,7 +1226,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";d",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("δ") }
     ),
@@ -1219,7 +1237,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";e",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("𝜖") }
     ),
@@ -1230,7 +1248,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";ve",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ε") }
     ),
@@ -1241,7 +1259,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";h",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("θ") }
     ),
@@ -1252,7 +1270,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";g",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("γ") }
     ),
@@ -1262,7 +1280,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";k",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("κ") }
     ),
@@ -1272,7 +1290,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";l",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("λ") }
     ),
@@ -1282,7 +1300,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";m",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("μ") }
     ),
@@ -1292,7 +1310,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";n",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ν") }
     ),
@@ -1302,7 +1320,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";o",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ο") }
     ),
@@ -1313,7 +1331,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";p",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("π") }
     ),
@@ -1324,7 +1342,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";q",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("φ") }
     ),
@@ -1335,7 +1353,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";r",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ρ") }
     ),
@@ -1345,7 +1363,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";s",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("σ") }
     ),
@@ -1355,7 +1373,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";t",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("τ") }
     ),
@@ -1366,7 +1384,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";w",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ω") }
     ),
@@ -1377,7 +1395,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";x",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("χ") }
     ),
@@ -1387,7 +1405,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";y",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ψ") }
     ),
@@ -1398,7 +1416,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";z",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ζ") }
     ),
@@ -1408,7 +1426,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";A",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("Α") }
     ),
@@ -1418,7 +1436,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";B",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("Β") }
     ),
@@ -1428,7 +1446,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";D",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("Δ") }
     ),
@@ -1438,7 +1456,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";E",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("Ε") }
     ),
@@ -1448,7 +1466,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";G",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("Γ") }
     ),
@@ -1458,7 +1476,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";K",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("Κ") }
     ),
@@ -1468,7 +1486,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";L",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("Λ") }
     ),
@@ -1479,7 +1497,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";M",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("Μ") }
     ),
@@ -1489,7 +1507,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";N",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("∇") }
     ),
@@ -1499,7 +1517,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";R",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("Ρ") }
     ),
@@ -1509,7 +1527,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";S",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("Σ") }
     ),
@@ -1519,7 +1537,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ";T",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("Τ") }
     ),
@@ -1530,7 +1548,7 @@ return { -- can also return two lists, one list of reg one auto
                 snippetType = "autosnippet",
                 wordTrig = false,
             },
-            { condition = math },
+            { condition = in_mathzone },
             { filetype = "norg" },
         },
 
@@ -1542,7 +1560,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":R",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ℝ") }
     ),
@@ -1553,7 +1571,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":N",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ℕ") }
     ),
@@ -1564,7 +1582,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":Q",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ℚ") }
     ),
@@ -1575,7 +1593,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":C",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ℂ") }
     ),
@@ -1586,7 +1604,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":Z",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ℤ") }
     ),
@@ -1597,7 +1615,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":0",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("∅") }
     ),
@@ -1608,7 +1626,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "partial",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("∂") }
     ),
@@ -1619,7 +1637,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "forall",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("∀") }
     ),
@@ -1630,7 +1648,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "exists",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("∃") }
     ),
@@ -1641,7 +1659,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "int",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("∫") }
     ),
@@ -1652,7 +1670,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "to",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("→") }
     ),
@@ -1663,7 +1681,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "elem",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("∈") }
     ),
@@ -1674,7 +1692,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "notin",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("∉") }
     ),
@@ -1685,7 +1703,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "subset",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("⊂") }
 
@@ -1697,7 +1715,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "notsubset",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("⊄") }
     ),
@@ -1708,7 +1726,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ">=",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("≥") }
     ),
@@ -1719,7 +1737,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = "<=",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("≤") }
     ),
@@ -1730,7 +1748,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":a",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("𝒜") }
     ),
@@ -1741,7 +1759,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":b",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ℬ") }
     ),
@@ -1752,7 +1770,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":c",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("𝒞") }
     ),
@@ -1763,7 +1781,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":d",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("𝒟") }
     ),
@@ -1774,7 +1792,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":e",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ℰ") }
     ),
@@ -1785,7 +1803,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":f",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ℱ") }
     ),
@@ -1796,7 +1814,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":g",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("𝒢") }
     ),
@@ -1807,7 +1825,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":h",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ℋ") }
     ),
@@ -1818,7 +1836,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":i",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ℐ") }
     ),
@@ -1829,7 +1847,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":j",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("𝒥") }
     ),
@@ -1840,7 +1858,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":k",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("𝒦") }
     ),
@@ -1851,7 +1869,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":l",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ℒ") }
     ),
@@ -1862,7 +1880,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":m",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ℳ") }
     ),
@@ -1873,7 +1891,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":n",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("𝒩") }
     ),
@@ -1884,7 +1902,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":o",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("𝒪") }
     ),
@@ -1895,7 +1913,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":p",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("𝒫") }
     ),
@@ -1906,7 +1924,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":q",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("𝒬") }
     ),
@@ -1917,7 +1935,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":r",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("ℛ") }
     ),
@@ -1928,7 +1946,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":s",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("𝒮") }
     ),
@@ -1939,7 +1957,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":t",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("𝒯") }
     ),
@@ -1950,7 +1968,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":u",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("𝒰") }
     ),
@@ -1961,7 +1979,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":v",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("𝒱") }
     ),
@@ -1972,7 +1990,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":w",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("𝒲") }
     ),
@@ -1983,7 +2001,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":x",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("𝒳") }
     ),
@@ -1994,7 +2012,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":y",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("𝒴") }
     ),
@@ -2005,7 +2023,7 @@ return { -- can also return two lists, one list of reg one auto
             trig = ":z",
             snippetType = "autosnippet",
             wordTrig = false,
-            condition = math,
+            condition = in_mathzone,
         },
         { t("𝒵") }
     ),

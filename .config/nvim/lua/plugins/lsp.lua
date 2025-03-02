@@ -24,7 +24,6 @@ local function lsp_setup()
     })
     require("mason-lspconfig").setup({
         ensure_installed = {
-            "fish_lsp",
             -- "ltex",
             "texlab",
             "basedpyright",
@@ -138,6 +137,13 @@ local function lsp_setup()
     lspconfig.r_language_server.setup({
         capabilities = capabilities,
         on_attach = common_attach,
+        settings = {
+            r = {
+                lsp = {
+                    rich_documentation = false,
+                },
+            },
+        },
     })
 
     -- LUA
@@ -252,16 +258,13 @@ return {
             -- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
             -- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which
             -- no longer trigger the **nvim-treesitter** module to be loaded in time.
-            -- Luckily, the only things that those plugins need are the custom queries, which we make available
-            -- during startup.
-            require("lazy.core.loader").add_to_rtp(plugin)
-            require("nvim-treesitter.query_predicates")
+            -- Luckily, the only things that those plugins need are the custom queries, which we make available during startup. require("lazy.core.loader").add_to_rtp(plugin) require("nvim-treesitter.query_predicates")
         end,
         cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
         opts_extend = { "ensure_installed" },
         opts = {
             -- Install parsers synchronously (only applied to `ensure_installed`)
-            ensure_installed = { "lua", "python", "rust", "c" },
+            ensure_installed = { "lua", "python", "rust", "c", "markdown", "markdown_inline", "yaml", "rnoweb", "r", "csv" },
             ignore_install = { "latex", "bibtex" },
             sync_install = false,
 
