@@ -1556,6 +1556,16 @@ return { -- can also return two lists, one list of reg one auto
     ),
     s(
         {
+            name = "expectation",
+            trig = ":E",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = in_mathzone,
+        },
+        { t("𝔼") }
+    ),
+    s(
+        {
             name = "real numbers",
             trig = ":R",
             snippetType = "autosnippet",
