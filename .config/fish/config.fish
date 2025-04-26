@@ -14,7 +14,6 @@ function fish_greeting
     echo "Fish taste weird"
     # Emulates vim's cursor shape behavior
 
-
 end
 
 function fish_user_key_bindings
@@ -25,10 +24,6 @@ end
 
 function trash --wraps mv --description "rm to trash"
     mv $argv ~/.trash
-end
-
-function ls --wraps eza --description "Remaps ls to exa"
-    eza -l --total-size --no-permissions $argv
 end
 
 # include following in .bashrc / .bash_profile / .zshrc
@@ -78,7 +73,6 @@ pixi completion --shell fish | source
 
 status --is-interactive
 
-
 ### Colors
 
 function toggle-theme-light
@@ -114,7 +108,6 @@ function fzf --wraps="fzf"
 
     command fzf
 end
-
 
 # EXPORT NVIDIA VARS
 if lsmod | grep -q nvidia
