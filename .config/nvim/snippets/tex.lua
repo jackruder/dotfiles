@@ -1754,6 +1754,17 @@ return { -- can also return two lists, one list of reg one auto
 
     s(
         {
+            name = "not equal",
+            trig = "!=",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = in_mathzone,
+        },
+        { t("≠") }
+    ),
+
+    s(
+        {
             name = "Script A",
             trig = ":a",
             snippetType = "autosnippet",
