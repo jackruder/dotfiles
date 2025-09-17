@@ -296,6 +296,17 @@ return { -- can also return two lists, one list of reg one auto
 
     s(
         {
+            name = "inner product",
+            trig = "<>",
+            snippettype = "autosnippet",
+            wordtrig = false,
+            condition = in_mathzone,
+        },
+        { t("⟨ "), i(1), t(" , "), i(2), t(" ⟩"), i(0) }
+    ),
+
+    s(
+        {
             name = "infinite intersection",
             trig = "nn",
             snippettype = "autosnippet",
@@ -322,6 +333,23 @@ return { -- can also return two lists, one list of reg one auto
             -- Optionally, remove the trailing punctuation by not including it
             i(0),
         }
+    ),
+
+    s(
+        {
+            name = "tilde",
+            trig = "til",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = in_mathzone,
+        },
+        {
+            t("\\tilde{"),
+            i(1),
+            t("}"),
+            i(0),
+        }
+
     ),
 
     s(
