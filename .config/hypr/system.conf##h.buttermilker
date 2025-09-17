@@ -26,3 +26,5 @@ input {
 
     sensitivity = 0 # -1.0 - 1.0, 0 means no modification.
 }
+
+bind = SUPER, W, exec, librewolf-bin

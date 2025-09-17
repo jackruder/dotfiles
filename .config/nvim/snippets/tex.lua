@@ -215,7 +215,7 @@ return { -- can also return two lists, one list of reg one auto
             wordTrig = false,
             condition = in_mathzone,
         },
-        { t("\\times") }
+        { t("×") }
     ),
 
     s(
@@ -1217,6 +1217,19 @@ return { -- can also return two lists, one list of reg one auto
 
     s(
         {
+            name = "bold xi",
+            trig = "ξ,.",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = in_mathzone,
+        },
+        {
+            t("𝛏"),
+        }
+    ),
+
+    s(
+        {
             name = "bold 0",
             trig = "0,.",
             snippetType = "autosnippet",
@@ -1273,7 +1286,7 @@ return { -- can also return two lists, one list of reg one auto
     s(
         {
             name = "varepsilon",
-            trig = ";ve",
+            trig = "v;e",
             snippetType = "autosnippet",
             wordTrig = false,
             condition = in_mathzone,
@@ -1366,13 +1379,23 @@ return { -- can also return two lists, one list of reg one auto
 
     s(
         {
+            name = "varphi",
+            trig = "v;q",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = in_mathzone,
+        },
+        { t("ϕ") }
+    ),
+    s(
+        {
             name = "phi",
             trig = ";q",
             snippetType = "autosnippet",
             wordTrig = false,
             condition = in_mathzone,
         },
-        { t("φ") }
+        { t("ϕ") }
     ),
 
     s(
@@ -1419,13 +1442,13 @@ return { -- can also return two lists, one list of reg one auto
 
     s(
         {
-            name = "chi",
+            name = "xi",
             trig = ";x",
             snippetType = "autosnippet",
             wordTrig = false,
             condition = in_mathzone,
         },
-        { t("χ") }
+        { t("ξ") }
     ),
     s(
         {
@@ -1582,6 +1605,17 @@ return { -- can also return two lists, one list of reg one auto
 
         { t("Ω") }
     ),
+
+    s(
+        {
+            name = "complex numbers",
+            trig = ":C",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = in_mathzone,
+        },
+        { t("ℂ") }
+    ),
     s(
         {
             name = "expectation",
@@ -1592,17 +1626,6 @@ return { -- can also return two lists, one list of reg one auto
         },
         { t("𝔼") }
     ),
-    s(
-        {
-            name = "real numbers",
-            trig = ":R",
-            snippetType = "autosnippet",
-            wordTrig = false,
-            condition = in_mathzone,
-        },
-        { t("ℝ") }
-    ),
-
     s(
         {
             name = "natural numbers",
@@ -1624,16 +1647,36 @@ return { -- can also return two lists, one list of reg one auto
         },
         { t("ℚ") }
     ),
-
     s(
         {
-            name = "complex numbers",
-            trig = ":C",
+            name = "real numbers",
+            trig = ":R",
             snippetType = "autosnippet",
             wordTrig = false,
             condition = in_mathzone,
         },
-        { t("ℂ") }
+        { t("ℝ") }
+    ),
+
+    s(
+        {
+            name = "sphere",
+            trig = ":S",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = in_mathzone,
+        },
+        { t("𝕊") }
+    ),
+    s(
+        {
+            name = "Torus",
+            trig = ":T",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = in_mathzone,
+        },
+        { t("𝕋") }
     ),
 
     s(
@@ -1711,6 +1754,17 @@ return { -- can also return two lists, one list of reg one auto
             condition = in_mathzone,
         },
         { t("→") }
+    ),
+
+    s(
+        {
+            name = "maps",
+            trig = "maps",
+            snippetType = "autosnippet",
+            wordTrig = false,
+            condition = in_mathzone,
+        },
+        { t("↦") }
     ),
 
     s(

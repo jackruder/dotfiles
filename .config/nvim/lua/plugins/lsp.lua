@@ -333,6 +333,37 @@ return {
         init = function()
             -- VimTeX configuration goes here, e.g.
             vim.g.vimtex_view_method = "zathura"
+            vim.g.vimtex_subfile_start_local = 1
+            -- Better indentation for math environments
+            vim.g.vimtex_indent_enabled = 1
+            vim.g.vimtex_indent_bib_enabled = 1
+
+            -- Format on save (optional)
+            vim.g.vimtex_format_enabled = 1
+            -- Auto-close quickfix after a few keystrokes
+            vim.g.vimtex_quickfix_autoclose_after_keystrokes = 3
+
+            -- Ignore certain warnings
+            vim.g.vimtex_quickfix_ignore_filters = {
+                'Underfull \\hbox',
+                'Overfull \\hbox',
+                'LaTeX Warning: .\\+ float specifier changed to',
+            }
+
+            -- compilation
+            vim.g.vimtex_compiler_latexmk = {
+                aux_dir = 'build',
+                out_dir = 'build',
+                callback = 1,
+                continuous = 1,
+                executable = 'latexmk',
+                options = {
+                    '-verbose',
+                    '-file-line-error',
+                    '-synctex=1',
+                    '-interaction=nonstopmode',
+                },
+            }
         end
     }
 }

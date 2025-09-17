@@ -130,3 +130,4 @@ else
     end
 end
 # <<< conda initialize <<<
+fish_add_path /home/jackman/.pixi/bin
