@@ -45,5 +45,18 @@ return {
             copilot_node_command = "node", -- Node.js version must be > 18.x
             server_opts_overrides = {},
         }
-    }
+    },
+    {
+        "olimorris/codecompanion.nvim",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+        },
+        opts = {
+            -- NOTE: The log_level is in `opts.opts`
+            opts = {
+                log_level = "DEBUG", -- or "TRACE"
+            },
+        },
+    },
 }

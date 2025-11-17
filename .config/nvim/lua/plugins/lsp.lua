@@ -1,13 +1,12 @@
+-- lua/plugins/lsp.lua
+
 local function lsp_setup()
-    local capabilities = vim.tbl_deep_extend(
-        "force",
-        vim.lsp.protocol.make_client_capabilities(),
-        require("cmp_nvim_lsp").default_capabilities()
-    )
-    capabilities.textDocument.foldingRange = {
-        dynamicRegistration = false,
-        lineFoldingOnly = true,
-    }
+    -- Capabilities (with cmp if present)
+    local base_caps = vim.lsp.protocol.make_client_capabilities()
+    local ok_cmp, cmp = pcall(require, "cmp_nvim_lsp")
+    local capabilities = ok_cmp and vim.tbl_deep_extend("force", base_caps, cmp.default_capabilities()) or base_caps
+    capabilities.textDocument = capabilities.textDocument or {}
+    capabilities.textDocument.foldingRange = { dynamicRegistration = false, lineFoldingOnly = true }
 
     -- MANAGE DEPENDENCIES FOR LSP SERVERS AND LINTERS --
     require("mason").setup({
@@ -18,17 +17,15 @@ local function lsp_setup()
                 package_uninstalled = "✗",
             },
         },
-        pip = {
-            upgrade_pip = true,
-        },
+        pip = { upgrade_pip = true },
     })
     require("mason-lspconfig").setup({
         ensure_installed = {
-            -- "ltex",
+            "ltex_plus",
             "texlab",
             "basedpyright",
             "ruff",
-            -- "r_language_server", -- mason no likey
+            -- "r_language_server",
             "lua_ls",
             "efm",
         },
@@ -37,47 +34,150 @@ local function lsp_setup()
     vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
             local client = vim.lsp.get_client_by_id(args.data.client_id)
-            if client.supports_method("textDocument/implementation") then
-                -- Create a keymap for vim.lsp.buf.implementation
+            if client and client.name then
+                vim.notify(("LSP attached: %s"):format(client.name), vim.log.levels.INFO)
             end
-            if client.supports_method("textDocument/formatting") then
-                -- Format the current buffer on save
+            if client and client.supports_method("textDocument/formatting") then
+                -- Example: format on save (disabled by default)
                 -- vim.api.nvim_create_autocmd("BufWritePre", {
-                --     buffer = args.buf,
-                --     callback = function()
-                --         vim.lsp.buf.format({ bufnr = args.buf, id = client.id })
-                --     end,
+                --   buffer = args.buf,
+                --   callback = function()
+                --     vim.lsp.buf.format({ bufnr = args.buf, id = client.id })
+                --   end,
                 -- })
             end
         end,
     })
 
-    local lspconfig = require("lspconfig")
+    -- Only use util helpers from lspconfig (no deprecated setup framework)
+    local util = require("lspconfig.util")
 
-    require("lsp-format").setup({})
+    require("lsp-format").setup({
+        order = {
+            tex = { "efm" },
+            plaintex = { "efm" },
+            -- optional: avoid accidental double-format elsewhere
+            -- lua = { "efm" },   -- if you want stylua via efm instead of lua_ls
+            -- rust = { "efm" },  -- if you want rustfmt via efm instead of rust_analyzer
+        },
+    })
 
-    local common_attach = function(client, bufnr)
+    local function common_attach(client, bufnr)
         require("lsp-format").on_attach(client, bufnr)
-        vim.api.nvim_buf_set_keymap(
-            bufnr,
-            "n",
-            "<leader>od",
-            "<cmd>lua vim.diagnostic.open_float(0, {scope='line'})<CR>",
-            { noremap = true, silent = true }
-        )
+        vim.keymap.set("n", "<leader>od", function()
+            vim.diagnostic.open_float(0, { scope = "line" })
+        end, { buffer = bufnr, silent = true })
     end
+
     vim.cmd([[cabbrev wq execute "Format sync" <bar> wq]])
 
-    -- fish
-    -- lspconfig.fish_lsp.setup({ capabilities = capabilities, on_attach = common_attach })
+    -- Helper to define and enable a server with the new API
+    local function define_server(name, opts)
+        vim.lsp.config(name, opts)
+        vim.lsp.enable(name)
+    end
 
-    -- grammar
-    lspconfig.ltex.setup({ capabilities = capabilities, on_attach = common_attach })
+    -- Compute TeX project root (supports both return and callback styles)
+    local function tex_root_compute(bufnr_or_name)
+        local fname
+        if type(bufnr_or_name) == "number" then
+            fname = vim.api.nvim_buf_get_name(bufnr_or_name)
+        elseif type(bufnr_or_name) == "string" and bufnr_or_name ~= "" then
+            fname = bufnr_or_name
+        else
+            fname = vim.api.nvim_buf_get_name(0)
+        end
 
-    -- latex
-    lspconfig.texlab.setup({ capabilities = capabilities, on_attach = common_attach })
+        -- Ask VimTeX (best with \subfile workflows)
+        local ok_vimtex, doc = pcall(function()
+            return vim.fn["vimtex#state#document"](vim.api.nvim_get_current_buf())
+        end)
+        if ok_vimtex and doc and type(doc.root) == "string" and doc.root ~= "" then
+            return doc.root
+        end
 
-    lspconfig.basedpyright.setup({
+        -- Markers: prefer explicit; avoid latexmkrc so $HOME never becomes root
+        local start = (fname ~= "" and vim.fs.dirname(fname)) or vim.fn.getcwd()
+        local markers = { "texlabroot.json", "main.tex", ".git" }
+        local found = vim.fs.find(markers, { path = start, upward = true })[1]
+        if type(found) == "string" and found ~= "" then
+            return vim.fs.dirname(found)
+        end
+        return start
+    end
+
+    -- New API can pass a callback; support both styles
+    local function tex_root(arg1, on_dir)
+        local dir = tex_root_compute(arg1)
+        if type(on_dir) == "function" then
+            return on_dir(dir)
+        end
+        return dir
+    end
+
+    -- Resolve Mason bin paths explicitly to avoid PATH timing issues
+    local mason_bin = vim.fn.stdpath("data") .. "/mason/bin/"
+
+    -- grammar: ltex
+    define_server("ltex_plus", {
+        cmd = { mason_bin .. "ltex-ls-plus" },
+        filetypes = { "bib", "gitcommit", "markdown", "org", "norg", "plaintex", "rnoweb", "tex", "text" },
+        root_dir = tex_root,
+        single_file_support = true,
+        capabilities = capabilities,
+        on_attach = common_attach,
+    })
+
+    -- latex: texlab
+    define_server("texlab", {
+        cmd = { mason_bin .. "texlab" },
+        filetypes = { "tex", "plaintex", "bib" },
+        root_dir = tex_root,
+        single_file_support = true,
+        capabilities = capabilities,
+        -- custom attach to let EFM format
+        on_attach = 
+            function(client, bufnr)
+                -- Disable texlab formatting in favor of efm
+                -- Only efm should format TeX
+                client.server_capabilities.documentFormattingProvider = false
+                client.server_capabilities.documentRangeFormattingProvider = false
+                common_attach(client, bufnr)
+            end,
+        on_new_config = function(new_config, root)
+            new_config.settings = new_config.settings or {}
+            new_config.settings.texlab = new_config.settings.texlab or {}
+            new_config.settings.texlab.rootDirectory = root
+        end,
+    })
+
+    -- Ensure servers are enabled when TeX buffers open
+    vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "tex", "plaintex", "bib" },
+        callback = function()
+            vim.lsp.enable("texlab")
+            vim.lsp.enable("ltex_plus")
+            -- Debug notify to confirm the autocmd fires
+            vim.notify("Enabled texlab/ltex for TeX buffer", vim.log.levels.DEBUG)
+        end,
+    })
+
+    -- Also enable globally so already-open buffers can attach
+    -- vim.lsp.enable("texlab")
+    -- vim.lsp.enable("ltex")
+
+    -- Python: basedpyright
+    define_server("basedpyright", {
+        cmd = { "basedpyright-langserver", "--stdio" },
+        filetypes = { "python" },
+        root_dir = util.root_pattern(
+            "pyproject.toml",
+            "setup.py",
+            "setup.cfg",
+            "requirements.txt",
+            "Pipfile",
+            ".git"
+        ),
         capabilities = capabilities,
         settings = {
             basedpyright = {
@@ -85,7 +185,7 @@ local function lsp_setup()
                 disableTaggedHints = false,
                 analysis = {
                     typeCheckingMode = "standard",
-                    useLibraryCodeForTypes = true, -- Analyze library code for type information
+                    useLibraryCodeForTypes = true,
                     autoImportCompletions = true,
                     autoSearchPaths = true,
                     diagnosticSeverityOverrides = {
@@ -96,33 +196,30 @@ local function lsp_setup()
         },
     })
 
-    lspconfig.ruff.setup({
+    -- Python: ruff
+    define_server("ruff", {
+        cmd = { "ruff-lsp" },
+        filetypes = { "python" },
+        root_dir = util.root_pattern("pyproject.toml", "ruff.toml", ".git"),
+        capabilities = capabilities,
         on_attach = function(client, bufnr)
-            -- common_on_attach_handler(client, bufnr)
-            client.server_capabilities.disableHoverProvider = false
             require("lsp-format").on_attach(client, bufnr)
+            -- client.server_capabilities.hoverProvider = false -- if you prefer BasedPyright hovers
         end,
-        init_options = {
-            settings = {
-                -- Any extra CLI arguments for `ruff` go here.
-                args = {},
-            },
-        },
+        init_options = { settings = { args = {} } },
     })
 
     -- rust
-    lspconfig.rust_analyzer.setup({
+    define_server("rust_analyzer", {
+        cmd = { "rust-analyzer" },
+        filetypes = { "rust" },
+        root_dir = util.root_pattern("Cargo.toml"),
         capabilities = capabilities,
         on_attach = common_attach,
-        root_dir = lspconfig.util.root_pattern("Cargo.toml"),
         settings = {
             ["rust-analyzer"] = {
-                cargo = {
-                    allFeatures = true,
-                },
-                add_return_type = {
-                    enable = true,
-                },
+                cargo = { allFeatures = true },
+                add_return_type = { enable = true },
                 inlayHints = {
                     enable = true,
                     showParameterNames = true,
@@ -131,10 +228,14 @@ local function lsp_setup()
                 },
             },
         },
+        single_file_support = true,
     })
 
     -- r
-    lspconfig.r_language_server.setup({
+    define_server("r_language_server", {
+        cmd = { "R", "--slave", "-e", "languageserver::run()" },
+        filetypes = { "r", "rnoweb", "rmd", "quarto", "qmd" },
+        root_dir = util.root_pattern(".git", ".Rproj.user", "*.Rproj"),
         capabilities = capabilities,
         on_attach = common_attach,
         settings = {
@@ -147,45 +248,42 @@ local function lsp_setup()
     })
 
     -- LUA
-    lspconfig.lua_ls.setup({
+    define_server("lua_ls", {
+        cmd = { "lua-language-server" },
+        filetypes = { "lua" },
+        root_dir = util.root_pattern(".git", ".luarc.json", ".luacheckrc", "stylua.toml"),
         capabilities = capabilities,
+        on_attach = common_attach,
         settings = {
             Lua = {
-                diagnostics = {
-                    globals = { "vim" },
-                },
+                diagnostics = { globals = { "vim" } },
             },
         },
-        on_attach = common_attach,
+        single_file_support = true,
     })
 
     -- FORMATTING AND LINTING --
     -- Register linters and formatters per language
-
-    -- misc lint --
     local vale = require("efmls-configs.linters.vale")
-    -- local languagetool = require('efmls-configs.linters.languagetool')
+    local chktex = require("efmls-configs.linters.chktex")
+    local latexindent = {
+          -- if efm's cwd is TeX project root, this finds localSettings.yaml there
+          formatCommand = "latexindent -m -rv -l defaultSettings.yaml -",
+          formatStdin = true,
+    }
 
-    -- fish --
     local fish = require("efmls-configs.linters.fish")
     local fish_indent = require("efmls-configs.formatters.fish_indent")
 
-    --git lint--
     local gitlint = require("efmls-configs.linters.gitlint")
 
-    -- lua --
     local luacheck = require("efmls-configs.linters.luacheck")
     local stylua = require("efmls-configs.formatters.stylua")
 
-    -- markdown --
     local markdownlint = require("efmls-configs.linters.markdownlint")
 
-    -- rust --
     local rustfmt = require("efmls-configs.formatters.rustfmt")
 
-    -- latex --
-
-    -- yaml --
     local yamllint = require("efmls-configs.linters.yamllint")
     local prettier = require("efmls-configs.formatters.prettier")
 
@@ -197,18 +295,16 @@ local function lsp_setup()
         markdown = { markdownlint },
         python = {}, -- use ruff directly from lsp
         rust = { rustfmt },
-        -- latex = { },
+        tex = {chktex, latexindent, vale},
+        plaintex = {chktex, latexindent, vale},
+        bib = {},
         yaml = { yamllint, prettier },
     })
-    -- Or use the defaults provided by this plugin
-    -- check doc/SUPPORTED_LIST.md for the supported languages
-    --
-    -- local languages = require('efmls-configs.defaults').languages()
 
     local efmls_config = {
         filetypes = vim.tbl_keys(languages),
         settings = {
-            rootMarkers = { ".git/" },
+            rootMarkers = { ".git/", "main.tex"},
             languages = languages,
         },
         init_options = {
@@ -217,64 +313,40 @@ local function lsp_setup()
         },
     }
 
-    lspconfig.efm.setup(vim.tbl_extend("force", efmls_config, {
+    define_server("efm", {
+        cmd = { "efm-langserver" },
+        filetypes = efmls_config.filetypes,
+        root_dir = tex_root, -- HACK: this defaults to .git when no markers found; better for TeX
         on_attach = common_attach,
         capabilities = capabilities,
-    }))
-end
+        init_options = efmls_config.init_options,
+        settings = efmls_config.settings,
+    }) end
 
---- RUST ---
--- vim.g.rustaceanvim = {
--- 	-- Plugin configuration
--- 	tools = {},
--- 	-- LSP configuration
--- 	server = {
--- 		on_attach = function(client, bufnr)
--- 			common_attach(client, bufnr)
--- 			if client.server_capabilities.inlayHintProvider then
--- 				vim.lsp.inlay_hint.enable(true)
--- 			end
--- 		end,
--- 		capabilities = capabilities,
--- 		default_settings = {
--- 			-- rust-analyzer language server configuration
--- 			["rust-analyzer"] = {
--- 				cargo = {
--- 					all_features = true,
--- 				},
--- 			},
--- 		},
--- 	},
--- 	-- DAP configuration
--- 	dap = {},
--- }
 return {
     {
-        'nvim-treesitter/nvim-treesitter',
+        "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
         event = { "BufNewFile", "BufRead", "BufEnter" },
-        lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
+        lazy = vim.fn.argc(-1) == 0,
         init = function(plugin)
-            -- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
-            -- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which
-            -- no longer trigger the **nvim-treesitter** module to be loaded in time.
-            -- Luckily, the only things that those plugins need are the custom queries, which we make available during startup. require("lazy.core.loader").add_to_rtp(plugin) require("nvim-treesitter.query_predicates")
+            -- PERF: add nvim-treesitter queries to the rtp early if needed
+            -- require("lazy.core.loader").add_to_rtp(plugin)
+            -- require("nvim-treesitter.query_predicates")
         end,
         cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
         opts_extend = { "ensure_installed" },
         opts = {
-            -- Install parsers synchronously (only applied to `ensure_installed`)
-            ensure_installed = { "lua", "python", "rust", "c", "markdown", "markdown_inline", "yaml", "rnoweb", "r", "csv" },
-            ignore_install = { "latex", "bibtex" },
+            ensure_installed = {
+                "lua", "python", "rust", "c", "markdown", "markdown_inline", "yaml", "rnoweb", "r", "csv",
+                "latex", "bibtex",
+            },
             sync_install = false,
-
-            -- Automatically install missing parsers when entering buffer
-            -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
             auto_install = true,
-
-            -- List of parsers to ignore installing (or "all")
             highlight = {
                 enable = true,
+                -- Keep VimTeX for LaTeX highlighting; TS parser is still present for rainbow-delimiters
+                disable = { "latex", "tex", "plaintex", "bib" },
             },
             incremental_selection = {
                 enable = true,
@@ -285,23 +357,21 @@ return {
                     node_decremental = "grm",
                 },
             },
-            indent = {
-                enable = true,
-            },
+            indent = { enable = true },
         },
         config = function(_, opts)
             require("nvim-treesitter.configs").setup(opts)
         end,
     },
     {
-        'neovim/nvim-lspconfig',
-        event = { "BufReadPost", "BufNewFile" },
+        "neovim/nvim-lspconfig",
+        event = { "BufReadPre", "BufNewFile" },
         cmd = { "LspInfo", "LspInstall", "LspUninstall" },
         config = lsp_setup,
         dependencies = { "nvim-treesitter/nvim-treesitter", "mason-lspconfig.nvim", "mason.nvim" },
     },
     {
-        'williamboman/mason.nvim',
+        "williamboman/mason.nvim",
         opts = {
             ui = {
                 icons = {
@@ -310,60 +380,65 @@ return {
                     package_uninstalled = "✗",
                 },
             },
-            pip = {
-                upgrade_pip = true,
-            },
-        }
+            pip = { upgrade_pip = true },
+        },
     },
-    { 'williamboman/mason-lspconfig.nvim', },
-    { 'creativenull/efmls-configs-nvim',   version = 'v1.x.x', dependencies = { 'neovim/nvim-lspconfig' } },
-    { 'lukas-reineke/lsp-format.nvim' },
-    { 'mfussenegger/nvim-dap' },
+    { "williamboman/mason-lspconfig.nvim" },
+    { "creativenull/efmls-configs-nvim", version = "v1.x.x", dependencies = { "neovim/nvim-lspconfig" } },
+    { "lukas-reineke/lsp-format.nvim" },
+    { "mfussenegger/nvim-dap" },
     {
-        'creativenull/efmls-configs-nvim',
-        version = 'v1.x.x', -- version is optional, but recommended
-        dependencies = { 'neovim/nvim-lspconfig' },
-    },
-    { 'lukas-reineke/lsp-format.nvim' },
-    { 'mfussenegger/nvim-dap' },
-    {
-        "lervag/vimtex", -- TODO: learn motions
-        lazy = false,    -- we don't want to lazy load VimTeX
-        -- tag = "v2.15", -- uncomment to pin to a specific release
-        init = function()
-            -- VimTeX configuration goes here, e.g.
-            vim.g.vimtex_view_method = "zathura"
-            vim.g.vimtex_subfile_start_local = 1
-            -- Better indentation for math environments
-            vim.g.vimtex_indent_enabled = 1
-            vim.g.vimtex_indent_bib_enabled = 1
-
-            -- Format on save (optional)
-            vim.g.vimtex_format_enabled = 1
-            -- Auto-close quickfix after a few keystrokes
-            vim.g.vimtex_quickfix_autoclose_after_keystrokes = 3
-
-            -- Ignore certain warnings
-            vim.g.vimtex_quickfix_ignore_filters = {
-                'Underfull \\hbox',
-                'Overfull \\hbox',
-                'LaTeX Warning: .\\+ float specifier changed to',
-            }
-
-            -- compilation
-            vim.g.vimtex_compiler_latexmk = {
-                aux_dir = 'build',
-                out_dir = 'build',
-                callback = 1,
-                continuous = 1,
-                executable = 'latexmk',
-                options = {
-                    '-verbose',
-                    '-file-line-error',
-                    '-synctex=1',
-                    '-interaction=nonstopmode',
+        "HiPhish/rainbow-delimiters.nvim",
+        event = { "BufReadPost", "BufNewFile" },
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
+        config = function()
+            local rd = require("rainbow-delimiters")
+            vim.g.rainbow_delimiters = {
+                strategy = {
+                    [""] = rd.strategy["local"],
+                    -- latex = rd.strategy['global'], -- optional for very large files
+                },
+                highlight = {
+                    "RainbowDelimiterRed",
+                    "RainbowDelimiterYellow",
+                    "RainbowDelimiterBlue",
+                    "RainbowDelimiterOrange",
+                    "RainbowDelimiterGreen",
+                    "RainbowDelimiterViolet",
+                    "RainbowDelimiterCyan",
                 },
             }
-        end
-    }
+        end,
+    },
+    {
+        "lervag/vimtex",
+        lazy = false,
+        init = function()
+            vim.g.vimtex_view_method = "zathura"
+            vim.g.vimtex_subfile_start_local = 1
+            vim.g.vimtex_indent_enabled = 1
+            vim.g.vimtex_indent_bib_enabled = 1
+            vim.g.vimtex_format_enabled = 0
+            vim.g.vimtex_quickfix_autoclose_after_keystrokes = 3
+            vim.g.vimtex_quickfix_ignore_filters = {
+                "Underfull \\hbox",
+                "Overfull \\hbox",
+                "LaTeX Warning: .\\+ float specifier changed to",
+            }
+            vim.g.vimtex_compiler_latexmk = {
+                aux_dir = "build",
+                out_dir = "build",
+                callback = 1,
+                continuous = 1,
+                executable = "latexmk",
+                options = {
+                    "-verbose",
+                    "-file-line-error",
+                    "-synctex=1",
+                    "-interaction=nonstopmode",
+                },
+            }
+        end,
+    },
 }
+

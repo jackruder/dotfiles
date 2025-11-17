@@ -101,7 +101,10 @@ return {
         end,
     },
     { 'andrem222/copilot-lualine' },
-    { 'HiPhish/rainbow-delimiters.nvim' }, -- TODO: rose pine colors
+    { 'HiPhish/rainbow-delimiters.nvim',
+        event = { 'BufReadPost', 'BufNewFile' },
+        dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    }, -- TODO: rose pine colors
     {
         "catppuccin/nvim",
         name = "catppuccin",
