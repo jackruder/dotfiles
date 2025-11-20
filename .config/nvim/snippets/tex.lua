@@ -73,15 +73,6 @@ return { -- can also return two lists, one list of reg one auto
     ),
     s(
         {
-            name = "implied by",
-            trig = "<=",
-            snippetType = "autosnippet",
-            condition = in_mathzone,
-        },
-        { t("\\impliedby") }
-    ),
-    s(
-        {
             name = "iff",
             trig = "iff",
             snippetType = "autosnippet",

@@ -109,6 +109,14 @@ function fzf --wraps="fzf"
     command fzf
 end
 
+function off
+    sudo systemctl hibernate
+end
+
+function sleep
+    sudo systemctl suspend
+end
+
 # EXPORT NVIDIA VARS
 if lsmod | grep -q nvidia
     set -gx LD_LIBRARY_PATH /opt/cuda/lib64/ $LD_LIBRARY_PATH

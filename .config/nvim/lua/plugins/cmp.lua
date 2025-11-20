@@ -87,6 +87,9 @@ local function cmp_setup()
             { name = "otter" },
             { name = "cmp_r" },
             -- { name = "copilot" },
+            per_filetype = {
+                codecompanion = {"codecompanion"},
+            },
         }),
         sorting = {
             priority_weight = 2,
@@ -130,8 +133,8 @@ local function cmp_setup()
         sources = cmp.config.sources({
             { name = "git" },
         }, {
-            { name = "buffer" },
-        }),
+                { name = "buffer" },
+            }),
     })
     require("cmp_git").setup()
 
@@ -149,8 +152,8 @@ local function cmp_setup()
         sources = cmp.config.sources({
             { name = "path" },
         }, {
-            { name = "cmdline" },
-        }),
+                { name = "cmdline" },
+            }),
         matching = { disallow_symbol_nonprefix_matching = false },
     })
 
