@@ -103,14 +103,14 @@ If the user requests only part of the structure, respond accordingly.]],
                     },
                     prompts = {
                         {
-                            
-                                role = "system",
-                                content = [[
+
+                            role = "system",
+                            content = [[
                                 You are an expert software engineer with a strong background in machine learning and algorithms. Your task is to help implement academic papers into efficient, well-structured, and documented code.
                                 You are very careful to exactly follow the paper's specifications and algorithms.
                                 Adhere to best practices in coding, ensuring readability and maintainability.
                                 When writing comments, refer to specific sections or equations, and include the notation used in the paper for the comments 
-                                
+
                                 When responding, follow this structure:
                                 1. Summarize the equations and ideas which you will implement.
                                 2. Explain your approach to the implementation, including any design patterns or libraries you plan to use. 
@@ -127,28 +127,28 @@ If the user requests only part of the structure, respond accordingly.]],
                 },
             },
         },
+        keys = {
+            {
+                "<C-a>",
+                "<cmd>CodeCompanionActions<CR>",
+                desc = "Open the action palette",
+                mode = { "n", "v" },
+            },
+            {
+                "<Leader>a",
+                "<cmd>CodeCompanionChat Toggle<CR>",
+                desc = "Toggle a chat buffer",
+                mode = { "n", "v" },
+            },
+            {
+                "<LocalLeader>a",
+                "<cmd>CodeCompanionChat Add<CR>",
+                desc = "Add code to a chat buffer",
+                mode = { "v" },
+            },
+        },
     },
-    keys = {
-        {
-            "<C-a>",
-            "<cmd>CodeCompanionActions<CR>",
-            desc = "Open the action palette",
-            mode = { "n", "v" },
-        },
-        {
-            "<Leader>a",
-            "<cmd>CodeCompanionChat Toggle<CR>",
-            desc = "Toggle a chat buffer",
-            mode = { "n", "v" },
-        },
-        {
-            "<LocalLeader>a",
-            "<cmd>CodeCompanionChat Add<CR>",
-            desc = "Add code to a chat buffer",
-            mode = { "v" },
-        },
-    },
-},
+
     { -- For rendering markdown in chat tbuffer
         "OXY2DEV/markview.nvim",
         lazy = false,
