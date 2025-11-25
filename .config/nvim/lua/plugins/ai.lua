@@ -147,6 +147,36 @@ If the user requests only part of the structure, respond accordingly.]],
                 mode = { "v" },
             },
         },
+        strategies = {
+            chat = {
+                slash_commands = {
+                    ["file"] = {
+                        -- Location to the slash command in CodeCompanion
+                        callback = "strategies.chat.slash_commands.file",
+                        description = "Select a file using Telescope",
+                        opts = {
+                            provider = "telescope", -- Can be "default", "telescope", "fzf_lua", "mini_pick" or "snacks"
+                            contains_code = true,
+                        },
+                    },
+                },
+                adapter = "copilot",
+                model = "gpt-5.1",
+            },
+            inline = {
+                adapter = "copilot",
+                model = "gpt-4o"
+            }
+            
+        },
+        display = {
+            chat = {
+                icons = {
+                    chat_context = "📎️", -- You can also apply an icon to the fold
+                },
+                fold_context = true,
+            },
+        },
     },
 
     { -- For rendering markdown in chat tbuffer

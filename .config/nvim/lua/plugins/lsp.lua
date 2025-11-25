@@ -71,11 +71,6 @@ local function lsp_setup()
 
     vim.cmd([[cabbrev wq execute "Format sync" <bar> wq]])
 
-    -- Helper to define and enable a server with the new API
-    local function define_server(name, opts)
-        vim.lsp.config(name, opts)
-        vim.lsp.enable(name)
-    end
 
     -- Compute TeX project root (supports both return and callback styles)
     local function tex_root_compute(bufnr_or_name)
@@ -119,7 +114,7 @@ local function lsp_setup()
     local mason_bin = vim.fn.stdpath("data") .. "/mason/bin/"
 
     -- grammar: ltex
-    define_server("ltex_plus", {
+    vim.lsp.config("ltex_plus", {
         cmd = { mason_bin .. "ltex-ls-plus" },
         filetypes = { "bib", "gitcommit", "markdown", "org", "norg", "plaintex", "rnoweb", "tex", "text" },
         root_dir = tex_root,
@@ -129,7 +124,7 @@ local function lsp_setup()
     })
 
     -- latex: texlab
-    define_server("texlab", {
+    vim.lsp.config("texlab", {
         cmd = { mason_bin .. "texlab" },
         filetypes = { "tex", "plaintex", "bib" },
         root_dir = tex_root,
@@ -162,22 +157,20 @@ local function lsp_setup()
         end,
     })
 
-    -- Also enable globally so already-open buffers can attach
-    -- vim.lsp.enable("texlab")
-    -- vim.lsp.enable("ltex")
-
     -- Python: basedpyright
-    define_server("basedpyright", {
-        cmd = { "basedpyright-langserver", "--stdio" },
+    vim.lsp.config("basedpyright", {
+        cmd = {mason_bin .. "basedpyright-langserver", "--stdio" },
         filetypes = { "python" },
-        root_dir = util.root_pattern(
+        root_markers = {
             "pyproject.toml",
             "setup.py",
             "setup.cfg",
             "requirements.txt",
             "Pipfile",
-            ".git"
-        ),
+            ".git",
+            "ruff.toml",
+            "pixi.toml"
+        },
         capabilities = capabilities,
         settings = {
             basedpyright = {
@@ -190,27 +183,43 @@ local function lsp_setup()
                     autoSearchPaths = true,
                     diagnosticSeverityOverrides = {
                         reportIgnoreCommentWithoutRule = true,
+                        reportLineTooLong = "none",
+
                     },
+                    diagnosticMode = "workspace",
+                    extraPaths = {"src"},
+                    logLevel = "Information",
                 },
             },
         },
     })
 
     -- Python: ruff
-    define_server("ruff", {
-        cmd = { "ruff-lsp" },
+    vim.lsp.config("ruff", {
+        cmd = { mason_bin .. "ruff", "server"},
         filetypes = { "python" },
-        root_dir = util.root_pattern("pyproject.toml", "ruff.toml", ".git"),
+        root_markers = {
+            "pyproject.toml",
+            "setup.py",
+            "setup.cfg",
+            "requirements.txt",
+            "Pipfile",
+            ".git",
+            "ruff.toml",
+            "pixi.toml"
+        },
         capabilities = capabilities,
         on_attach = function(client, bufnr)
             require("lsp-format").on_attach(client, bufnr)
             -- client.server_capabilities.hoverProvider = false -- if you prefer BasedPyright hovers
+            common_attach(client, bufnr)
         end,
         init_options = { settings = { args = {} } },
     })
 
+
     -- rust
-    define_server("rust_analyzer", {
+    vim.lsp.config("rust_analyzer", {
         cmd = { "rust-analyzer" },
         filetypes = { "rust" },
         root_dir = util.root_pattern("Cargo.toml"),
@@ -232,7 +241,7 @@ local function lsp_setup()
     })
 
     -- r
-    define_server("r_language_server", {
+    vim.lsp.config("r_language_server", {
         cmd = { "R", "--slave", "-e", "languageserver::run()" },
         filetypes = { "r", "rnoweb", "rmd", "quarto", "qmd" },
         root_dir = util.root_pattern(".git", ".Rproj.user", "*.Rproj"),
@@ -248,7 +257,7 @@ local function lsp_setup()
     })
 
     -- LUA
-    define_server("lua_ls", {
+    vim.lsp.config("lua_ls", {
         cmd = { "lua-language-server" },
         filetypes = { "lua" },
         root_dir = util.root_pattern(".git", ".luarc.json", ".luacheckrc", "stylua.toml"),
@@ -267,9 +276,9 @@ local function lsp_setup()
     local vale = require("efmls-configs.linters.vale")
     local chktex = require("efmls-configs.linters.chktex")
     local latexindent = {
-          -- if efm's cwd is TeX project root, this finds localSettings.yaml there
-          formatCommand = "latexindent -m -rv -l defaultSettings.yaml -",
-          formatStdin = true,
+        -- if efm's cwd is TeX project root, this finds localSettings.yaml there
+        formatCommand = "latexindent -m -rv -l defaultSettings.yaml -",
+        formatStdin = true,
     }
 
     local fish = require("efmls-configs.linters.fish")
@@ -313,7 +322,7 @@ local function lsp_setup()
         },
     }
 
-    define_server("efm", {
+    vim.lsp.config("efm", {
         cmd = { "efm-langserver" },
         filetypes = efmls_config.filetypes,
         root_dir = tex_root, -- HACK: this defaults to .git when no markers found; better for TeX
@@ -387,29 +396,29 @@ return {
     { "creativenull/efmls-configs-nvim", version = "v1.x.x", dependencies = { "neovim/nvim-lspconfig" } },
     { "lukas-reineke/lsp-format.nvim" },
     { "mfussenegger/nvim-dap" },
-    {
-        "HiPhish/rainbow-delimiters.nvim",
-        event = { "BufReadPost", "BufNewFile" },
-        dependencies = { "nvim-treesitter/nvim-treesitter" },
-        config = function()
-            local rd = require("rainbow-delimiters")
-            vim.g.rainbow_delimiters = {
-                strategy = {
-                    [""] = rd.strategy["local"],
-                    -- latex = rd.strategy['global'], -- optional for very large files
-                },
-                highlight = {
-                    "RainbowDelimiterRed",
-                    "RainbowDelimiterYellow",
-                    "RainbowDelimiterBlue",
-                    "RainbowDelimiterOrange",
-                    "RainbowDelimiterGreen",
-                    "RainbowDelimiterViolet",
-                    "RainbowDelimiterCyan",
-                },
-            }
-        end,
-    },
+    -- {
+    --     "HiPhish/rainbow-delimiters.nvim",
+    --     event = { "BufReadPost", "BufNewFile" },
+    --     dependencies = { "nvim-treesitter/nvim-treesitter" },
+    --     config = function()
+    --         local rd = require("rainbow-delimiters")
+    --         vim.g.rainbow_delimiters = {
+    --             strategy = {
+    --                 [""] = rd.strategy["local"],
+    --                 -- latex = rd.strategy['global'], -- optional for very large files
+    --             },
+    --             highlight = {
+    --                 "RainbowDelimiterRed",
+    --                 "RainbowDelimiterYellow",
+    --                 "RainbowDelimiterBlue",
+    --                 "RainbowDelimiterOrange",
+    --                 "RainbowDelimiterGreen",
+    --                 "RainbowDelimiterViolet",
+    --                 "RainbowDelimiterCyan",
+    --             },
+    --         }
+    --     end,
+    -- },
     {
         "lervag/vimtex",
         lazy = false,
