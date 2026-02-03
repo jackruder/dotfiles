@@ -1,0 +1,217 @@
+# Use with: latexindent -m -l -   (or -l=/abs/path/to/this.yaml)
+# Notes:
+# - `-m` is required for modifyLineBreaks to take effect.
+
+# --------------------------
+# Indentation & whitespace
+# --------------------------
+defaultIndent: '    '              # 4 spaces (sentences are 2 spaces)
+tabReplacement: '    '             # convert tabs to 4 spaces
+removeTrailingWhitespace: 1
+
+# --------------------------
+# Environments/commands treated as verbatim-like (never reformatted)
+# --------------------------
+verbatimEnvironments:
+  verbatim: 1
+  Verbatim: 1
+  lstlisting: 1
+  minted: 1
+  tcolorbox: 0
+  nameAsRegex:
+    name: '(?i:verbatim\*?|lstlisting|minted\*?)'
+    lookForThis: 1
+    # can add more via nameAsRegex for families of env names. 
+
+verbatimCommands:
+  verb: 1
+  lstinline: 1
+  mike: 1
+  mikeblock: 1
+  jack: 1
+  jackblock: 1
+  todo: 1
+  nameAsRegex:
+    name: '(?i:verb|lstinline|mike|mikeblock|jack|jackblock|todo|todob)'
+    lookForThis: 1
+    # --------------------------
+    # Don’t indent selected blocks (regex-based begin/end)
+    # --------------------------
+
+
+# --------------------------
+# Additional-indent controls
+# --------------------------
+# Prevent extra indent for specific environments/commands (fine-grained control)
+noAdditionalIndent:
+  aligned: 1 # typically used under equation, which is already indented
+  # Global switch
+noAdditionalIndentGlobal:
+  commands: 1        # keep as 1 unless you want command bodies to get extra indent
+  environments: 0
+
+  # --------------------------
+  # Alignment in tabular-like envs (off/minimal by default to avoid churn)
+  # --------------------------
+lookForAlignDelims:
+  tabular: 1
+  tabularx: 1
+  longtable: 1
+  array: 1
+  matrix: 1
+  align:
+    alignDoubleBackSlash: 0
+    spacesBeforeDoubleBackSlash: 1
+    spacesAfterDoubleBackSlash: 0
+  align*:
+    alignDoubleBackSlash: 0
+    spacesBeforeDoubleBackSlash: 1
+    spacesAfterDoubleBackSlash: 0
+  aligned:
+    alignDoubleBackSlash: 0
+    spacesBeforeDoubleBackSlash: 1
+    spacesAfterDoubleBackSlash: 0
+  cases:
+    alignDoubleBackSlash: 0
+    spacesBeforeDoubleBackSlash: 1
+    spacesAfterDoubleBackSlash: 0
+
+    
+
+  # --------------------------
+  # Command parsing helpers (useful for TikZ/PGF, etc.)
+  # --------------------------
+commandCodeBlocks:
+  stringsAllowedBetweenArguments:
+    - amalgamate: 1
+    - 'node'
+    - 'to'
+    - 'at'
+    - '\+\+'
+    - '\-\-'
+    - 'decoration'
+  roundParenthesesAllowed: 1
+  # These help parse sequences like \draw ... node[...] ++(...) to[...] etc
+  # --------------------------
+  # Line breaking and wrapping (requires -m)
+  # --------------------------
+modifyLineBreaks:
+  textWrapOptions:
+    columns: 100           # your requested max line length
+    comments: 
+      wrap: 1
+  oneSentencePerLine:
+    manipulateSentences: 1              # 0/1
+    removeSentenceLineBreaks: 1         # 0/1
+    multipleSpacesToSingle: 1           # 0/1
+    textWrapSentences: 1                # 1 disables main textWrap
+    sentenceIndent: "  "
+    sentencesDoNOTcontain:
+      other: \\begin|\\end              # regex
+
+
+  environments:
+    equation:
+      BeginStartsOnOwnLine: 1
+      BodyStartsOnOwnLine: 1
+      EndStartsOnOwnLine: 1
+    equation*:
+      BeginStartsOnOwnLine: 1
+      BodyStartsOnOwnLine: 1
+      EndStartsOnOwnLine: 1
+    align:
+      BeginStartsOnOwnLine: 1
+      BodyStartsOnOwnLine: 1
+      EndStartsOnOwnLine: 1
+    align*:
+      BeginStartsOnOwnLine: 1
+      BodyStartsOnOwnLine: 1
+      EndStartsOnOwnLine: 1
+    aligned:
+      BeginStartsOnOwnLine: 1
+      BodyStartsOnOwnLine: 1
+      EndStartsOnOwnLine: 1
+    gather:
+      BeginStartsOnOwnLine: 1
+      BodyStartsOnOwnLine: 1
+      EndStartsOnOwnLine: 1
+    gather*:
+      BeginStartsOnOwnLine: 1
+      BodyStartsOnOwnLine: 1
+      EndStartsOnOwnLine: 1
+    multline:
+      BeginStartsOnOwnLine: 1
+      BodyStartsOnOwnLine: 1
+      EndStartsOnOwnLine: 1
+    multline*:
+      BeginStartsOnOwnLine: 1
+      BodyStartsOnOwnLine: 1
+      EndStartsOnOwnLine: 1
+    cases:
+      BeginStartsOnOwnLine: 1
+      BodyStartsOnOwnLine: 1
+      EndStartsOnOwnLine: 1
+      #   commands: {}
+
+specialBeginEnd:
+  specialBeginEnd:
+  leftRightDelims:
+    begin: '\\\\left(?:\\.|\\\\[A-Za-z]+|\\\\[^A-Za-z\\s]|[^\\s])'
+    end:   '\\\\right(?:\\.|\\\\[A-Za-z]+|\\\\[^A-Za-z\\s]|[^\\s])'
+    lookForThis: 1
+    # ALGORITHM INDENTING
+  ForStatement:
+    begin: \\For\{[^}]+?\}
+    end: \\EndFor
+  FORStatement:
+    begin: \\FOR\{[^}]+?\}
+    end: \\ENDFOR
+  WhileStatement:
+    begin: \\While\{[^}]+?\}
+    end: \\EndWhile
+  WHILEStatement:
+    begin: \\WHILE\{[^}]+?\}
+    end: \\ENDWHILE
+  ForAllStatement:
+    begin: \\ForAll\{[^}]+?\}
+    end: \\EndFor
+  LoopStatement:
+    begin: \\Loop
+    end: \\EndLoop
+  RepeatStatement:
+    begin: \\Repeat
+    end: \\Until\{[^}]+?\}
+  ProcedureStatement:
+    begin: \\Procedure\{[^}]+?\}\{[^}]+?\}
+    end: \\EndProcedure
+  FunctionStatement:
+    begin: \\Function\{[^}]+?\}\{[^}]+?\}
+    end: \\EndFunction
+  IfStatement:
+    begin: \\If\{[^}]+?\}
+    middle:
+      - \\Else
+      - \\ElsIf\{[^}]+?\}
+    end: \\EndIf
+  IFStatement:
+    begin: \\IF\{[^}]+?\}
+    middle:
+      - \\ELSE
+      - \\ELSIF\{[^}]+?\}
+    end: \\ENDIF
+  specialBeforeCommand: 1
+
+replacements:
+  ## Handle whitespace before \\ in align envs.
+  # One space before \nonumber (removes all preceding spaces, adds one back)
+  - substitution: 's/\s+\\nonumber/ \\nonumber/g'
+  # One space before \label (removes all preceding spaces, adds one back)
+  - substitution: 's/\s+\\label/ \\label/g'
+
+  ## Replace spaces with non-breaking space before citations
+  # Replace space before \cite with non-breaking space
+  - substitution: 's/\s+(\\cite\b)/~$1/g'
+  # Replace space before \parencite with non-breaking space  
+  - substitution: 's/\s+(\\parencite\b)/~$1/g'
+  # Also handle \textcite, \citet, \citep, etc.
+  - substitution: 's/\s+(\\(?:text)?cite[pt]?\b)/~$1/g'
