@@ -32,8 +32,7 @@ end
 # $ venv myvirtualenv   # activates venv
 # $ deactivate          # deactivates venv
 # $ rmvenv myvirtualenv # removes venv
-
-export VENV_HOME="$HOME/.virtualenvs"
+set -gx VENV_HOME "$HOME/.virtualenvs"
 
 function lsvenv
     ls -1 $VENV_HOME
@@ -49,15 +48,22 @@ end
 
 function mkvenv
     if set -q argv[1]
-        python3 -m venv $VENV_HOME/$argv[1]
+        if set -q argv[2]
+            # Create venv with specific Python version
+            uv venv --python $argv[2] $VENV_HOME/$argv[1]
+        else
+            # Create venv with default Python
+            uv venv $VENV_HOME/$argv[1]
+        end
     else
-        echo "Please provide venv name"
+        echo "Usage: mkvenv <name> [python-version]"
+        echo "Example: mkvenv myenv 3.13"
     end
 end
 
 function rmvenv
     if set -q argv[1]
-        rm -r $VENV_HOME/$argv[1]
+        rm -rf $VENV_HOME/$argv[1]
     else
         echo "Please provide venv name"
     end
@@ -139,3 +145,9 @@ else
 end
 # <<< conda initialize <<<
 fish_add_path /home/jackman/.pixi/bin
+
+# open emacs client in terminal
+function e --wraps="emacs"
+    emacsclient -n -t ""
+    emacsclient -t $argv
+end
