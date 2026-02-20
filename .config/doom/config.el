@@ -112,7 +112,7 @@
 ;;; ORG ------------------------------------------------------------
 
 ;; Base location (safe to set early)
-(setq org-directory (expand-file-name "~/org/"))
+(setq org-directory (expand-file-name "~/sync/org/"))
 
 (after! org
         (setq org-agenda-files (list (expand-file-name "inbox.org" org-directory)
@@ -122,6 +122,20 @@
               org-default-notes-file (expand-file-name "inbox.org" org-directory))
         ;; Open PDF links inside Emacs (so pdf-tools/doc-view handles them)
         (setf (cdr (assoc "\\.pdf\\'" org-file-apps)) 'emacs)
+
+        ;; Configure babel
+        (org-babel-do-load-languages
+         'org-babel-load-languages
+         '((emacs-lisp . t)
+           (python . t)
+           (shell . t)
+           (latex . t)
+           (R . t)
+           (julia . t)
+           (c . t)
+           (rust . t)
+           (yaml . t)
+           ))
         )
 
 
@@ -150,7 +164,7 @@
             (org-roam-node-title node))))
 
 (after! org-roam
-        (setq org-roam-directory (file-truename (expand-file-name "~/org/roam/")))
+        (setq org-roam-directory (file-truename (expand-file-name "~/sync/org/roam/")))
         (org-roam-db-autosync-mode)
 
         (setq org-roam-capture-templates

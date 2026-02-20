@@ -54,3 +54,6 @@
 ;; (package! evil-embrace) ;; learn how to use
 ;; (package! evil-snipe)
 ;; (package! evil-easymotion)
+
+(package! ob-async)
+

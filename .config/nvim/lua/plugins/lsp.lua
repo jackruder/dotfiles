@@ -428,6 +428,10 @@ return {
             vim.g.vimtex_indent_enabled = 1
             vim.g.vimtex_indent_bib_enabled = 1
             vim.g.vimtex_format_enabled = 0
+
+            -- Ignore indentation in proof environments
+            vim.g.vimtex_indent_ignored_envs = {"proof"}
+
             vim.g.vimtex_quickfix_autoclose_after_keystrokes = 3
             vim.g.vimtex_quickfix_ignore_filters = {
                 "Underfull \\hbox",
