@@ -114,6 +114,7 @@
 ;; Base location (safe to set early)
 (setq org-directory (expand-file-name "~/sync/org/"))
 
+(add-hook 'org-mode-hook #'turn-on-org-cdlatex)
 (after! org
         (setq org-agenda-files (list (expand-file-name "inbox.org" org-directory)
                                      (expand-file-name "agenda.org" org-directory)
@@ -134,35 +135,60 @@
             (julia . t)
             (c . t)
             (rust . t)
-            (yaml . t)
             ))
 
-        ;; Use LuaLaTeX + dvisvgm (PDF -> SVG) for previews
-        (setq org-preview-latex-default-process 'lualatex-dvisvgm)
+        ;; Unfold sub/superscripts (e.g., _{} and ^{})
+        (setq org-appear-autosubmarkers t)
 
-        (add-to-list 'org-preview-latex-process-alist
-                     '(lualatex-dvisvgm
-                        :programs ("lualatex" "dvisvgm")
-                        :description "LuaLaTeX -> PDF -> SVG (dvisvgm)"
-                        :message "Install lualatex and dvisvgm (Ghostscript may be needed for PDF input)."
-                        :image-input-type "pdf"
-                        :image-output-type "svg"
-                        :image-size-adjust (1.0 . 1.0)
-                        :latex-compiler ("lualatex -interaction nonstopmode -halt-on-error -output-directory %o %f")
-                        :image-converter ("dvisvgm --pdf --page=1- --optimize --clipjoin --bbox=min -o %O %f")))
+        ;; Unfold LaTeX entities (e.g., \alpha, \beta)
+        (setq org-appear-autoentities t)
 
-        ;; Unicode math support (STIX)
-        (setq org-format-latex-header
-              (concat
-                "\\documentclass{article}\n"
-                "\\usepackage{amsmath,amssymb}\n"
-                "\\usepackage{fontspec}\n"
-                "\\usepackage{unicode-math}\n"
-                "\\setmainfont{STIXTwoText}\n"
-                "\\setmathfont{STIXTwoMath}\n"
-                "\\pagestyle{empty}\n"))
+        ;; (Optional) Allow org-appear to work inside LaTeX fragments
+        (setq org-appear-inside-latex t)
 
-        (require 'ox-reveal)
+        (map! :map org-cdlatex-mode-map
+              ";" #'cdlatex-math-symbol)
+        )
+
+;; Configure babel
+(org-babel-do-load-languages
+  'org-babel-load-languages
+  '((emacs-lisp . t)
+    (python . t)
+    (shell . t)
+    (latex . t)
+    (R . t)
+    (julia . t)
+    (c . t)
+    (rust . t)
+    ))
+
+;; Use LuaLaTeX + dvisvgm (PDF -> SVG) for previews
+(setq org-preview-latex-default-process 'lualatex-dvisvgm)
+
+(add-to-list 'org-preview-latex-process-alist
+             '(lualatex-dvisvgm
+                :programs ("lualatex" "dvisvgm")
+                :description "LuaLaTeX -> PDF -> SVG (dvisvgm)"
+                :message "Install lualatex and dvisvgm (Ghostscript may be needed for PDF input)."
+                :image-input-type "pdf"
+                :image-output-type "svg"
+                :image-size-adjust (1.0 . 1.0)
+                :latex-compiler ("lualatex -interaction nonstopmode -halt-on-error -output-directory %o %f")
+                :image-converter ("dvisvgm --pdf --page=1- --optimize --clipjoin --bbox=min -o %O %f")))
+
+;; Unicode math support (STIX)
+(setq org-format-latex-header
+      (concat
+        "\\documentclass{article}\n"
+        "\\usepackage{amsmath,amssymb}\n"
+        "\\usepackage{fontspec}\n"
+        "\\usepackage{unicode-math}\n"
+        "\\setmainfont{STIXTwoText}\n"
+        "\\setmathfont{STIXTwoMath}\n"
+        "\\pagestyle{empty}\n"))
+
+(require 'ox-reveal)
 )
 
 
@@ -287,7 +313,20 @@
 ;; Keep your prefix style
 (setq cdlatex-math-symbol-prefix ?\;)
 
+
 (after! cdlatex
+        (setq cdlatex-command-alist
+              '(
+                ("int" "∫_{?}^{}" nil nil nil)
+                ("in"  "∈" nil nil nil)
+                ("notin"  "∉" nil nil nil)
+                ("<=" "≤" nil nil nil)
+                ("leq" "≤" nil nil nil)
+                (">=" "≥" nil nil nil)
+                ("geq" "≥" nil nil nil)
+                ("sum" "≥" nil nil nil)
+                ("ip" "⟨{}, {}⟩" nil nil nil)
+                ))
         (setq cdlatex-math-symbol-alist
               '(
                 ( ?a  ("α"          ))
@@ -299,14 +338,14 @@
                 ( ?d  ("δ"            "∂"))
                 ( ?D  ("Δ"            "∇"))
                 ( ?e  ("ε"            "ϵ"           "\\exp"))
-                ( ?E  ("∃"            ""                "\\ln"))
+                ( ?E  ("∃"            "𝔼"                "\\ln"))
                 ( ?f  ("φ"            "ϕ"))
                 ( ?F  ("Φ"                 ))
                 ( ?g  ("γ"            ""                "\\lg"))
                 ( ?G  ("Γ"            ""                "10^{?}"))
                 ( ?h  ("η"            "ℏ"))
                 ( ?H  (""                 ))
-                ( ?i  ("∈"             "\\imath"))
+                ( ?i  (""             "\\imath"))
                 ( ?I  (""                 "\\Im"))
                 ( ?j  (""                 "\\jmath"))
                 ( ?J  (""                 ))
@@ -327,7 +366,7 @@
                 ( ?r  ("ρ"            "ϱ"))
                 ( ?R  (""             "ℝ"                 "ℜ"))
                 ( ?s  ("σ"            "ς"           "\\sin"))
-                ( ?S  ("Σ"            ""                "\\arcsin"))
+                ( ?S  ("Σ"            "𝕊"                "\\arcsin"))
                 ( ?t  ("τ"            ""                "\\tan"))
                 ( ?T  (""   "𝕋"                              "\\arctan"))
                 ( ?u  ("υ"            ))
@@ -361,11 +400,11 @@
                 ( ?^  ("↑"        ))
                 ( ?&  ("∧"          ))
                 ( ?\? (""                 ))
-                ( ?~  ("≈"         "≃"))
+                ( ?~  ("∼"  " ≈"         "≃"))
                 ( ?_  ("↓"      ))
                 ( ?+  ("∪"            ))
-                ( ?-  ("↔" "⟷" ))
-                ( ?*  ("×"          ))
+                ( ?-  ("̸" "" ))
+                ( ?*  ("⋅" "×"          ))
                 ( ?/  ("̸"            ))
                 ( ?|  ("↦"         "⟼"))
                 ( ?\\ ("∖"       ))
@@ -381,9 +420,10 @@
                 ( ?>  ("→"     "⟶"    "\\max"))
                 ( ?`  (""                 ))
                 ( ?'  ("′"          ))
-                ( ?.  ("⋅"           ))
+                ( ?.  ("…"  "⋯" )) ;; ldots, cdots
 
-               )
-        )
+                )
+              )
+        ) 
 
-) 
+
