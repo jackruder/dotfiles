@@ -119,7 +119,9 @@
         (setq org-agenda-files (list (expand-file-name "inbox.org" org-directory)
                                      (expand-file-name "agenda.org" org-directory)
                                      (expand-file-name "projects.org" org-directory)
-                                     (expand-file-name "admin.org" org-directory))
+                                     (expand-file-name "admin.org" org-directory)
+                                     (expand-file-name "todo.org" org-directory))
+
               org-default-notes-file (expand-file-name "inbox.org" org-directory))
         ;; Open PDF links inside Emacs (so pdf-tools/doc-view handles them)
         (setf (cdr (assoc "\\.pdf\\'" org-file-apps)) 'emacs)
@@ -148,50 +150,36 @@
 
         (map! :map org-cdlatex-mode-map
               ";" #'cdlatex-math-symbol)
-        )
-
-;; Configure babel
-(org-babel-do-load-languages
-  'org-babel-load-languages
-  '((emacs-lisp . t)
-    (python . t)
-    (shell . t)
-    (latex . t)
-    (R . t)
-    (julia . t)
-    (c . t)
-    (rust . t)
-    ))
-
-;; Use LuaLaTeX + dvisvgm (PDF -> SVG) for previews
-(setq org-preview-latex-default-process 'lualatex-dvisvgm)
-
-(add-to-list 'org-preview-latex-process-alist
-             '(lualatex-dvisvgm
-                :programs ("lualatex" "dvisvgm")
-                :description "LuaLaTeX -> PDF -> SVG (dvisvgm)"
-                :message "Install lualatex and dvisvgm (Ghostscript may be needed for PDF input)."
-                :image-input-type "pdf"
-                :image-output-type "svg"
-                :image-size-adjust (1.0 . 1.0)
-                :latex-compiler ("lualatex -interaction nonstopmode -halt-on-error -output-directory %o %f")
-                :image-converter ("dvisvgm --pdf --page=1- --optimize --clipjoin --bbox=min -o %O %f")))
-
-;; Unicode math support (STIX)
-(setq org-format-latex-header
-      (concat
-        "\\documentclass{article}\n"
-        "\\usepackage{amsmath,amssymb}\n"
-        "\\usepackage{fontspec}\n"
-        "\\usepackage{unicode-math}\n"
-        "\\setmainfont{STIXTwoText}\n"
-        "\\setmathfont{STIXTwoMath}\n"
-        "\\pagestyle{empty}\n"))
-
-(require 'ox-reveal)
-)
 
 
+        ;; Use LuaLaTeX + dvisvgm (PDF -> SVG) for previews
+        (setq org-preview-latex-default-process 'lualatex-dvisvgm)
+
+        (add-to-list 'org-preview-latex-process-alist
+                     '(lualatex-dvisvgm
+                        :programs ("lualatex" "dvisvgm")
+                        :description "LuaLaTeX -> PDF -> SVG (dvisvgm)"
+                        :message "Install lualatex and dvisvgm (Ghostscript may be needed for PDF input)."
+                        :image-input-type "pdf"
+                        :image-output-type "svg"
+                        :image-size-adjust (1.0 . 1.0)
+                        :latex-compiler ("lualatex -interaction nonstopmode -halt-on-error -output-directory %o %f")
+                        :image-converter ("dvisvgm --pdf --page=1- --optimize --clipjoin --bbox=min -o %O %f")))
+
+        ;; Unicode math support (STIX)
+        (setq org-format-latex-header
+              (concat
+                "\\documentclass{article}\n"
+                "\\usepackage{amsmath,amssymb}\n"
+                "\\usepackage{fontspec}\n"
+                "\\usepackage{unicode-math}\n"
+                "\\setmainfont{STIXTwoText}\n"
+                "\\setmathfont{STIXTwoMath}\n"
+                "\\pagestyle{empty}\n"))
+
+        (require 'ox-reveal)
+
+    )
 ;;; ORG-ROAM -------------------------------------------------------
 
 (setq my/papers-dir (file-truename (expand-file-name "~/data/papers/")))
@@ -426,4 +414,21 @@
               )
         ) 
 
+;; TRAMP optimizations
+(after! tramp
+        (setq tramp-default-method "ssh")
+        (setq tramp-auto-save-directory "~/tmp/tramp-autosave")
+        (setq remote-file-name-inhibit-cache nil)
+        (setq tramp-verbose 1))
+
+;; Disable VC on remote files (huge speedup)
+(setq vc-ignore-dir-regexp
+      (format "%s\\|%s"
+              vc-ignore-dir-regexp
+              tramp-file-name-regexp))
+
+;; Disable LSP over TRAMP (avoids hanging)
+(after! lsp-mode
+        (setq lsp-auto-guess-root nil)
+        (setq lsp-warn-no-matched-clients nil))
 
