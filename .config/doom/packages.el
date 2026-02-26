@@ -56,4 +56,6 @@
 ;; (package! evil-easymotion)
 
 (package! ob-async)
+(package! ox-reveal)
+(package! htmlize) ; strongly recommended for syntax highlighting in HTML exports
 
