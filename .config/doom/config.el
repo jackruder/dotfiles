@@ -95,16 +95,16 @@
 
 ;;; Evil 
 (after! evil-surround
-        (global-evil-surround-mode 1))
+  (global-evil-surround-mode 1))
 (after! evil-nerd-commenter
-        (evilnc-default-hotkeys))
+  (evilnc-default-hotkeys))
 (after! evil-embrace
-        (evil-embrace-enable-evil-surround-integration))
+  (evil-embrace-enable-evil-surround-integration))
 (after! evil-easymotion
-        (evilem-default-keybindings "SPC"))
+  (evilem-default-keybindings "SPC"))
 (after! evil-snipe
-        (evil-snipe-mode 1)
-        (evil-snipe-override-mode 1))
+  (evil-snipe-mode 1)
+  (evil-snipe-override-mode 1))
 
 
 
@@ -114,29 +114,42 @@
 ;; Base location (safe to set early)
 (setq org-directory (expand-file-name "~/sync/org/"))
 
+(add-hook 'org-mode-hook #'turn-on-org-cdlatex)
 (after! org
-        (setq org-agenda-files (list (expand-file-name "inbox.org" org-directory)
-                                     (expand-file-name "agenda.org" org-directory)
-                                     (expand-file-name "projects.org" org-directory)
-                                     (expand-file-name "admin.org" org-directory))
-              org-default-notes-file (expand-file-name "inbox.org" org-directory))
-        ;; Open PDF links inside Emacs (so pdf-tools/doc-view handles them)
-        (setf (cdr (assoc "\\.pdf\\'" org-file-apps)) 'emacs)
+  (setq org-agenda-files (list (expand-file-name "inbox.org" org-directory)
+                               (expand-file-name "agenda.org" org-directory)
+                               (expand-file-name "projects.org" org-directory)
+                               (expand-file-name "admin.org" org-directory))
+        org-default-notes-file (expand-file-name "inbox.org" org-directory))
+  ;; Open PDF links inside Emacs (so pdf-tools/doc-view handles them)
+  (setf (cdr (assoc "\\.pdf\\'" org-file-apps)) 'emacs)
 
-        ;; Configure babel
-        (org-babel-do-load-languages
-         'org-babel-load-languages
-         '((emacs-lisp . t)
-           (python . t)
-           (shell . t)
-           (latex . t)
-           (R . t)
-           (julia . t)
-           (c . t)
-           (rust . t)
-           (yaml . t)
-           ))
-        )
+  ;; Configure babel
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (shell . t)
+     (latex . t)
+     (R . t)
+     (julia . t)
+     (c . t)
+     (rust . t)
+     ))
+
+  ;; Unfold sub/superscripts (e.g., _{} and ^{})
+  (setq org-appear-autosubmarkers t)
+
+  ;; Unfold LaTeX entities (e.g., \alpha, \beta)
+  (setq org-appear-autoentities t)
+
+  ;; (Optional) Allow org-appear to work inside LaTeX fragments
+  (setq org-appear-inside-latex t)
+
+  (map! :map org-cdlatex-mode-map
+        ";" #'cdlatex-math-symbol)
+  )
+
 
 
 ;;; ORG-ROAM -------------------------------------------------------
@@ -147,216 +160,229 @@
   "Prompt for a PDF under `my/papers-dir` and return a file: link."
   (concat "file:"
           (file-truename
-            (read-file-name
-              "PDF: " my/papers-dir nil t nil
-              (lambda (f)
-                (or (file-directory-p f)
-                    (string-match-p "\\.pdf\\'" f)))))))
+           (read-file-name
+            "PDF: " my/papers-dir nil t nil
+            (lambda (f)
+              (or (file-directory-p f)
+                  (string-match-p "\\.pdf\\'" f)))))))
 
 (defun my/org-roam-course-link ()
   "Pick an existing course node (tagged :course:) and return an id: link."
   (let* ((node (org-roam-node-read
-                 nil
-                 (lambda (n)
-                   (member "course" (org-roam-node-tags n))))))
+                nil
+                (lambda (n)
+                  (member "course" (org-roam-node-tags n))))))
     (format "[[id:%s][%s]]"
             (org-roam-node-id node)
             (org-roam-node-title node))))
 
 (after! org-roam
-        (setq org-roam-directory (file-truename (expand-file-name "~/sync/org/roam/")))
-        (org-roam-db-autosync-mode)
+  (setq org-roam-directory (file-truename (expand-file-name "~/sync/org/roam/")))
+  (org-roam-db-autosync-mode)
 
-        (setq org-roam-capture-templates
-              '(("p" "Paper (PDF)" plain
-                 "%?"
-                 :if-new (file+head "papers/${slug}.org"
-                                    "#+title: ${title}\n#+filetags: :paper:\n\n:PROPERTIES:\n:ROAM_REFS: %^{DOI/URL (optional)}\n:PDF: %(my/org-roam-read-pdf-link)\n:ADDED: %U\n:END:\n\n* Summary\n\n* Detailed notes\n\n* Key quotes / figures\n\n* Reading group\n\n* Connections\n- Concepts:\n- Related papers:\n- Related projects:\n")
-                 :unnarrowed t)
+  (setq org-roam-capture-templates
+        '(("p" "Paper (PDF)" plain
+           "%?"
+           :if-new (file+head "papers/${slug}.org"
+                              "#+title: ${title}\n#+filetags: :paper:\n\n:PROPERTIES:\n:ROAM_REFS: %^{DOI/URL (optional)}\n:PDF: %(my/org-roam-read-pdf-link)\n:ADDED: %U\n:END:\n\n* Summary\n\n* Detailed notes\n\n* Key quotes / figures\n\n* Reading group\n\n* Connections\n- Concepts:\n- Related papers:\n- Related projects:\n")
+           :unnarrowed t)
 
-                ("g" "Paper (PDF, reading group)" plain
-                 "%?"
-                 :if-new (file+head "papers/${slug}.org"
-                                    "#+title: ${title}\n#+filetags: :paper:reading_group:\n\n:PROPERTIES:\n:ROAM_REFS: %^{DOI/URL (optional)}\n:PDF: %(my/org-roam-read-pdf-link)\n:ADDED: %U\n:END:\n\n* Summary\n\n* Detailed notes\n\n* Key quotes / figures\n\n* Reading group\n** %<%Y-%m-%d> Discussion notes\n** Questions / follow-ups\n\n* Connections\n- Concepts:\n- Related papers:\n- Related projects:\n")
-                 :unnarrowed t)
+          ("g" "Paper (PDF, reading group)" plain
+           "%?"
+           :if-new (file+head "papers/${slug}.org"
+                              "#+title: ${title}\n#+filetags: :paper:reading_group:\n\n:PROPERTIES:\n:ROAM_REFS: %^{DOI/URL (optional)}\n:PDF: %(my/org-roam-read-pdf-link)\n:ADDED: %U\n:END:\n\n* Summary\n\n* Detailed notes\n\n* Key quotes / figures\n\n* Reading group\n** %<%Y-%m-%d> Discussion notes\n** Questions / follow-ups\n\n* Connections\n- Concepts:\n- Related papers:\n- Related projects:\n")
+           :unnarrowed t)
 
-                ("C" "Course hub" plain
-                 "%?"
-                 :if-new (file+head "courses/${slug}.org"
-                                    "#+title: Course: ${title}\n#+filetags: :course:\n\n* Outline\n* Key concepts\n* Links\n")
-                 :unnarrowed t)
+          ("C" "Course hub" plain
+           "%?"
+           :if-new (file+head "courses/${slug}.org"
+                              "#+title: Course: ${title}\n#+filetags: :course:\n\n* Outline\n* Key concepts\n* Links\n")
+           :unnarrowed t)
 
-                ;; Per-topic “lecture” note (topic-first, searchable).
-                ;; Create once, then keep adding under * Coverage log.
-                ("L" "Lecture topic (per topic)" plain
-                 "%?"
-                 :if-new (file+head "lectures/%^{Course code}/${slug}.org"
-                                    "#+title: ${title}\n#+filetags: :lecture:%^{Course tag (e.g. stat501)}:\n\n:PROPERTIES:\n:COURSE: %(my/org-roam-course-link)\n:CREATED: %U\n:END:\n\n* Summary\n\n* Coverage log\n** %<%Y-%m-%d> (%^{Context: lecture/reading group/self-study|lecture})\n\n* Main notes\n\n* Definitions / statements\n\n* Examples\n\n* Questions / confusions\n\n* Links\n- Concepts:\n- Papers:\n- Projects:\n")
-                 :unnarrowed t)))
-        )
+          ;; Per-topic “lecture” note (topic-first, searchable).
+          ;; Create once, then keep adding under * Coverage log.
+          ("L" "Lecture topic (per topic)" plain
+           "%?"
+           :if-new (file+head "lectures/%^{Course code}/${slug}.org"
+                              "#+title: ${title}\n#+filetags: :lecture:%^{Course tag (e.g. stat501)}:\n\n:PROPERTIES:\n:COURSE: %(my/org-roam-course-link)\n:CREATED: %U\n:END:\n\n* Summary\n\n* Coverage log\n** %<%Y-%m-%d> (%^{Context: lecture/reading group/self-study|lecture})\n\n* Main notes\n\n* Definitions / statements\n\n* Examples\n\n* Questions / confusions\n\n* Links\n- Concepts:\n- Papers:\n- Projects:\n")
+           :unnarrowed t)))
+  )
 
 
 (after! latex
-        ;; use emacs pdf-tools for viewing compiled pdfs
-        (setq +latex-viewers '(pdf-tools))
-        ;; Force AUCTeX's viewer used by C-c C-v (TeX-view)
-        (setq TeX-view-program-selection
-              '((output-pdf "PDF Tools")
-                (output-dvi "DVI Viewer")
-                (output-html "HTML Viewer")))
+  ;; use emacs pdf-tools for viewing compiled pdfs
+  (setq +latex-viewers '(pdf-tools))
+  ;; Force AUCTeX's viewer used by C-c C-v (TeX-view)
+  (setq TeX-view-program-selection
+        '((output-pdf "PDF Tools")
+          (output-dvi "DVI Viewer")
+          (output-html "HTML Viewer")))
 
-        ;; Register the "PDF Tools" viewer for AUCTeX
-        (setq TeX-view-program-list
-              '(("PDF Tools" TeX-pdf-tools-sync-view)))
+  ;; Register the "PDF Tools" viewer for AUCTeX
+  (setq TeX-view-program-list
+        '(("PDF Tools" TeX-pdf-tools-sync-view)))
 
-        (setq TeX-source-correlate-mode t)
-        (setq TeX-source-correlate-start-server t)
-        (add-hook 'TeX-after-compilation-finished-functions
-                  #'TeX-revert-document-buffer)
+  (setq TeX-source-correlate-mode t)
+  (setq TeX-source-correlate-start-server t)
+  (add-hook 'TeX-after-compilation-finished-functions
+            #'TeX-revert-document-buffer)
 
-        ;; use lualatex and latexmk
-        (setq-default TeX-engine 'luatex)
-        (setq-default TeX-command-default "LatexMk")
+  ;; use lualatex and latexmk
+  (setq-default TeX-engine 'luatex)
+  (setq-default TeX-command-default "LatexMk")
 
-        ;; AUCTeX uses buffer-local values; enforce defaults per LaTeX buffer
-        (add-hook! 'LaTeX-mode-hook
-                   (setq-local TeX-command-default "LatexMk")
-                   (setq-local TeX-engine 'luatex)
+  ;; AUCTeX uses buffer-local values; enforce defaults per LaTeX buffer
+  (add-hook! 'LaTeX-mode-hook
+    (setq-local TeX-command-default "LatexMk")
+    (setq-local TeX-engine 'luatex)
 
-                   (setq-local TeX-output-dir "build")
-                   (make-directory (expand-file-name TeX-output-dir default-directory) t)
+    (setq-local TeX-output-dir "build")
+    (make-directory (expand-file-name TeX-output-dir default-directory) t)
 
-                   (setq-local TeX-save-query nil)
-                   (setq-local TeX-auto-save t)
-                   (setq-local TeX-parse-self t))
+    (setq-local TeX-save-query nil)
+    (setq-local TeX-auto-save t)
+    (setq-local TeX-parse-self t))
 
-        ;; Automatically recompile on save.
-        (add-hook 'TeX-mode-hook
-                  (lambda ()
-                    ;; (TeX-command-master nil) runs LatexMk silently
-                    (add-hook 'after-save-hook (lambda () (TeX-command-master nil)) nil t)))
+  ;; Automatically recompile on save.
+  (add-hook 'TeX-mode-hook
+            (lambda ()
+              ;; (TeX-command-master nil) runs LatexMk silently
+              (add-hook 'after-save-hook (lambda () (TeX-command-master nil)) nil t)))
 
-        (after! pdf-tools
-                ;; When you click in build/foo.pdf, look for sources relative to the TeX project root
-                (setq pdf-sync-backward-display-action t)
-                (add-hook! 'pdf-view-mode-hook
-                           (setq-local pdf-sync-backward-correspondence
-                                       (list (cons (expand-file-name "build/" default-directory)
-                                                   (file-name-as-directory default-directory))))))
-        ;; (setq TeX-electric-math (cons "\\(" "\\)"))
-        (add-hook 'LaTeX-mode-hook #'turn-on-cdlatex)
+  (after! pdf-tools
+    ;; When you click in build/foo.pdf, look for sources relative to the TeX project root
+    (setq pdf-sync-backward-display-action t)
+    (add-hook! 'pdf-view-mode-hook
+      (setq-local pdf-sync-backward-correspondence
+                  (list (cons (expand-file-name "build/" default-directory)
+                              (file-name-as-directory default-directory))))))
+  ;; (setq TeX-electric-math (cons "\\(" "\\)"))
+  (add-hook 'LaTeX-mode-hook #'turn-on-cdlatex)
 
 
-        )
+  )
 
 (after! tex
-        (map! :map LaTeX-mode-map
-              :localleader
-              :desc "Compile master" "m" #'TeX-command-master
-              :desc "Compile buffer" "b" #'TeX-command-buffer
-              :desc "View"           "v" #'TeX-view))
+  (map! :map LaTeX-mode-map
+        :localleader
+        :desc "Compile master" "m" #'TeX-command-master
+        :desc "Compile buffer" "b" #'TeX-command-buffer
+        :desc "View"           "v" #'TeX-view))
 
 
 ;; Keep your prefix style
 (setq cdlatex-math-symbol-prefix ?\;)
 
-(after! cdlatex
-        (setq cdlatex-math-symbol-alist
-              '(
-                ( ?a  ("α"          ))
-                ( ?A  ("∀"          "\\aleph"))
-                ( ?b  ("β"           ))
-                ( ?B  (""                 ))
-                ( ?c  (""                 ""                "\\cos"))
-                ( ?C  ( "" "ℂ"                                "\\arccos"))
-                ( ?d  ("δ"            "∂"))
-                ( ?D  ("Δ"            "∇"))
-                ( ?e  ("ε"            "ϵ"           "\\exp"))
-                ( ?E  ("∃"            ""                "\\ln"))
-                ( ?f  ("φ"            "ϕ"))
-                ( ?F  ("Φ"                 ))
-                ( ?g  ("γ"            ""                "\\lg"))
-                ( ?G  ("Γ"            ""                "10^{?}"))
-                ( ?h  ("η"            "ℏ"))
-                ( ?H  (""                 ))
-                ( ?i  ("∈"             "\\imath"))
-                ( ?I  (""                 "\\Im"))
-                ( ?j  (""                 "\\jmath"))
-                ( ?J  (""                 ))
-                ( ?k  ("κ"            ))
-                ( ?K  (""                 ))
-                ( ?l  ("λ"           "ℓ"           "\\log"))
-                ( ?L  ("Λ"           ))
-                ( ?m  ("μ"             ))
-                ( ?M  (""                 ))
-                ( ?n  ("ν"             "∇"                "\\ln"))
-                ( ?N  (""      "ℕ"         "\\exp"))
-                ( ?o  ("ω"            ))
-                ( ?O  ("Ω"            "℧"))
-                ( ?p  ("π"             "ϖ"))
-                ( ?P  ("Π"             ))
-                ( ?q  ("θ"            "ϑ"))
-                ( ?Q  ("Θ"            "ℚ"))
-                ( ?r  ("ρ"            "ϱ"))
-                ( ?R  (""             "ℝ"                 "ℜ"))
-                ( ?s  ("σ"            "ς"           "\\sin"))
-                ( ?S  ("Σ"            ""                "\\arcsin"))
-                ( ?t  ("τ"            ""                "\\tan"))
-                ( ?T  (""   "𝕋"                              "\\arctan"))
-                ( ?u  ("υ"            ))
-                ( ?U  ("Υ"            ))
-                ( ?v  ("∨"            ))
-                ( ?V  (""            ))
-                ( ?w  ("ξ"             ))
-                ( ?W  ("Ξ"             ))
-                ( ?x  ("χ"            ))
-                ( ?X  (""                 ))
-                ( ?y  ("ψ"            ))
-                ( ?Y  ("Ψ"            ))
-                ( ?z  ("ζ"           ))
-                ( ?Z  ("" "ℤ"                 ))
-                ( ?   (""                 ))
-                ( ?0  ("∅"       ))
-                ( ?1  (""                 ))
-                ( ?2  (""                 ))
-                ( ?3  (""                 ))
-                ( ?4  (""                 ))
-                ( ?5  (""                 ))
-                ( ?6  (""                 ))
-                ( ?7  (""                 ))
-                ( ?8  ("∞"          ))
-                ( ?9  (""                 ))
-                ( ?!  ("¬"            ))
-                ( ?@  (""                 ))
-                ( ?#  (""                 ))
-                ( ?$  (""                 ))
-                ( ?%  (""                 ))
-                ( ?^  ("↑"        ))
-                ( ?&  ("∧"          ))
-                ( ?\? (""                 ))
-                ( ?~  ("≈"         "≃"))
-                ( ?_  ("↓"      ))
-                ( ?+  ("∪"            ))
-                ( ?-  ("↔" "⟷" ))
-                ( ?*  ("×"          ))
-                ( ?/  ("̸"            ))
-                ( ?|  ("↦"         "⟼"))
-                ( ?\\ ("∖"       ))
-                ( ?\" (""                 ))
-                ( ?=  ("⇔" "⟺"))
-                ( ?\( ("⟨"         ))
-                ( ?\) ("⟩"         ))
-                ( ?\[ ("⇐"      "⟸"))
-                ( ?\] ("⇒"     "⟹"))
-                ( ?{  ("⊂"         ))
-                ( ?}  ("⊃"         ))
-                ( ?<  ("←"      "⟵"     "\\min"))
-                ( ?>  ("→"     "⟶"    "\\max"))
-                ( ?`  (""                 ))
-                ( ?'  ("′"          ))
-                ( ?.  ("⋅"           ))
 
-                )
-                )
-              ) 
+(after! cdlatexy
+  (setq cdlatex-command-alist
+        '(
+          ("int" "∫_{?}^{}" nil nil nil)
+          ("in"  "∈" nil nil nil)
+          ("notin"  "∉" nil nil nil)
+          ("<=" "≤" nil nil nil)
+          ("leq" "≤" nil nil nil)
+          (">=" "≥" nil nil nil)
+          ("geq" "≥" nil nil nil)
+          ("sum" "≥" nil nil nil)
+          ("ip" "⟨{}, {}⟩" nil nil nil)
+          ))
+  (setq cdlatex-math-symbol-alist
+        '(
+          ( ?a  ("α"          ))
+          ( ?A  ("∀"          "\\aleph"))
+          ( ?b  ("β"           ))
+          ( ?B  (""                 ))
+          ( ?c  (""                 ""                "\\cos"))
+          ( ?C  ( "" "ℂ"                                "\\arccos"))
+          ( ?d  ("δ"            "∂"))
+          ( ?D  ("Δ"            "∇"))
+          ( ?e  ("ε"            "ϵ"           "\\exp"))
+          ( ?E  ("∃"            "𝔼"                "\\ln"))
+          ( ?f  ("φ"            "ϕ"))
+          ( ?F  ("Φ"                 ))
+          ( ?g  ("γ"            ""                "\\lg"))
+          ( ?G  ("Γ"            ""                "10^{?}"))
+          ( ?h  ("η"            "ℏ"))
+          ( ?H  (""                 ))
+          ( ?i  (""             "\\imath"))
+          ( ?I  (""                 "\\Im"))
+          ( ?j  (""                 "\\jmath"))
+          ( ?J  (""                 ))
+          ( ?k  ("κ"            ))
+          ( ?K  (""                 ))
+          ( ?l  ("λ"           "ℓ"           "\\log"))
+          ( ?L  ("Λ"           ))
+          ( ?m  ("μ"             ))
+          ( ?M  (""                 ))
+          ( ?n  ("ν"             "∇"                "\\ln"))
+          ( ?N  (""      "ℕ"         "\\exp"))
+          ( ?o  ("ω"            ))
+          ( ?O  ("Ω"            "℧"))
+          ( ?p  ("π"             "ϖ"))
+          ( ?P  ("Π"             ))
+          ( ?q  ("θ"            "ϑ"))
+          ( ?Q  ("Θ"            "ℚ"))
+          ( ?r  ("ρ"            "ϱ"))
+          ( ?R  (""             "ℝ"                 "ℜ"))
+          ( ?s  ("σ"            "ς"           "\\sin"))
+          ( ?S  ("Σ"            "𝕊"                "\\arcsin"))
+          ( ?t  ("τ"            ""                "\\tan"))
+          ( ?T  (""   "𝕋"                              "\\arctan"))
+          ( ?u  ("υ"            ))
+          ( ?U  ("Υ"            ))
+          ( ?v  ("∨"            ))
+          ( ?V  (""            ))
+          ( ?w  ("ξ"             ))
+          ( ?W  ("Ξ"             ))
+          ( ?x  ("χ"            ))
+          ( ?X  (""                 ))
+          ( ?y  ("ψ"            ))
+          ( ?Y  ("Ψ"            ))
+          ( ?z  ("ζ"           ))
+          ( ?Z  ("" "ℤ"                 ))
+          ( ?   (""                 ))
+          ( ?0  ("∅"       ))
+          ( ?1  (""                 ))
+          ( ?2  (""                 ))
+          ( ?3  (""                 ))
+          ( ?4  (""                 ))
+          ( ?5  (""                 ))
+          ( ?6  (""                 ))
+          ( ?7  (""                 ))
+          ( ?8  ("∞"          ))
+          ( ?9  (""                 ))
+          ( ?!  ("¬"            ))
+          ( ?@  (""                 ))
+          ( ?#  (""                 ))
+          ( ?$  (""                 ))
+          ( ?%  (""                 ))
+          ( ?^  ("↑"        ))
+          ( ?&  ("∧"          ))
+          ( ?\? (""                 ))
+          ( ?~  ("∼"  " ≈"         "≃"))
+          ( ?_  ("↓"      ))
+          ( ?+  ("∪"            ))
+          ( ?-  ("̸" "" ))
+          ( ?*  ("⋅" "×"          ))
+          ( ?/  ("̸"            ))
+          ( ?|  ("↦"         "⟼"))
+          ( ?\\ ("∖"       ))
+          ( ?\" (""                 ))
+          ( ?=  ("⇔" "⟺"))
+          ( ?\( ("⟨"         ))
+          ( ?\) ("⟩"         ))
+          ( ?\[ ("⇐"      "⟸"))
+          ( ?\] ("⇒"     "⟹"))
+          ( ?{  ("⊂"         ))
+          ( ?}  ("⊃"         ))
+          ( ?<  ("←"      "⟵"     "\\min"))
+          ( ?>  ("→"     "⟶"    "\\max"))
+          ( ?`  (""                 ))
+          ( ?'  ("′"          ))
+          ( ?.  ("…"  "⋯" )) ;; ldots, cdots
+
+          )
+        )
+  ) 
 
