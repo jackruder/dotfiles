@@ -1,0 +1,61 @@
+# ===========================================================
+# PROTON MAIL (via Bridge)
+# ===========================================================
+IMAPAccount proton
+Host 127.0.0.1
+Port 1143
+User j@ckruder.xyz 
+PassCmd "pass show email/proton-bridge"
+SSLType STARTTLS
+CertificateFile ~/.config/protonmail/bridge-v3/cert.pem
+
+IMAPStore proton-remote
+Account proton
+
+MaildirStore proton-local
+SubFolders Verbatim
+Path ~/mail/proton/
+Inbox ~/mail/proton/inbox
+
+Channel proton
+Far :proton-remote:
+Near :proton-local:
+Patterns * !"All Mail" 
+Create Both
+Expunge Both
+SyncState *
+
+
+# ===========================================================
+# SCHOOL EMAIL
+# Adjust host/port/SSLType for your school's IMAP server.
+# Common examples:
+#   Google Workspace: imap.gmail.com:993 IMAPS
+#   Microsoft 365:    outlook.office365.com:993 IMAPS
+#   Generic:          imap.school.edu:993 IMAPS
+# ===========================================================
+# IMAPAccount school
+# Host imap.school.edu
+# Port 993
+# User your-student-id@school.edu
+# PassCmd "pass show email/school"
+# SSLType IMAPS
+# AuthMechs LOGIN
+# CertificateFile /etc/ssl/certs/ca-certificates.crt
+#
+# IMAPStore school-remote
+# Account school
+#
+# MaildirStore school-local
+# SubFolders Verbatim
+# Path ~/mail/school/
+# Inbox ~/mail/school/inbox
+#
+# Channel school
+# Far :school-remote:
+# Near :school-local:
+# Patterns *
+# Create Both
+# Expunge Both
+# SyncState *
+#
