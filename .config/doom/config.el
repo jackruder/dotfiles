@@ -6,8 +6,8 @@
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
-;; (setq user-full-name "John Doe"
-;;       user-mail-address "john@doe.com")
+(setq user-full-name "Jack Ruder"
+      user-mail-address "j@ckruder.xyz")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
@@ -153,33 +153,45 @@
 
 
   ;; Use LuaLaTeX + dvisvgm (PDF -> SVG) for previews
-  (setq org-preview-latex-default-process 'lualatex-dvisvgm)
+  (setq org-latex-pdf-process
+        '("latexmk -lualatex -interaction=nonstopmode -output-directory=%o %f"))
 
   (add-to-list 'org-preview-latex-process-alist
-               '(lualatex-dvisvgm
-                 :programs ("lualatex" "dvisvgm")
-                 :description "LuaLaTeX -> PDF -> SVG (dvisvgm)"
-                 :message "Install lualatex and dvisvgm (Ghostscript may be needed for PDF input)."
-                 :image-input-type "pdf"
-                 :image-output-type "svg"
-                 :image-size-adjust (1.0 . 1.0)
-                 :latex-compiler ("lualatex -interaction nonstopmode -halt-on-error -output-directory %o %f")
-                 :image-converter ("dvisvgm --pdf --page=1- --optimize --clipjoin --bbox=min -o %O %f")))
+             '(lualatex-dvisvgm
+               :programs ("lualatex" "dvisvgm")
+               :description "dvi > svg"
+               :message "you need to install the programs: lualatex and dvisvgm."
+               :image-input-type "dvi"
+               :image-output-type "svg"
+               :image-size-adjust (0.5 . 0.5)
+               :latex-compiler ("lualatex --output-format=dvi -interaction nonstopmode -output-directory %o %f")
+               :image-converter ("dvisvgm %f --no-fonts --exact-bbox --scale=%S --output=%O")))
 
-  ;; Unicode math support (STIX)
+  (setq org-preview-latex-default-process 'lualatex-dvisvgm)
+
+  ;; 
   (setq org-format-latex-header
-        (concat
-         "\\documentclass{article}\n"
-         "\\usepackage{amsmath,amssymb}\n"
-         "\\usepackage{fontspec}\n"
-         "\\usepackage{unicode-math}\n"
-         "\\setmainfont{STIXTwoText}\n"
-         "\\setmathfont{STIXTwoMath}\n"
-         "\\pagestyle{empty}\n"))
+        (string-join
+         '("\\documentclass{article}"
+           "\\usepackage[usenames]{xcolor}"
+           "\\usepackage{fontspec}"
+           "\\usepackage{unicode-math}"
+           "\\setmainfont{STIX Two Text}"
+           "\\setmathfont{STIX Two Math}"
+           "\\pagestyle{empty}")
+         "\n"))
+
+  (setq org-latex-default-packages-alist
+      (cl-remove-if (lambda (pkg)
+                      (member (cadr pkg) '("amssymb" "amsfonts" "inputenc" "fontenc")))
+                    org-latex-default-packages-alist))
+
 
   (require 'ox-reveal)
 
   )
+                                        ;"\\setmainfont{STIXTwoText}\n"
+                                        ;"\\setmathfont{STIXTwoMath}\n"
 ;;; ORG-ROAM -------------------------------------------------------
 
 (setq my/papers-dir (file-truename (expand-file-name "~/data/papers/")))
@@ -432,3 +444,139 @@
   (setq lsp-auto-guess-root nil)
   (setq lsp-warn-no-matched-clients nil))
 
+;; ===========================================================
+;; mu4e — General
+;; ===========================================================
+(after! mu4e
+  (setq mu4e-maildir (expand-file-name "~/mail"))
+  (setq mu4e-get-mail-command "~/.local/bin/sync-mail.sh")
+  (setq mu4e-update-interval 300)                 ;; sync every 5 min
+  (setq mu4e-change-filenames-when-moving t)
+  (setq mu4e-sent-messages-behavior 'delete)       ;; Bridge stores sent mail server-side
+  (setq mu4e-view-show-images t)
+  (setq mu4e-view-prefer-html nil)
+  (setq mu4e-compose-format-flowed t)
+  (setq message-confirm-send t)
+  (setq mu4e-confirm-quit nil)
+  (setq mu4e-view-show-addresses t)
+  (setq mu4e-headers-date-format "%Y-%m-%d %H:%M")
+  (setq mu4e-attachment-dir "~/downloads")
+
+  ;; ===========================================================
+  ;; Sending via msmtp
+  ;; ===========================================================
+  (setq sendmail-program (executable-find "msmtp"))
+  (setq message-send-mail-function #'message-send-mail-with-sendmail)
+  (setq message-sendmail-f-is-evil t)
+  (setq message-sendmail-extra-arguments '("--read-envelope-from"))
+
+  ;; ===========================================================
+  ;; Header view
+  ;; ===========================================================
+  (setq mu4e-headers-fields
+        '((:human-date . 18)
+          (:flags      . 6)
+          (:from       . 25)
+          (:subject    . nil)))
+
+  ;; ===========================================================
+  ;; Context — Proton only (school added later)
+  ;; ===========================================================
+  (setq mu4e-contexts
+        (list
+         (make-mu4e-context
+          :name "Proton"
+          :enter-func (lambda () (mu4e-message "Switched to Proton"))
+          :match-func
+          (lambda (msg)
+            (when msg
+              (string-prefix-p "/proton" (mu4e-message-field msg :maildir))))
+          :vars '((user-mail-address       . "j@ckruder.xyz")
+                  (user-full-name          . "Jack Ruder")
+                  (mu4e-drafts-folder      . "/proton/Drafts")
+                  (mu4e-sent-folder        . "/proton/Sent")
+                  (mu4e-refile-folder      . "/proton/Archive")
+                  (mu4e-trash-folder       . "/proton/Trash")
+                  (mu4e-compose-signature  . "")
+                  (message-sendmail-extra-arguments
+                   . ("--read-envelope-from" "-a" "proton"))))))
+
+  (setq mu4e-context-policy 'pick-first)
+  (setq mu4e-compose-context-policy 'ask-if-none)
+
+  ;; ===========================================================
+  ;; SimpleLogin aliases — load dynamically from file
+  ;; ===========================================================
+  (defun my/load-simplelogin-aliases ()
+    "Load SimpleLogin aliases from file."
+    (let ((alias-file (expand-file-name "~/mail/simplelogin-aliases.txt")))
+      (if (file-exists-p alias-file)
+          (with-temp-buffer
+            (insert-file-contents alias-file)
+            (split-string (buffer-string) "\n" t))
+        nil)))
+
+  (setq mu4e-user-mail-address-list
+        (append '("jackruder@proton.me"
+                  "j@ckruder.xyz"
+                  "contact@jackruder.xyz"
+                  "school@jackruder.xyz"
+                  "montana@jackruder.xyz"
+                  "finance@jackruder.xyz"
+                  "jackruder@montana.edu"
+                  "jack.ruder@student.montana.edu")
+                (my/load-simplelogin-aliases)))
+
+  ;; ===========================================================
+  ;; Bookmarks
+  ;; ===========================================================
+  (setq mu4e-bookmarks
+        '((:name "Inbox"
+           :query "maildir:/proton/inbox"
+           :key ?i)
+          (:name "Unread"
+           :query "flag:unread AND NOT flag:trashed"
+           :key ?u)
+          (:name "Today"
+           :query "date:today..now"
+           :key ?t)
+          (:name "Last 7 Days"
+           :query "date:7d..now"
+           :key ?w)
+          (:name "Flagged"
+           :query "flag:flagged"
+           :key ?f)))
+
+  ;; ===========================================================
+  ;; Maildir shortcuts
+  ;; ===========================================================
+  (setq mu4e-maildir-shortcuts
+        '((:maildir "/proton/inbox"    :key ?i)
+          (:maildir "/proton/Sent"     :key ?s)
+          (:maildir "/proton/Archive"  :key ?a)
+          (:maildir "/proton/Drafts"   :key ?d)
+          (:maildir "/proton/Trash"    :key ?t)))
+
+  ;; ===========================================================
+  ;; Manual alias refresh keybinding
+  ;; ===========================================================
+  (defun my/refresh-simplelogin-aliases ()
+    "Fetch latest SimpleLogin aliases and re-init mu if changed."
+    (interactive)
+    (async-shell-command "~/.local/bin/refresh-aliases.sh"
+                         (get-buffer-create "*alias-refresh*"))
+    (message "Refreshing SimpleLogin aliases..."))
+
+  (map! :map mu4e-main-mode-map
+        :n "A" #'my/refresh-simplelogin-aliases))
+
+;; ===========================================================
+;; Doom email account registration
+;; ===========================================================
+(set-email-account! "Proton"
+                    '((mu4e-sent-folder       . "/proton/Sent")
+                      (mu4e-drafts-folder     . "/proton/Drafts")
+                      (mu4e-trash-folder      . "/proton/Trash")
+                      (mu4e-refile-folder     . "/proton/Archive")
+                      (smtpmail-smtp-user     . "j@ckruder.xyz"))
+                    t)
