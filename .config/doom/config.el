@@ -160,63 +160,100 @@
   (setq org-latex-pdf-process
         '("latexmk -lualatex -interaction=nonstopmode -output-directory=%o %f"))
 
-  (add-to-list 'org-preview-latex-process-alist
-             '(lualatex-dvisvgm
-               :programs ("lualatex" "dvisvgm")
-               :description "dvi > svg"
-               :message "you need to install the programs: lualatex and dvisvgm."
-               :image-input-type "dvi"
-               :image-output-type "svg"
-               :image-size-adjust (0.5 . 0.5)
-               :latex-compiler ("lualatex --output-format=dvi -interaction nonstopmode -output-directory %o %f")
-               :image-converter ("dvisvgm %f --no-fonts --exact-bbox --scale=%S --output=%O")))
+  ;; ;; Export stuff 
+  ;; Export compiler
+  (setq org-latex-compiler "lualatex")
 
-  ;; Unicode math support (STIX)
-  (setq org-format-latex-header
+  (add-to-list 'org-latex-packages-alist '("" "mathtools" t ("lualatex" "xelatex")))
+  (add-to-list 'org-latex-packages-alist '("" "amsthm" t ("lualatex" "xelatex")))
+  (add-to-list 'org-latex-packages-alist '("" "unicode-math" t ("lualatex" "xelatex")))
+  (add-to-list 'org-latex-packages-alist '("" "lualatex-math" t ("lualatex"))) 
+  (add-to-list 'org-latex-packages-alist '("" "microtype" t ("lualatex" "xelatex"))) 
+  (add-to-list 'org-latex-packages-alist '("autostyle" "csquotes" t ("lualatex" "xelatex"))) 
+  (add-to-list 'org-latex-packages-alist '("" "xcolor" t ("lualatex" "xelatex"))) 
+  (add-to-list 'org-latex-packages-alist '("" "selnolig" t ("lualatex"))) 
+  (add-to-list 'org-latex-packages-alist '("" "cleveref" t ("lualatex"))) 
+  (add-to-list 'org-latex-packages-alist '("" "booktabs" t ("lualatex"))) 
+  (add-to-list 'org-latex-packages-alist '("english" "babel" t nil)) 
+
+
+  ;; preview stuff
+  ;;
+  ;;
+  ;; (setq org-latex-preview-appearance-options
+  ;;       '(
+  ;;         :foreground default
+  ;;         :background default
+  ;;         :scale 1
+  ;;         :zoom 1
+  ;;         :page-width nil ; or 0.0-1.0 or a string like "12cm" or "3in"
+  ;;         ))
+
+  (setq org-latex-preview-process-default 'dvisvgm)
+
+  ;; ;; Disable precompilation (lualatex doesn't support it)
+  (setq org-latex-preview-process-precompile nil)
+
+  ;; ;; cache previews
+  (setq org-latex-preview-cache "~/.emacs.d/.local/cache/latex-previews/")
+
+  (setq org-latex-preview-mode-display-live t)
+  ;; ;; generate previews for newly inserted fragments
+  (setq org-latex-preview-mode-track-inserts t)
+
+  ;; ;; calculate correct numbering (options t, 'preview or nil)
+  (setq org-latex-preview-numbered t)
+
+  (setq org-latex-preview-preamble
         (concat
          "\\documentclass{article}\n"
-         "\\usepackage{amsmath,amssymb}\n"
-         "\\usepackage{fontspec}\n"
-         "\\usepackage{unicode-math}\n"
+         "[PACKAGES]\n"
          "\\setmainfont{STIXTwoText}\n"
          "\\setmathfont{STIXTwoMath}\n"
          "\\pagestyle{empty}\n"))
 
-  (require 'ox-reveal)
+  ;; deprecated
+  ;; (setq org-format-latex-header
+  ;;       (concat
+  ;;        "\\documentclass{article}\n"
+  ;;        "\\usepackage{amsmath, mathtools, amsthm}\n"
+  ;;        "\\usepackage{unicode-math}\n"
+  ;;        "\\usepackage{lualatex-math}\n"
+  ;;        "\\usepackage{fontspec}\n"
+  ;;        "\\usepackage{microtype}\n"
+  ;;        "\\usepackage{xcolor}\n"
+  ;;        "\\setmainfont{STIXTwoText}\n"
+  ;;        "\\setmathfont{STIXTwoMath}\n"
+  ;;        "\\pagestyle{empty}\n"))
 
-  
 
-;; Change org capture behavior
-;; Fullscreen capture with window restore (Doom-compatible)
-(defvar my-org-capture-before-config nil
-  "Window configuration before `org-capture'.")
+  ;; end preview section
 
-(defun my-org-capture-save-config (&rest _)
-  (setq my-org-capture-before-config (current-window-configuration)))
+  ;; Change org capture behavior
+  ;; Fullscreen capture with window restore (Doom-compatible)
+  (defvar my-org-capture-before-config nil
+    "Window configuration before `org-capture'.")
 
-(defun my-org-capture-fullscreen (&rest _)
-  (delete-other-windows))
+  (defun my-org-capture-save-config (&rest _)
+    (setq my-org-capture-before-config (current-window-configuration)))
 
-(advice-add 'org-capture :before #'my-org-capture-save-config)
-(advice-add 'org-capture-place-template :after #'my-org-capture-fullscreen)
+  (defun my-org-capture-fullscreen (&rest _)
+    (delete-other-windows))
 
-(add-hook 'org-capture-after-finalize-hook
-          (lambda ()
-            (when my-org-capture-before-config
-              (set-window-configuration my-org-capture-before-config))))
-  (setq org-preview-latex-default-process 'lualatex-dvisvgm)
+  (advice-add 'org-capture :before #'my-org-capture-save-config)
+  (advice-add 'org-capture-place-template :after #'my-org-capture-fullscreen)
 
-  (setq org-latex-default-packages-alist
-      (cl-remove-if (lambda (pkg)
-                      (member (cadr pkg) '("amssymb" "amsfonts" "inputenc" "fontenc")))
-                    org-latex-default-packages-alist))
+  (add-hook 'org-capture-after-finalize-hook
+            (lambda ()
+              (when my-org-capture-before-config
+                (set-window-configuration my-org-capture-before-config))))
 
 
   (require 'ox-reveal)
 
   )
-                                        ;"\\setmainfont{STIXTwoText}\n"
-                                        ;"\\setmathfont{STIXTwoMath}\n"
+
+
 ;;; ORG-ROAM -------------------------------------------------------
 
 (setq my/papers-dir (file-truename (expand-file-name "~/data/papers/")))
@@ -356,16 +393,16 @@
 (after! cdlatex
   (setq cdlatex-command-alist
         '(
-          ("int" "∫_{?}^{}" nil nil nil)
-          ("in"  "∈" nil nil nil)
-          ("notin"  "∉" nil nil nil)
-          ("<=" "≤" nil nil nil)
-          ("leq" "≤" nil nil nil)
-          (">=" "≥" nil nil nil)
-          ("geq" "≥" nil nil nil)
-          ("sum" "≥" nil nil nil)
-          ("ip" "⟨{}, {}⟩" nil nil nil)
-          ))
+          ("int"   "Insert integral"  "∫_{?}^{}"  cdlatex-position-cursor nil nil t)
+          ("in"    "Set membership"   "∈"         nil nil nil t)
+          ("notin" "Not in set"       "∉"         nil nil nil t)
+          ("<="    "Less or equal"    "≤"         nil nil nil t)
+          ("leq"   "Less or equal"    "≤"         nil nil nil t)
+          (">="    "Greater or equal" "≥"         nil nil nil t)
+          ("geq"   "Greater or equal" "≥"         nil nil nil t)
+          ("sum"   "Sum"              "∑"         nil nil nil t)
+          ("ip"    "Inner product"    "⟨?, ⟩"   cdlatex-position-cursor nil nil t)))
+
   (setq cdlatex-math-symbol-alist
         '(
           ( ?a  ("α"          ))
@@ -482,7 +519,11 @@
 (after! lsp-mode
   (setq lsp-auto-guess-root nil)
   (setq lsp-warn-no-matched-clients nil))
-
+;; ======== LLM ==========
+;; using :llm in :tools doom block
+(setq gptel-model 'claude-3.7-sonnet
+      gptel-backend (gptel-make-gh-copilot "Copilot" :host "api.individual.githubcopilot.com"))
+;; OPTIONAL configuration
 ;; ===========================================================
 ;; mu4e — General
 ;; ===========================================================
