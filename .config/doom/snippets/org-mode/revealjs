@@ -1,0 +1,29 @@
+# -*- mode: snippet -*-
+# name: reveal.js presentation (org-re-reveal)
+# key: revealjs
+# uuid: org-revealjs
+# --
+#+TITLE: ${1:Presentation Title}
+#+SUBTITLE: ${2:Subtitle}
+#+AUTHOR: ${3:Jack Ruder}
+#+DATE: ${4:\today}
+#+OPTIONS: toc:nil num:nil reveal_title_slide:t
+#+REVEAL_INIT_OPTIONS: transition: 'slide', controls: true, progress: true, slideNumber: 'c/t', hash: true
+#+REVEAL_TRANS: slide
+#+REVEAL_HLEVEL: 2
+#+REVEAL_PLUGINS: (highlight notes search zoom)
+${5:# MSU CSS theme is loaded via org-reveal-extra-css in config.el.}
+
+* ${6:Introduction}
+** ${7:Slide title}
+   $0
+
+   - Bullet one
+   - Bullet two
+   - Bullet three
+
+** Staged reveal
+   #+ATTR_REVEAL: :frag (appear)
+   - First
+   - Then this
+   - Finally this

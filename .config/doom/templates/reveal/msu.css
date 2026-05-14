@@ -1,0 +1,199 @@
+/**
+ * MSU reveal.js theme.
+ * Palette mirrors msu-colors.sty:
+ *   MSUBlue   #00205B
+ *   MSUGold   #B9975B
+ *   MSUDark   #333333
+ */
+
+@import url(https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700&family=Source+Serif+4:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap);
+
+:root {
+  --msu-blue:       #00205B;
+  --msu-blue-dark:  #001540;
+  --msu-gold:       #B9975B;
+  --msu-gold-light: #D4B97A;
+  --msu-grey:       #8A8A8A;
+  --msu-dark:       #333333;
+  --msu-bg:         #FFFFFF;
+  --r-background-color: var(--msu-bg);
+  --r-main-font: "Source Sans 3", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --r-main-font-size: 38px;
+  --r-main-color: var(--msu-dark);
+  --r-heading-font: "Source Serif 4", Georgia, serif;
+  --r-heading-color: var(--msu-blue);
+  --r-heading-text-shadow: none;
+  --r-heading-text-transform: none;
+  --r-heading-font-weight: 600;
+  --r-link-color: var(--msu-blue);
+  --r-link-color-dark: var(--msu-blue-dark);
+  --r-link-color-hover: var(--msu-gold);
+  --r-selection-color: #fff;
+  --r-selection-background-color: var(--msu-blue);
+  --r-code-font: "JetBrains Mono", "Source Code Pro", Menlo, monospace;
+}
+
+.reveal-viewport {
+  background: var(--msu-bg);
+}
+
+.reveal {
+  font-family: var(--r-main-font);
+  font-size: var(--r-main-font-size);
+  font-weight: 400;
+  color: var(--msu-dark);
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+  font-family: var(--r-heading-font);
+  font-weight: 600;
+  color: var(--msu-blue);
+  text-transform: none;
+  text-shadow: none;
+  line-height: 1.2;
+  letter-spacing: 0;
+  word-wrap: break-word;
+}
+
+.reveal h1 { font-size: 2.2em; }
+.reveal h2 { font-size: 1.5em; padding-bottom: 0.15em; border-bottom: 3px solid var(--msu-gold); }
+.reveal h3 { font-size: 1.2em; color: var(--msu-blue-dark); }
+.reveal h4 { font-size: 1.0em; color: var(--msu-blue-dark); }
+
+/* Title slide: full MSU Blue background with gold rule. */
+.reveal section.title-slide,
+.reveal section.has-dark-background,
+.reveal section[data-state="title"] {
+  background: var(--msu-blue);
+  color: #fff;
+  text-align: center;
+}
+.reveal section.title-slide h1,
+.reveal section.title-slide h2,
+.reveal section.title-slide h3,
+.reveal section[data-state="title"] h1,
+.reveal section[data-state="title"] h2,
+.reveal section[data-state="title"] h3 {
+  color: #fff;
+}
+.reveal section.title-slide h1::after,
+.reveal section[data-state="title"] h1::after {
+  content: "";
+  display: block;
+  width: 4em;
+  height: 4px;
+  background: var(--msu-gold);
+  margin: 0.6em auto 0.4em;
+}
+
+/* Links */
+.reveal a {
+  color: var(--r-link-color);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.reveal a:hover {
+  color: var(--r-link-color-hover);
+  text-shadow: none;
+  border: none;
+}
+
+/* Emphasis */
+.reveal strong, .reveal b { color: var(--msu-blue); }
+.reveal em, .reveal i { color: var(--msu-dark); }
+.reveal mark { background: var(--msu-gold-light); color: var(--msu-dark); padding: 0 0.15em; }
+
+/* Lists */
+.reveal ul, .reveal ol { display: block; margin-left: 1em; }
+.reveal li { margin: 0.25em 0; }
+.reveal ul li::marker { color: var(--msu-gold); }
+.reveal ol li::marker { color: var(--msu-blue); font-weight: 600; }
+
+/* Block quote */
+.reveal blockquote {
+  display: block;
+  background: #F4F4F4;
+  border-left: 4px solid var(--msu-gold);
+  padding: 0.6em 1em;
+  font-style: italic;
+  box-shadow: none;
+  width: auto;
+}
+
+/* Code */
+.reveal code {
+  font-family: var(--r-code-font);
+  background: #F4F4F4;
+  color: var(--msu-blue-dark);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+.reveal pre {
+  font-family: var(--r-code-font);
+  box-shadow: 0 2px 12px rgba(0, 32, 91, 0.12);
+  border-left: 4px solid var(--msu-gold);
+  background: #FAFAFA;
+  width: 100%;
+  margin: 0.6em auto;
+}
+.reveal pre code {
+  background: transparent;
+  color: var(--msu-dark);
+  padding: 0.8em 1em;
+  font-size: 0.7em;
+  line-height: 1.4;
+  max-height: 70vh;
+}
+
+/* Tables */
+.reveal table {
+  border-collapse: collapse;
+  margin: 0.5em auto;
+}
+.reveal table th {
+  background: var(--msu-blue);
+  color: #fff;
+  font-weight: 600;
+  padding: 0.4em 0.8em;
+  text-align: left;
+  border-bottom: 2px solid var(--msu-gold);
+}
+.reveal table td {
+  padding: 0.35em 0.8em;
+  border-bottom: 1px solid #E0E0E0;
+}
+.reveal table tr:nth-child(even) td {
+  background: #FAFAFA;
+}
+
+/* Slide number + progress bar */
+.reveal .progress {
+  color: var(--msu-gold);
+  height: 4px;
+}
+.reveal .slide-number {
+  color: var(--msu-gold);
+  background: transparent;
+  font-family: var(--r-main-font);
+  font-size: 0.55em;
+}
+
+/* Controls (arrows) */
+.reveal .controls { color: var(--msu-blue); }
+
+/* Fragments — beamer-style alerts inherit reveal's fragment system. */
+.reveal .fragment.highlight-current-blue.current-fragment { color: var(--msu-blue); }
+.reveal .fragment.highlight-current-red.current-fragment  { color: var(--msu-gold); }
+
+/* Footer (set via #+REVEAL_SLIDE_FOOTER) */
+.reveal .slide-footer {
+  position: absolute;
+  bottom: 0.6em;
+  left: 1em;
+  font-size: 0.5em;
+  color: var(--msu-grey);
+}

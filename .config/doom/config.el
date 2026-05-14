@@ -245,7 +245,7 @@
   (add-to-list 'org-latex-packages-alist '("autostyle" "csquotes" t ("lualatex" "xelatex"))) 
   (add-to-list 'org-latex-packages-alist '("" "xcolor" t ("lualatex" "xelatex"))) 
   (add-to-list 'org-latex-packages-alist '("" "selnolig" t ("lualatex"))) 
-  (add-to-list 'org-latex-packages-alist '("" "cleveref" t ("lualatex"))) 
+  (add-to-list 'org-latex-packages-alist '("" "cleveref" t ("lualatex")))
   (add-to-list 'org-latex-packages-alist '("" "booktabs" t ("lualatex")))
   (add-to-list 'org-latex-packages-alist '("english" "babel" t nil))
 
@@ -294,6 +294,17 @@
 \\usetheme{MSU}"
                    ("\\section{%s}" . "\\section*{%s}"))))
 
+  ;; reveal.js HTML presentations via ox-reveal.
+  ;; Load reveal.js from a CDN; layer the MSU CSS theme on top of the
+  ;; built-in `white' base. `revealjs' yasnippet inserts a matching scaffold.
+  (after! ox-reveal
+    (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js"
+          org-reveal-theme "white"
+          org-reveal-extra-css (expand-file-name "templates/reveal/msu.css" doom-user-dir)
+          org-reveal-mathjax t
+          org-reveal-hlevel 2
+          org-reveal-title-slide
+          "<h1>%t</h1><h3>%s</h3><p>%a &middot; %d</p>"))
 
   ;; preview stuff
   ;;
