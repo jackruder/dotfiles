@@ -1,0 +1,43 @@
+# -*- mode: snippet -*-
+# name: msu-poster (org export, tikzposter)
+# key: msuposter
+# uuid: msu-org-poster
+# --
+#+TITLE: ${1:Poster Title}
+#+AUTHOR: ${2:Jack Ruder}
+#+DATE: ${3:\today}
+#+LATEX_CLASS: msu-poster
+#+LATEX_CLASS_OPTIONS: [25pt,a0paper,portrait,margin=0mm,innermargin=15mm,blockverticalspace=15mm,colspace=15mm,subcolspace=8mm]
+#+LATEX_HEADER: \\institute{${4:Montana State University}}
+#+OPTIONS: toc:nil num:nil
+
+#+BEGIN_EXPORT latex
+\\maketitle
+\\begin{columns}
+\\column{0.5}
+#+END_EXPORT
+
+#+BEGIN_EXPORT latex
+\\block{${5:Introduction}}{
+#+END_EXPORT
+
+$0
+
+#+BEGIN_EXPORT latex
+}
+#+END_EXPORT
+
+#+BEGIN_EXPORT latex
+\\column{0.5}
+#+END_EXPORT
+
+#+BEGIN_EXPORT latex
+\\block{${6:Results}}{
+#+END_EXPORT
+
+Content.
+
+#+BEGIN_EXPORT latex
+}
+\\end{columns}
+#+END_EXPORT

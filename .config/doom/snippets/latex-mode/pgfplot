@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: pgfplots 2D axis
+# key: pgfplot
+# uuid: pgfplot
+# --
+\\begin{tikzpicture}
+    \\begin{axis}[
+        width=${1:0.85}\\linewidth,
+        xlabel=${2:\$x\$},
+        ylabel=${3:\$y\$},
+        grid=major,
+    ]
+        \\addplot[domain=${4:-3:3}, smooth, thick] {${5:exp(-x^2)}};
+    \\end{axis}
+\\end{tikzpicture}
+$0

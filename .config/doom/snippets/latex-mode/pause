@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: \pause
+# key: pause
+# uuid: overlay-pause
+# --
+\\pause$0
