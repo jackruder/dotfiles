@@ -1,0 +1,238 @@
+#+title: Org / Agenda Workflow
+#+author: Jack Ruder
+#+startup: overview
+
+* Purpose
+
+This file is the reference guide for the personal task-management
+system layered on top of Doom Emacs. It explains every TODO keyword,
+tag, capture template, and agenda view defined in
+=.config/doom/config.el=, and how to use them day-to-day. If
+something here disagrees with the config, the config wins — fix this
+file.
+
+The style is *Light GTD*: capture everything to an inbox, refile
+weekly, agenda views surface what's actionable. Files are *homes*
+for tasks; tags are *orthogonal slices*; agenda views are *saved
+queries* across both.
+
+This file is documentation only — it lives outside =org-agenda-files=
+so it does not pollute agenda queries.
+
+* File layout
+
+All under =~/sync/org/=.
+
+| File         | Purpose                                                                 |
+|--------------+-------------------------------------------------------------------------|
+| inbox.org    | Everything captured lands here. Refile during weekly review.            |
+| agenda.org   | Appointments to schedule (e.g. =:followup:= with a SCHEDULED date).     |
+| projects.org | Multi-step projects: House, Car, Bike, Keyboards, Chainsaw, Woodworking, Travel. |
+| admin.org    | Bills, Insurance, Taxes, Financial.                                     |
+| work.org     | Non-research work TODOs.                                                |
+| todo.org     | One-off life todos that don't fit any other file.                       |
+| roam/        | Org-roam zettelkasten — knowledge notes, not tasks.                     |
+| workflow.org | This file.                                                              |
+
+* TODO keywords
+
+The first sequence (active states → done states):
+
+| Keyword | Key  | Meaning                                                       |
+|---------+------+---------------------------------------------------------------|
+| TODO    | =t=  | Default. Anything captured starts here.                       |
+| NEXT    | =N=  | The single next physical action for some project / area.      |
+| PROJ    | =p=  | A project: implies sub-tasks. Should always have ≥1 NEXT.     |
+| LOOP    | =r=  | A recurring habit / routine.                                  |
+| STRT    | =s=  | Started but not yet finished (in-progress).                   |
+| WAIT    | =w=  | Blocked on someone else (their reply, their action).          |
+| HOLD    | =h=  | Paused by me — picks up later, intentionally on the back burner. |
+| IDEA    | =i=  | Speculative; might become a real TODO some day.               |
+| DONE    | =d=  | Completed.                                                    |
+| KILL    | =k=  | Dropped, won't do.                                            |
+
+Two other sequences (rarely used directly, but available):
+
+- Checkbox-style: =[ ] [-] [?] [X]= (cycle =T S W D=).
+- Question-style done states: =OKAY YES NO= (=o y n=).
+
+** Discipline rules
+
+- Every =PROJ= heading should have at least one =NEXT= child. The
+  custom agenda view =p= ("Stuck projects") lists any PROJ that
+  doesn't.
+- =NEXT= is for *the* next physical action — not a list of all
+  remaining steps. As you finish one NEXT, promote the next sub-TODO.
+- Cycle states with =C-c C-t= (or use the single-letter shortcut after
+  the state hint, e.g. =C-c C-t N= for NEXT).
+
+* Tags
+
+Defined in =org-tag-alist=. Open the fast selector on any heading
+with =C-c C-q=. Press the indicated letter, then RET.
+
+** Contexts (mutually exclusive — =@= prefix)
+
+| Tag       | Key | When to use                                                       |
+|-----------+-----+-------------------------------------------------------------------|
+| @home     | =h= | Can only be done at home.                                         |
+| @work     | =w= | At the office / lab (physical presence).                          |
+| @errand   | =e= | Out and about — hardware store, post office, anywhere not home/work. |
+| @phone    | =p= | Requires making a phone call.                                     |
+| @computer | =c= | At a computer, but nothing more specific.                         |
+| @email    | =E= | Sitting at mu4e, willing to compose/reply.                        |
+| @mike     | =m= | Question or item for advisor's next 1:1.                          |
+
+** Topics (free-form — no prefix)
+
+| Tag      | Key | Meaning                                                       |
+|----------+-----+---------------------------------------------------------------|
+| admin    | =a= | Administrivia (forms, paperwork).                             |
+| bills    | =b= | Anything billable — utilities, subscriptions, dues.           |
+| car      | =v= | Vehicle maintenance / registration / etc.                     |
+| house    | =H= | Home maintenance / improvements.                              |
+| travel   | =T= | Trip planning, bookings, itinerary items.                     |
+| buy      | =B= | Online shopping list — pulled up via agenda =b=.              |
+| research | =r= | Research work (cross-cuts work.org and roam/ notes).          |
+| ddssm    | =d= | DDSSM project (diffusion-driven state space models).          |
+| followup | =f= | Needs me to schedule / decide a time — see agenda =f=.        |
+| shared   | =s= | Lives in or relates to a shared (collaborator-visible) file.  |
+| private  | =P= | Lives in or relates to a private file (e.g. roam DDSSM doc).  |
+
+** Quick tag patterns
+
+- Property tax bill: =:bills:house:=
+- Question to ask Mike at 1:1: =:@mike:research:=
+- Order new bike chain online: =:buy:bike:=
+- Reply to landlord email: =:@email:house:= (auto-set if captured via =SPC X e=).
+
+** Filtering the agenda by tag
+
+After opening any agenda view, press =/= to filter the visible entries
+to a single tag. This is how you ask "what can I do *right now*?"
+based on your current context.
+
+* Capture templates
+
+Open the capture dispatcher with =SPC X= (Doom) or =C-c c= (vanilla
+binding). Pick a letter:
+
+| Key | Template             | Lands in                          | Notes                                                  |
+|-----+----------------------+-----------------------------------+--------------------------------------------------------|
+| =t= | Todo (inbox)         | inbox.org (top-level)             | The default catch-all. Use for everything by default.  |
+| =e= | Email follow-up      | inbox.org (top-level)             | Auto-tags =:@email:followup:= and links the mu4e msg.  |
+| =M= | DDSSD meeting        | roam DDSSM note → =* Meetings=    | Date-stamped meeting template with attendees + actions. |
+
+Other letters (=n=, =j=, etc.) come from Doom's defaults; they remain
+available but are not part of this workflow.
+
+** Capture flow
+
+1. Thought hits → =SPC X t= → type the headline → =C-c C-c= to file.
+2. New entry appears at the *top* of =inbox.org= (=:prepend t=).
+3. Editor restores prior window layout automatically (handled in
+   config).
+4. The capture is born as =TODO=. Promote to =NEXT=, schedule,
+   refile, etc. during the weekly review.
+
+** Email follow-ups
+
+From any mu4e message buffer, =SPC X e= captures a TODO that:
+
+- Starts in state =TODO=, pre-tagged =:@email:followup:=.
+- Includes an org link (=%a=) back to the message — click in the
+  resulting TODO to jump to the email.
+
+* Refile
+
+=C-c C-w= on any heading offers every heading (down to depth 3)
+across all =org-agenda-files= as a destination. After typing the
+target path, press RET.
+
+Path completion is file-first (=org-refile-use-outline-path 'file=),
+so type the filename, then drill into headings.
+
+Refile is the workflow's main verb during the weekly review: move
+each inbox item to its real home, picking up any tags or scheduling
+along the way.
+
+* Agenda views
+
+Open the dispatcher with =SPC o A= (Doom). Pick a letter.
+
+** Custom commands (defined in config)
+
+| Key | View                     | What it does                                                |
+|-----+--------------------------+-------------------------------------------------------------|
+| =n= | Next actions             | Every heading in =NEXT= state. Your daily working list.     |
+| =w= | Waiting on               | =WAIT= + =HOLD=. Skim weekly to nudge stalled items.        |
+| =i= | Inbox to process         | Everything in inbox.org (matches CATEGORY="inbox").         |
+| =p= | Stuck projects           | =PROJ= headings with no =NEXT= descendant.                  |
+| =f= | Followups to schedule    | Anything tagged =:followup:= — pick a SCHEDULED date.       |
+| =b= | Shopping list            | Anything tagged =:buy:=. Open at the laptop, order things.  |
+| =k= | For Mike                 | Anything tagged =:@mike:=. Open before 1:1s.                |
+| =R= | Weekly review (composite) | Calendar (7 days) + NEXT + WAIT/HOLD + stuck + inbox.      |
+
+** Built-in commands (available by default)
+
+| Key | View                                                |
+|-----+-----------------------------------------------------|
+| =a= | Agenda calendar — next 7 days of SCHEDULED/DEADLINE |
+| =t= | All TODOs across all agenda files                   |
+| =T= | TODOs matching one keyword you type                 |
+| =m= | Tag match — type a tag expression                   |
+| =M= | Same as =m=, but only TODO-state headings           |
+| =s= | Full-text search across all agenda files            |
+
+** Inside an agenda buffer
+
+| Key     | Action                                  |
+|---------+-----------------------------------------|
+| =RET=   | Jump to source heading                  |
+| =t=     | Cycle TODO state (same as =C-c C-t=)    |
+| =C-c C-s= | Set SCHEDULED                         |
+| =C-c C-d= | Set DEADLINE                          |
+| =C-c C-w= | Refile                                |
+| =:=     | Set tags                                |
+| =/=     | Filter by tag                           |
+| =r=     | Rebuild the view                        |
+| =q=     | Quit                                    |
+
+* Daily / weekly loop
+
+** Daily
+
+1. =SPC X t= any time a thought hits → straight to inbox.
+2. =SPC o A n= to see today's =NEXT= actions.
+3. While working, =C-c C-t= cycles state, =C-c C-s= schedules,
+   =C-c C-q= tags.
+
+** Weekly review (≈ 20 min)
+
+1. =SPC o A R= — the composite review buffer.
+2. Open inbox.org. On each captured item:
+   - Decide: is it actionable?
+     - No → archive (=C-c C-x C-a=) or delete.
+     - Yes → set state (=TODO=/=NEXT=/=PROJ=), tag, schedule.
+   - Refile (=C-c C-w=) to its real home.
+3. Walk projects.org. Every =PROJ= should have a =NEXT=. The
+   "Stuck projects" block of =R= will tell you which don't.
+4. Skim WAIT/HOLD — anything to chase? Promote or unhold.
+5. Done.
+
+* Where this lives
+
+- Config that creates all of the above:
+  =~/dotfiles/.config/doom/config.el=, inside the =(after! org ...)=
+  block.
+- This guide:
+  =~/dotfiles/.config/doom/workflow.org= (also copy/symlink to
+  =~/sync/org/workflow.org= if you want to open it from there).
+- Org files: =~/sync/org/=.
+
+* Deferred / not yet wired
+
+- Shared research repo's =todo.org= and the private DDSSM roam file
+  as =org-agenda-files= + refile targets — pending the right paths.
+- Org-clock / time-tracking.
+- Anything beyond capture for the mu4e ↔ org integration.
