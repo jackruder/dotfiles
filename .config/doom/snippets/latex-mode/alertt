@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: \alert<spec>{...}
+# key: alertt
+# uuid: overlay-alerttext
+# --
+\\alert<${1:1-}>{${2:text}}$0

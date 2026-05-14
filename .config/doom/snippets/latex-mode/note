@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: \note{...} (speaker note)
+# key: note
+# uuid: note
+# --
+\\note{${1:speaker note}}$0

@@ -101,6 +101,20 @@
 ;; Base location (safe to set early)
 (setq org-directory (expand-file-name "~/sync/org/"))
 
+;; Global macros for inline beamer overlays. Use in org with
+;;   {{{only(1-2, important text)}}}
+;;   {{{pause}}}
+;;   {{{uncover(2-, ...)}}}
+;;   {{{onslide(+-)}}}
+;;   {{{oalert(2, urgent)}}}
+;; (`oalert' rather than `alert' to avoid colliding with org's own.)
+(setq org-export-global-macros
+      '(("only"    . "@@latex:\\only<$1>{@@$2@@latex:}@@")
+        ("pause"   . "@@latex:\\pause@@")
+        ("uncover" . "@@latex:\\uncover<$1>{@@$2@@latex:}@@")
+        ("onslide" . "@@latex:\\onslide<$1>@@")
+        ("oalert"  . "@@latex:\\alert<$1>{@@$2@@latex:}@@")))
+
 (after! org
   (add-hook 'org-mode-hook #'turn-on-org-cdlatex)
   (setq org-agenda-files (list (expand-file-name "inbox.org" org-directory)
@@ -160,8 +174,22 @@
   (add-to-list 'org-latex-packages-alist '("" "xcolor" t ("lualatex" "xelatex"))) 
   (add-to-list 'org-latex-packages-alist '("" "selnolig" t ("lualatex"))) 
   (add-to-list 'org-latex-packages-alist '("" "cleveref" t ("lualatex"))) 
-  (add-to-list 'org-latex-packages-alist '("" "booktabs" t ("lualatex"))) 
+  (add-to-list 'org-latex-packages-alist '("" "booktabs" t ("lualatex")))
   (add-to-list 'org-latex-packages-alist '("english" "babel" t nil))
+
+  ;; Code highlighting, plots, diagrams, SVG include.
+  (add-to-list 'org-latex-packages-alist '("" "minted"   t ("lualatex")))
+  (add-to-list 'org-latex-packages-alist '("" "pgfplots" t ("lualatex")))
+  (add-to-list 'org-latex-packages-alist '("" "tikz-cd"  t ("lualatex")))
+  (add-to-list 'org-latex-packages-alist '("" "forest"   t ("lualatex")))
+  (add-to-list 'org-latex-packages-alist '("inkscapelatex=false" "svg" t ("lualatex")))
+
+  ;; Use minted for source-code listings on export.
+  (setq org-latex-listings 'minted)
+  (setq org-latex-minted-options
+        '(("breaklines" "true")
+          ("frame"      "lines")
+          ("fontsize"   "\\small")))
 
   ;; MSU-branded beamer class for org-export. Use via:
   ;;   #+LATEX_CLASS: msu-beamer
@@ -178,7 +206,21 @@
 \\usepackage{beamerthememsu}"
                    ("\\section{%s}" . "\\section*{%s}")
                    ("\\subsection{%s}" . "\\subsection*{%s}")
-                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+
+    ;; MSU-branded conference poster (tikzposter). Use via:
+    ;;   #+LATEX_CLASS: msu-poster
+    ;; Poster blocks don't map cleanly to org headlines; use the `pblock'
+    ;; snippet to wrap content in \block{title}{body}.
+    (add-to-list 'org-latex-classes
+                 '("msu-poster"
+                   "\\documentclass[25pt,a0paper,portrait,margin=0mm,innermargin=15mm,blockverticalspace=15mm,colspace=15mm,subcolspace=8mm]{tikzposter}
+[NO-DEFAULT-PACKAGES]
+[PACKAGES]
+\\usepackage{msu-colors}
+\\usepackage{tikzposterthemeMSU}
+\\usetheme{MSU}"
+                   ("\\section{%s}" . "\\section*{%s}"))))
 
 
   ;; preview stuff

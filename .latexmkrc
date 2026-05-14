@@ -1,6 +1,6 @@
 # Use LuaLaTeX as the PDF engine
 $pdf_mode = 4;  # 4 = lualatex, 5 = xelatex
-$lualatex = 'lualatex -synctex=1 -file-line-error -interaction=nonstopmode %O %S';
+$lualatex = 'lualatex -shell-escape -synctex=1 -file-line-error -interaction=nonstopmode %O %S';
 
 # Make the dotfiles template directory (msu-colors.sty, beamerthememsu.sty, ...)
 # discoverable from any project compiled with latexmk.
@@ -14,8 +14,9 @@ $out_dir = 'build';
 $use_biber = 1;
 $biber = 'biber %O %B';
 
-# Optional: shell-escape 
-# $lualatex = 'lualatex -shell-escape -synctex=1 -file-line-error -interaction=nonstopmode %O %S';
+# Note: -shell-escape is enabled above. Required by `minted` (pygments)
+# and the `svg` package (inkscape). Only run latexmk on .tex sources you
+# trust.
 
 # Optional: be more quiet; comment out for full logs
 # $silence_logfile_warnings = 1;

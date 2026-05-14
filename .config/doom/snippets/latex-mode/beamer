@@ -21,6 +21,13 @@
 \usepackage{amsthm}
 \usepackage{mathtools}
 
+\usepackage{minted}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepackage{tikz-cd}
+\usepackage{forest}
+\usepackage[inkscapelatex=false]{svg}
+
 \usepackage{msu-colors}
 \usepackage{beamerthememsu}
 \usetheme{msu}

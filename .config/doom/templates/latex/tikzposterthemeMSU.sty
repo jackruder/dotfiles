@@ -1,0 +1,132 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tikzposterthemeMSU}[2026/05/14 Montana State University tikzposter theme]
+
+\RequirePackage{msu-colors}
+
+% --------------------------------------------------------------------
+% Color palette / style
+% --------------------------------------------------------------------
+\definecolorpalette{MSU}{
+    \definecolor{colorOne}{named}{MSUBlue}
+    \definecolor{colorTwo}{named}{MSUGold}
+    \definecolor{colorThree}{named}{MSUWhite}
+}
+
+\definecolorstyle{MSU}{
+    \definecolorpalette{MSU}{
+        \definecolor{colorOne}{named}{MSUBlue}
+        \definecolor{colorTwo}{named}{MSUGold}
+        \definecolor{colorThree}{named}{MSUWhite}
+    }
+}{
+    % background / global
+    \colorlet{backgroundcolor}{MSUWhite}
+    \colorlet{framecolor}{MSUBlue}
+    % title
+    \colorlet{titlefgcolor}{MSUWhite}
+    \colorlet{titlebgcolor}{MSUBlue}
+    % blocks
+    \colorlet{blocktitlebgcolor}{MSUBlue}
+    \colorlet{blocktitlefgcolor}{MSUWhite}
+    \colorlet{blockbodybgcolor}{MSUWhite}
+    \colorlet{blockbodyfgcolor}{MSUDarkGrey}
+    % inner blocks (nested)
+    \colorlet{innerblocktitlebgcolor}{MSUGold}
+    \colorlet{innerblocktitlefgcolor}{MSUDarkGrey}
+    \colorlet{innerblockbodybgcolor}{MSULightGrey}
+    \colorlet{innerblockbodyfgcolor}{MSUDarkGrey}
+    % notes
+    \colorlet{notefgcolor}{MSUDarkGrey}
+    \colorlet{notebgcolor}{MSUGold!25}
+    \colorlet{notefrcolor}{MSUGold}
+}
+
+% --------------------------------------------------------------------
+% Title style: full-bleed MSU Blue masthead + gold rule
+% --------------------------------------------------------------------
+\definetitlestyle{MSU}{
+    width=\paperwidth,
+    roundedcorners=0,
+    linewidth=0pt,
+    innersep=15mm,
+    titletotopverticalspace=0mm,
+    titletoblockverticalspace=20mm,
+    titlegraphictotitledistance=10mm,
+    titletextscale=1
+}{
+    \begin{scope}[line width=\titlelinewidth, rounded corners=0pt]
+        \draw[color=titlebgcolor, fill=titlebgcolor]
+            (\titleposleft,\titleposbottom)
+            rectangle (\titleposright,\titlepostop);
+        % Gold rule across the bottom of the masthead
+        \draw[color=MSUGold, line width=8pt]
+            (\titleposleft,\titleposbottom)
+            -- (\titleposright,\titleposbottom);
+    \end{scope}
+}
+
+% --------------------------------------------------------------------
+% Block style: MSU Blue title band, gold underline, white body
+% --------------------------------------------------------------------
+\defineblockstyle{MSU}{
+    titlewidthscale=1,
+    bodywidthscale=1,
+    titlecenter,
+    titleoffsetx=0pt,
+    titleoffsety=0pt,
+    bodyoffsetx=0mm,
+    bodyoffsety=2mm,
+    bodyverticalshift=0mm,
+    roundedcorners=10,
+    linewidth=2pt,
+    titleinnersep=8mm,
+    bodyinnersep=12mm
+}{
+    \draw[color=framecolor, fill=blockbodybgcolor,
+          rounded corners=\blockroundedcorners]
+        (blockbody.south west) rectangle (blockbody.north east);
+    \ifBlockHasTitle
+        \draw[color=blocktitlebgcolor, fill=blocktitlebgcolor,
+              rounded corners=\blockroundedcorners]
+            (blocktitle.south west) rectangle (blocktitle.north east);
+        \draw[color=MSUGold, line width=3pt]
+            (blocktitle.south west) -- (blocktitle.south east);
+    \fi
+}
+
+% --------------------------------------------------------------------
+% Note style: gold-tinted callout
+% --------------------------------------------------------------------
+\definenotestyle{MSU}{
+    targetoffsetx=0pt,
+    targetoffsety=0pt,
+    width=8cm,
+    innersep=4mm,
+    linewidth=2pt,
+    rotate=0,
+    roundedcorners=8
+}{
+    \draw[color=notefrcolor, fill=notebgcolor, line width=\notelinewidth,
+          rounded corners=\noteroundedcorners]
+        (notenode.south west) rectangle (notenode.north east);
+}
+
+% --------------------------------------------------------------------
+% Combined layout theme
+% --------------------------------------------------------------------
+\definelayouttheme{MSU}{
+    \usecolorstyle{MSU}
+    \usebackgroundstyle{Default}
+    \usetitlestyle{MSU}
+    \useblockstyle{MSU}
+    \usenotestyle{MSU}
+}
+
+% --------------------------------------------------------------------
+% Convenience: \posterqr places a QR-code placeholder in the footer.
+% Replace ARG with \includegraphics{qr.pdf} once you have one.
+% --------------------------------------------------------------------
+\newcommand{\posterqr}[1]{\node[anchor=south east, inner sep=15mm]
+    at (bottomright) {\includegraphics[width=6cm]{#1}};}
+
+\endinput

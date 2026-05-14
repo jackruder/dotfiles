@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: exampleblock{title}
+# key: exampleblock
+# uuid: exampleblock
+# --
+\\begin{exampleblock}{${1:Title}}
+    $0
+\\end{exampleblock}

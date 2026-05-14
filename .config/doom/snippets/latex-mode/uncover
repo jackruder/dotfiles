@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: \uncover<spec>{...}
+# key: uncover
+# uuid: overlay-uncover
+# --
+\\uncover<${1:1-}>{${2:content}}$0
