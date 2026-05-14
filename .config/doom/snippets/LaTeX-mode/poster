@@ -1,0 +1,52 @@
+# -*- mode: snippet -*-
+# name: tikzposter (MSU, lualatex)
+# key: poster
+# uuid: msu-poster
+# --
+% !TEX program = lualatex
+\documentclass[25pt,a0paper,portrait,margin=0mm,innermargin=15mm,
+    blockverticalspace=15mm,colspace=15mm,subcolspace=8mm]{tikzposter}
+
+\usepackage{fontspec}
+\usepackage[english]{babel}
+\usepackage{booktabs}
+\usepackage{cleveref}
+\usepackage{xcolor}
+\usepackage[autostyle]{csquotes}
+\usepackage{microtype}
+\usepackage{lualatex-math}
+\usepackage{unicode-math}
+\usepackage{mathtools}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepackage{tikz-cd}
+\usepackage{forest}
+\usepackage{minted}
+\usepackage[inkscapelatex=false]{svg}
+
+\usepackage{msu-colors}
+\usepackage{tikzposterthemeMSU}
+
+\usetheme{MSU}
+
+\title{\parbox{0.9\textwidth}{\centering ${1:Poster Title}}}
+\author{${2:Jack Ruder}}
+\institute{${3:Montana State University}}
+
+\begin{document}
+
+\maketitle
+
+\begin{columns}
+    \column{${4:0.5}}
+    \block{${5:Introduction}}{
+        $0
+    }
+
+    \column{${6:0.5}}
+    \block{${7:Results}}{
+
+    }
+\end{columns}
+
+\end{document}

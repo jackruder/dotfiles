@@ -46,9 +46,7 @@
 (setq display-line-numbers-type t)
 
 ;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/sync/org/")
-
+;; change `org-directory'. It must be set before org loads! (set once, below.)
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
@@ -93,42 +91,117 @@
 (setq-default vterm-shell (or (executable-find "fish") "/bin/fish"))
 (setq-default explicit-shell-file-name (or (executable-find "fish") "/bin/fish"))
 
-;;; Evil 
-(after! evil-surround
-  (global-evil-surround-mode 1))
-(after! evil-nerd-commenter
-  (evilnc-default-hotkeys))
-(after! evil-embrace
-  (evil-embrace-enable-evil-surround-integration))
-(after! evil-easymotion
-  (evilem-default-keybindings "SPC"))
-(after! evil-snipe
-  (evil-snipe-mode 1)
-  (evil-snipe-override-mode 1))
-
-
-
+;;; Evil
+;; The evil-surround / evil-nerd-commenter / evil-embrace / evil-easymotion /
+;; evil-snipe packages are commented out in packages.el. Re-add their
+;; `after!' configs here if you re-enable them.
 
 ;;; ORG ------------------------------------------------------------
 
 ;; Base location (safe to set early)
 (setq org-directory (expand-file-name "~/sync/org/"))
 
-(add-hook 'org-mode-hook #'turn-on-org-cdlatex)
 (after! org
-  (setq org-agenda-files (list (expand-file-name "inbox.org" org-directory)
-                               (expand-file-name "agenda.org" org-directory)
-                               (expand-file-name "projects.org" org-directory)
-                               (expand-file-name "admin.org" org-directory)
-                               (expand-file-name "todo.org" org-directory))
+;; Global macros for inline beamer overlays. Use in org with
+;;   {{{only(1-2, important text)}}}
+;;   {{{pause}}}
+;;   {{{uncover(2-, ...)}}}
+;;   {{{onslide(+-)}}}
+;;   {{{oalert(2, urgent)}}}
+;; (`oalert' rather than `alert' to avoid colliding with org's own.)
+(setq org-export-global-macros
+      '(("only"    . "@@latex:\\only<$1>{@@$2@@latex:}@@")
+        ("pause"   . "@@latex:\\pause@@")
+        ("uncover" . "@@latex:\\uncover<$1>{@@$2@@latex:}@@")
+        ("onslide" . "@@latex:\\onslide<$1>@@")
+        ("oalert"  . "@@latex:\\alert<$1>{@@$2@@latex:}@@")))
+
+  (add-hook 'org-mode-hook #'turn-on-org-cdlatex)
+  (setq org-agenda-files
+        (append (list (expand-file-name "inbox.org"    org-directory)
+                      (expand-file-name "agenda.org"   org-directory)
+                      (expand-file-name "projects.org" org-directory)
+                      (expand-file-name "admin.org"    org-directory)
+                      (expand-file-name "work.org"     org-directory)
+                      (expand-file-name "research.org" org-directory)
+                      (expand-file-name "todo.org"     org-directory))
+                ;; Project-local task files — only include when present
+                ;; so agenda doesn't fail on machines without the repo.
+                (cl-loop for p in '("~/dev/PML/ddssm-pml/todos.org")
+                         for f = (expand-file-name p)
+                         when (file-exists-p f) collect f))
 
         org-default-notes-file (expand-file-name "inbox.org" org-directory))
+
+  ;; --- GTD: TODO keywords (Doom defaults + NEXT) -----------------
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "NEXT(N)" "PROJ(p)" "LOOP(r)" "STRT(s)"
+                    "WAIT(w)" "HOLD(h)" "IDEA(i)"
+                    "|" "DONE(d)" "KILL(k)")
+          (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)")
+          (sequence "|" "OKAY(o)" "YES(y)" "NO(n)")))
+
+  ;; --- GTD: refile anywhere in the agenda ------------------------
+  (setq org-refile-targets '((org-agenda-files :maxlevel . 3))
+        org-refile-use-outline-path 'file
+        org-outline-path-complete-in-steps nil
+        org-refile-allow-creating-parent-nodes 'confirm)
+
+  ;; --- GTD: tags (contexts + topics) -----------------------------
+  (setq org-tag-alist
+        '((:startgroup)
+          ("@home"     . ?h) ("@work"     . ?w) ("@errand" . ?e)
+          ("@phone"    . ?p) ("@computer" . ?c) ("@email"  . ?E)
+          ("@mike"     . ?m)
+          (:endgroup)
+          ("admin"     . ?a) ("bills"     . ?b) ("car"      . ?v)
+          ("house"     . ?H) ("travel"    . ?T) ("buy"      . ?B)
+          ("research"  . ?r) ("ddssm"     . ?d) ("followup" . ?f)
+          ("shared"    . ?s) ("private"   . ?P)))
+
+  ;; --- GTD: capture templates ------------------------------------
+  ;; Override Doom's default "t" (which targets todo.org under * Inbox)
+  ;; so SPC X t captures top-level into inbox.org instead.
+  (setf (alist-get "t" org-capture-templates nil nil #'equal)
+        '("Todo (inbox)" entry
+          (file (lambda () (expand-file-name "inbox.org" org-directory)))
+          "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n%i\n%a"
+          :prepend t))
+
+  ;; "e" — Email follow-up from mu4e; tags itself and links the message.
+  (add-to-list 'org-capture-templates
+               '("e" "Email follow-up" entry
+                 (file (lambda () (expand-file-name "inbox.org" org-directory)))
+                 "* TODO %? :@email:followup:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n%a\n"
+                 :prepend t))
+
   (add-to-list 'org-capture-templates
                '("M" "DDSSD meeting" entry
                  (file+headline "~/sync/org/roam/20260317175125-diffusion_driven_state_space_models.org" "Meetings")
                  "** %<%Y-%m-%d> %^{Meeting title}\n- Attendees: %?\n*** Action Items\n"
                  :prepend t)
                )
+
+  ;; --- GTD: custom agenda views ----------------------------------
+  (setq org-agenda-custom-commands
+        '(("n" "Next actions"               todo "NEXT")
+          ("w" "Waiting on"                 todo "WAIT|HOLD")
+          ("i" "Inbox to process"           tags "+CATEGORY=\"inbox\"")
+          ("p" "Stuck projects (PROJ w/o NEXT)"
+           tags-todo "/PROJ"
+           ((org-agenda-skip-function
+             '(org-agenda-skip-entry-if 'todo '("NEXT")))))
+          ("f" "Followups to schedule"      tags-todo "+followup")
+          ("b" "Shopping list (buy online)" tags-todo "+buy")
+          ("k" "For Mike (next meeting)"    tags-todo "+@mike")
+          ("R" "Weekly review"
+           ((agenda "" ((org-agenda-span 7)))
+            (todo "NEXT")
+            (todo "WAIT|HOLD")
+            (tags-todo "/PROJ"
+                       ((org-agenda-skip-function
+                         '(org-agenda-skip-entry-if 'todo '("NEXT")))))
+            (tags "+CATEGORY=\"inbox\"")))))
   ;; Open PDF links inside Emacs (so pdf-tools/doc-view handles them)
   (setf (cdr (assoc "\\.pdf\\'" org-file-apps)) 'emacs)
 
@@ -173,8 +246,53 @@
   (add-to-list 'org-latex-packages-alist '("" "xcolor" t ("lualatex" "xelatex"))) 
   (add-to-list 'org-latex-packages-alist '("" "selnolig" t ("lualatex"))) 
   (add-to-list 'org-latex-packages-alist '("" "cleveref" t ("lualatex"))) 
-  (add-to-list 'org-latex-packages-alist '("" "booktabs" t ("lualatex"))) 
-  (add-to-list 'org-latex-packages-alist '("english" "babel" t nil)) 
+  (add-to-list 'org-latex-packages-alist '("" "booktabs" t ("lualatex")))
+  (add-to-list 'org-latex-packages-alist '("english" "babel" t nil))
+
+  ;; Code highlighting, plots, diagrams, SVG include.
+  (add-to-list 'org-latex-packages-alist '("" "minted"   t ("lualatex")))
+  (add-to-list 'org-latex-packages-alist '("" "pgfplots" t ("lualatex")))
+  (add-to-list 'org-latex-packages-alist '("" "tikz-cd"  t ("lualatex")))
+  (add-to-list 'org-latex-packages-alist '("" "forest"   t ("lualatex")))
+  (add-to-list 'org-latex-packages-alist '("inkscapelatex=false" "svg" t ("lualatex")))
+
+  ;; Use minted for source-code listings on export.
+  (setq org-latex-listings 'minted)
+  (setq org-latex-minted-options
+        '(("breaklines" "true")
+          ("frame"      "lines")
+          ("fontsize"   "\\small")))
+
+  ;; MSU-branded beamer class for org-export. Use via:
+  ;;   #+LATEX_CLASS: msu-beamer
+  ;;   #+BEAMER_THEME: msu
+  ;; The two .sty files live in ~/.config/doom/templates/latex/ and are
+  ;; discoverable by latexmk thanks to the TEXINPUTS export in ~/.latexmkrc.
+  (with-eval-after-load 'ox-latex
+    (add-to-list 'org-latex-classes
+                 '("msu-beamer"
+                   "\\documentclass[presentation]{beamer}
+[NO-DEFAULT-PACKAGES]
+[PACKAGES]
+\\usepackage{msu-colors}
+\\usepackage{beamerthememsu}"
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+
+    ;; MSU-branded conference poster (tikzposter). Use via:
+    ;;   #+LATEX_CLASS: msu-poster
+    ;; Poster blocks don't map cleanly to org headlines; use the `pblock'
+    ;; snippet to wrap content in \block{title}{body}.
+    (add-to-list 'org-latex-classes
+                 '("msu-poster"
+                   "\\documentclass[25pt,a0paper,portrait,margin=0mm,innermargin=15mm,blockverticalspace=15mm,colspace=15mm,subcolspace=8mm]{tikzposter}
+[NO-DEFAULT-PACKAGES]
+[PACKAGES]
+\\usepackage{msu-colors}
+\\usepackage{tikzposterthemeMSU}
+\\usetheme{MSU}"
+                   ("\\section{%s}" . "\\section*{%s}"))))
 
   ;; preview stuff
   ;;
@@ -324,9 +442,11 @@
   )
 
 
+;; `+latex-viewers' is consumed by Doom's :lang latex module while it loads;
+;; it MUST be set at top level (not inside an `after! latex' block).
+(setq +latex-viewers '(pdf-tools))
+
 (after! latex
-  ;; use emacs pdf-tools for viewing compiled pdfs
-  (setq +latex-viewers '(pdf-tools))
   ;; Force AUCTeX's viewer used by C-c C-v (TeX-view)
   (setq TeX-view-program-selection
         '((output-pdf "PDF Tools")
@@ -385,11 +505,10 @@
         :desc "View"           "v" #'TeX-view))
 
 
-;; Keep your prefix style
-(setq cdlatex-math-symbol-prefix ?\;)
-
-
 (after! cdlatex
+  ;; Keep your prefix style
+  (setq cdlatex-math-symbol-prefix ?\;)
+
   (setq cdlatex-command-alist
         '(
           ("int"   "Insert integral"  "∫_{?}^{}"  cdlatex-position-cursor nil nil t)
@@ -520,8 +639,9 @@
   (setq lsp-warn-no-matched-clients nil))
 ;; ======== LLM ==========
 ;; using :llm in :tools doom block
-(setq gptel-model 'claude-3.7-sonnet
-      gptel-backend (gptel-make-gh-copilot "Copilot" :host "api.individual.githubcopilot.com"))
+(after! gptel
+  (setq gptel-model 'claude-3.7-sonnet
+        gptel-backend (gptel-make-gh-copilot "Copilot" :host "api.individual.githubcopilot.com")))
 ;; OPTIONAL configuration
 ;; ===========================================================
 ;; mu4e — General
