@@ -1,0 +1,143 @@
+#+TITLE: Claude Code in Doom Emacs
+#+AUTHOR: Jack Ruder
+#+OPTIONS: toc:2 num:nil
+
+* Overview
+
+This config integrates [[https://docs.anthropic.com/claude/docs/claude-code][Claude Code]] — Anthropic's agentic coding CLI — into
+Doom Emacs via [[https://github.com/manzaltu/claude-code-ide.el][claude-code-ide.el]]. Unlike =gptel= (which provides
+synchronous chat over the Copilot backend), claude-code-ide runs the
+=claude= CLI inside a vterm side window and bridges Emacs to it over the
+Model Context Protocol (MCP), so the model can call Emacs functions
+(LSP, xref, tree-sitter, project.el, ediff) as tools.
+
+Keep =gptel= for one-shot questions; reach for Claude Code when you want
+the agent to actually edit files.
+
+* Prerequisites
+
+1. Install the Claude Code CLI:
+   #+begin_src sh
+   npm install -g @anthropic-ai/claude-code
+   # or use the official installer from docs.anthropic.com
+   #+end_src
+2. Authenticate once in any shell:
+   #+begin_src sh
+   claude login
+   #+end_src
+   Alternatively, export =ANTHROPIC_API_KEY= in your shell init.
+3. Verify =claude= is on the =PATH= Emacs sees:
+   =M-x claude-code-ide-check-status=
+4. =doom sync= after pulling these changes, then restart Emacs (or
+   =M-x doom/reload=).
+
+* Keybindings
+
+All bindings live under the Doom LLM leader =SPC l c=:
+
+| Key       | Command                              | What it does                                   |
+|-----------+--------------------------------------+------------------------------------------------|
+| =SPC l c c= | =claude-code-ide=                    | Start (or focus) the session for this project  |
+| =SPC l c m= | =claude-code-ide-menu=               | Transient menu — all commands, discoverable    |
+| =SPC l c t= | =claude-code-ide-toggle=             | Hide / show the Claude side window             |
+| =SPC l c p= | =claude-code-ide-send-prompt=        | Fire a one-shot prompt from the minibuffer     |
+| =SPC l c r= | =claude-code-ide-insert-at-mentioned= | Send active region as =@file#Lx-Ly= reference |
+| =SPC l c k= | =claude-code-ide-continue=           | Continue the most recent conversation          |
+| =SPC l c R= | =claude-code-ide-resume=             | Pick a past session to resume                  |
+| =SPC l c l= | =claude-code-ide-list-sessions=      | List & switch between active sessions          |
+| =SPC l c b= | =claude-code-ide-switch-to-buffer=   | Jump to the Claude buffer for this project     |
+| =SPC l c s= | =claude-code-ide-stop=               | Stop the session for this project              |
+| =SPC l c ?= | =claude-code-ide-check-status=       | Verify the CLI is installed & reachable        |
+
+When the cursor is in the vterm side window, =RET= submits, =S-RET= or
+=M-RET= inserts a newline (depends on backend; see the transient menu).
+
+* Common Workflows
+
+** Pair-program on a function
+1. Place point in the function.
+2. =SPC l c c= to open the session in a right-side window.
+3. =v i f= (or whatever your text-object is) to select the function,
+   then =SPC l c r= to push it into the prompt as an =@mention= — Claude
+   sees the actual file path + line range, not a copy-pasted blob.
+4. Ask: "Refactor this to use early returns." When Claude proposes a
+   diff, ediff opens; =n= / =p= to navigate hunks, =a= / =b= to choose.
+
+** One-shot question without opening the side window
+=SPC l c p=, type the prompt, =RET=. Useful for "what does this error
+mean?" without committing to a full session.
+
+** Multiple projects open at once
+Each project gets its own session, keyed by project root. =SPC l c l=
+lists them; =SPC l c b= jumps to the current project's buffer.
+
+* How the MCP bridge works
+
+On startup, =claude-code-ide-emacs-tools-setup= boots a local WebSocket
+MCP server inside Emacs and registers tool handlers that wrap:
+
+- =flycheck= / =flymake= → =getDiagnostics=
+- =xref= → =getDefinition=, =getReferences=
+- =project.el= → =getOpenBuffers=, file listing
+- =tree-sitter= / =imenu= → symbol queries
+- =ediff= → diff review UI
+
+When the CLI is launched via =claude-code-ide=, it's told to connect to
+that server. The result: Claude queries live Emacs state instead of
+re-reading files from disk, which makes it both faster and more
+accurate on a dirty buffer.
+
+To sanity-check the bridge: ask Claude "list the diagnostics in the
+current buffer" — the response should match what flycheck shows, and
+=claude-code-ide-show-debug= will log the tool call.
+
+* Configuration knobs
+
+Set in =config.el= today (all are defaults except being explicit):
+
+| Variable                              | Value     | Notes                                       |
+|---------------------------------------+-----------+---------------------------------------------|
+| =claude-code-ide-terminal-backend=    | ='vterm=  | Uses Doom's existing vterm                  |
+| =claude-code-ide-use-side-window=     | =t=       | Dedicated side window vs. random buffer     |
+| =claude-code-ide-window-side=         | ='right=  | Mirrors a typical VS Code layout            |
+| =claude-code-ide-window-width=        | =100=     | Columns                                     |
+| =claude-code-ide-focus-on-open=       | =t=       | Cursor jumps to Claude on launch            |
+| =claude-code-ide-use-ide-diff=        | =t=       | Open ediff for proposed edits               |
+
+Useful knobs not set (defaults are fine, but worth knowing):
+
+- =claude-code-ide-cli-extra-flags= — e.g. ="--model opus"= or
+  ="--allowed-tools=Bash"=.
+- =claude-code-ide-cli-path= — override if =claude= isn't on =$PATH=.
+- =claude-code-ide-enable-execute-code= — when =t=, exposes an Elisp eval
+  tool so Claude can introspect Emacs at runtime. Default =t=, flip to
+  =nil= if that makes you nervous.
+- =claude-code-ide-system-prompt= — string appended to every session's
+  system prompt; handy for repo-wide conventions.
+- =claude-code-ide-diagnostics-backend= — =auto= picks flycheck or
+  flymake; force one if both are loaded.
+- =claude-code-ide-no-flicker= / =claude-code-ide-vterm-anti-flicker=
+  — toggle if you see vterm tearing.
+
+* Troubleshooting
+
+- *"claude: command not found"* — Emacs inherits =$PATH= from the
+  process that launched it. On macOS, GUI Emacs often misses your
+  shell PATH; either install =exec-path-from-shell=, set
+  =claude-code-ide-cli-path= to the absolute path, or launch Emacs from
+  a terminal.
+- *Auth failures* — re-run =claude login= from a shell with the same
+  =$PATH= / =$HOME= as Emacs.
+- *vterm flicker* — try =(setq claude-code-ide-no-flicker t)=.
+- *Hung session* — =SPC l c s= to stop, then =SPC l c c= to restart.
+- *Want to see the wire traffic* — =(setq claude-code-ide-debug t)= and
+  =M-x claude-code-ide-show-debug=.
+
+* Relationship to other AI tools in this config
+
+- =gptel= (=config.el:643-645=) → quick chat over GitHub Copilot's
+  Claude endpoint. No tool use, no file edits.
+- =claude-code-ide= (here) → full agent over the official Claude Code
+  CLI with MCP tool calls and ediff-driven edits.
+
+Both can coexist; pick whichever fits the task.

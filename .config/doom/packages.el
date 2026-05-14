@@ -88,3 +88,7 @@
 
                                         ; for R
 (package! ess)
+
+;; Claude Code (agentic CLI) IDE integration
+(package! claude-code-ide
+  :recipe (:host github :repo "manzaltu/claude-code-ide.el"))
