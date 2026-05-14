@@ -1,0 +1,5 @@
+# latexindent searches this file for additional YAMLs to load by default
+# (see `latexindent -h` and section "User-Level Settings"). Note:
+# `~` and `$HOME` are NOT expanded here — absolute paths only.
+paths:
+    - /home/jack/.config/latexindent/defaultSettings.yaml

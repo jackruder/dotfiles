@@ -2,6 +2,10 @@
 $pdf_mode = 4;  # 4 = lualatex, 5 = xelatex
 $lualatex = 'lualatex -synctex=1 -file-line-error -interaction=nonstopmode %O %S';
 
+# Make the dotfiles template directory (msu-colors.sty, beamerthememsu.sty, ...)
+# discoverable from any project compiled with latexmk.
+$ENV{'TEXINPUTS'} = "$ENV{'HOME'}/.config/doom/templates/latex//:" . ($ENV{'TEXINPUTS'} // '');
+
 # Put aux and output files under build/
 $aux_dir = 'build';
 $out_dir = 'build';

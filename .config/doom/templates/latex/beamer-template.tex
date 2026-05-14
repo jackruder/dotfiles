@@ -1,0 +1,58 @@
+% !TEX program = lualatex
+\documentclass[presentation,aspectratio=169]{beamer}
+
+\usepackage{fontspec}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage[english]{babel}
+\usepackage{booktabs}
+\usepackage{cleveref}
+\usepackage{selnolig}
+\usepackage{xcolor}
+\usepackage[autostyle]{csquotes}
+\usepackage{microtype}
+\usepackage{lualatex-math}
+\usepackage{unicode-math}
+\usepackage{amsthm}
+\usepackage{mathtools}
+
+\usepackage{msu-colors}
+\usepackage{beamerthememsu}
+\usetheme{msu}
+
+\title{Presentation Title}
+\subtitle{An optional subtitle}
+\author{Jack Ruder}
+\institute{Montana State University}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+\section{Introduction}
+
+\begin{frame}{Motivation}
+  \begin{itemize}
+    \item First point.
+    \item Second point.
+    \item Third point.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{A block example}
+  \begin{block}{Theorem}
+    Statement of the theorem in MSU Blue.
+  \end{block}
+  \begin{alertblock}{Highlight}
+    An accent block in MSU Gold.
+  \end{alertblock}
+\end{frame}
+
+\end{document}
