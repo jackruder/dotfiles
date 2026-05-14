@@ -642,6 +642,38 @@
 (after! gptel
   (setq gptel-model 'claude-3.7-sonnet
         gptel-backend (gptel-make-gh-copilot "Copilot" :host "api.individual.githubcopilot.com")))
+
+;; ======== Claude Code IDE ==========
+;; Agentic Claude Code CLI integration. Requires the `claude' binary on PATH
+;; (https://docs.anthropic.com/claude/docs/claude-code). Auth: run `claude login'
+;; once in a terminal, or set ANTHROPIC_API_KEY.
+;; See $DOOMDIR/claude-code-guide.org for usage details.
+(use-package! claude-code-ide
+  :defer t
+  :config
+  (setq claude-code-ide-terminal-backend 'vterm
+        claude-code-ide-use-side-window  t
+        claude-code-ide-window-side      'right
+        claude-code-ide-window-width     100
+        claude-code-ide-focus-on-open    t
+        claude-code-ide-use-ide-diff     t)
+  ;; Expose Emacs (LSP/xref/tree-sitter/project) to Claude as MCP tools.
+  (claude-code-ide-emacs-tools-setup))
+
+(map! :leader
+      (:prefix ("l c" . "claude code")
+       :desc "Start / open"         "c" #'claude-code-ide
+       :desc "Transient menu"       "m" #'claude-code-ide-menu
+       :desc "Toggle window"        "t" #'claude-code-ide-toggle
+       :desc "Send prompt"          "p" #'claude-code-ide-send-prompt
+       :desc "Send region as @ref"  "r" #'claude-code-ide-insert-at-mentioned
+       :desc "Continue last"        "k" #'claude-code-ide-continue
+       :desc "Resume session…"      "R" #'claude-code-ide-resume
+       :desc "List sessions"        "l" #'claude-code-ide-list-sessions
+       :desc "Switch to buffer"     "b" #'claude-code-ide-switch-to-buffer
+       :desc "Stop"                 "s" #'claude-code-ide-stop
+       :desc "Check CLI status"     "?" #'claude-code-ide-check-status))
+
 ;; OPTIONAL configuration
 ;; ===========================================================
 ;; mu4e — General
