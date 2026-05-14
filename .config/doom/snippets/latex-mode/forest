@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: forest tree
+# key: forest
+# uuid: forest
+# --
+\\begin{forest}
+    [${1:root}
+        [${2:child}]
+        [${3:child}]
+    ]
+\\end{forest}
+$0

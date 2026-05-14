@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: \column (beamer)
+# key: col
+# uuid: col
+# --
+\\column{${1:0.5}\\textwidth}
+$0

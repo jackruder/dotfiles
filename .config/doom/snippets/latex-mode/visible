@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: \visible<spec>{...}
+# key: visible
+# uuid: overlay-visible
+# --
+\\visible<${1:1-}>{${2:content}}$0

@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: minted code block
+# key: minted
+# uuid: minted
+# --
+\\begin{minted}{${1:python}}
+$0
+\\end{minted}
