@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: beamer frame
+# key: frame
+# uuid: msu-frame
+# --
+\begin{frame}{${1:Frame title}}
+    $0
+\end{frame}

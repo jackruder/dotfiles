@@ -1,0 +1,116 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerthememsu}[2026/05/14 Montana State University beamer theme]
+
+\RequirePackage{msu-colors}
+\RequirePackage{fontspec}
+
+\mode<presentation>
+
+% Fonts: TeX Gyre Heros for sans (Helvetica-compatible, MSU supporting),
+% STIX Two Text for serif body. Math is handled by the document preamble
+% (unicode-math + lualatex-math).
+\setsansfont{TeX Gyre Heros}
+\setmainfont{STIX Two Text}
+
+% Default to sans for slides.
+\renewcommand{\familydefault}{\sfdefault}
+
+% Color theme
+\setbeamercolor{normal text}{fg=MSUDarkGrey,bg=MSUWhite}
+\setbeamercolor{alerted text}{fg=MSUGold}
+\setbeamercolor{example text}{fg=MSUBlue}
+\setbeamercolor{structure}{fg=MSUBlue}
+
+\setbeamercolor{palette primary}{fg=MSUWhite,bg=MSUBlue}
+\setbeamercolor{palette secondary}{fg=MSUWhite,bg=MSUBlue}
+\setbeamercolor{palette tertiary}{fg=MSUWhite,bg=MSUBlue}
+
+\setbeamercolor{title}{fg=MSUWhite,bg=MSUBlue}
+\setbeamercolor{subtitle}{fg=MSUGold}
+\setbeamercolor{author}{fg=MSUDarkGrey}
+\setbeamercolor{institute}{fg=MSUMidGrey}
+\setbeamercolor{date}{fg=MSUMidGrey}
+
+\setbeamercolor{frametitle}{fg=MSUWhite,bg=MSUBlue}
+\setbeamercolor{framesubtitle}{fg=MSUGold}
+
+\setbeamercolor{item}{fg=MSUGold}
+\setbeamercolor{itemize item}{fg=MSUGold}
+\setbeamercolor{itemize subitem}{fg=MSUGold}
+\setbeamercolor{enumerate item}{fg=MSUBlue}
+\setbeamercolor{section in toc}{fg=MSUBlue}
+\setbeamercolor{subsection in toc}{fg=MSUDarkGrey}
+
+\setbeamercolor{block title}{fg=MSUWhite,bg=MSUBlue}
+\setbeamercolor{block body}{fg=MSUDarkGrey,bg=MSULightGrey}
+\setbeamercolor{block title alerted}{fg=MSUDarkGrey,bg=MSUGold}
+\setbeamercolor{block body alerted}{fg=MSUDarkGrey,bg=MSULightGrey}
+
+% Font theme
+\setbeamerfont{title}{series=\bfseries,size=\LARGE}
+\setbeamerfont{subtitle}{series=\mdseries,size=\large,shape=\itshape}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+\setbeamerfont{framesubtitle}{series=\mdseries,size=\normalsize,shape=\itshape}
+\setbeamerfont{block title}{series=\bfseries}
+
+% Inner theme: rounded blocks, simple bullets
+\useinnertheme{rounded}
+\setbeamertemplate{itemize item}{\raisebox{0.15ex}{\textbullet}}
+\setbeamertemplate{itemize subitem}{\textendash}
+\setbeamertemplate{navigation symbols}{}
+
+% Frame title: blue bar with a gold rule below
+\setbeamertemplate{frametitle}{%
+  \nointerlineskip
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2.6ex,dp=1.2ex,leftskip=0.6em,rightskip=0.6em]{frametitle}%
+    \usebeamerfont{frametitle}\insertframetitle%
+    \ifx\insertframesubtitle\@empty\else%
+      \quad{\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle}%
+    \fi%
+  \end{beamercolorbox}%
+  \vskip-1pt%
+  {\color{MSUGold}\rule{\paperwidth}{1.2pt}}%
+}
+
+% Title page
+\setbeamertemplate{title page}{%
+  \vbox{}\vfill
+  {\usebeamercolor[fg]{structure}\rule{\textwidth}{1.5pt}\par}
+  \vskip0.6em
+  \begin{beamercolorbox}[sep=8pt,left]{title}
+    \usebeamerfont{title}\inserttitle\par%
+    \ifx\insertsubtitle\@empty\else%
+      \vskip0.4em%
+      {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+    \fi
+  \end{beamercolorbox}
+  \vskip0.4em
+  {\color{MSUGold}\rule{\textwidth}{1.2pt}\par}
+  \vskip1.2em
+  \begin{beamercolorbox}[sep=8pt,left]{author}
+    \usebeamerfont{author}\insertauthor
+  \end{beamercolorbox}
+  \begin{beamercolorbox}[sep=8pt,left]{institute}
+    \usebeamerfont{institute}\insertinstitute
+  \end{beamercolorbox}
+  \begin{beamercolorbox}[sep=8pt,left]{date}
+    \usebeamerfont{date}\insertdate
+  \end{beamercolorbox}
+  \vfill
+}
+
+% Footline: minimal — short title left, page x/y right in gold
+\setbeamertemplate{footline}{%
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.6\paperwidth,ht=2.5ex,dp=1ex,leftskip=0.8em]{author in head/foot}%
+      \usebeamerfont{author in head/foot}\color{MSUMidGrey}\insertshorttitle%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.4\paperwidth,ht=2.5ex,dp=1ex,rightskip=0.8em]{date in head/foot}%
+      \hfill\color{MSUGold}\insertframenumber\,/\,\inserttotalframenumber%
+    \end{beamercolorbox}}%
+}
+
+\mode<all>
+
+\endinput

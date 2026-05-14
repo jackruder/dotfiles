@@ -46,9 +46,7 @@
 (setq display-line-numbers-type t)
 
 ;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/sync/org/")
-
+;; change `org-directory'. It must be set before org loads! (set once, below.)
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
@@ -93,29 +91,18 @@
 (setq-default vterm-shell (or (executable-find "fish") "/bin/fish"))
 (setq-default explicit-shell-file-name (or (executable-find "fish") "/bin/fish"))
 
-;;; Evil 
-(after! evil-surround
-  (global-evil-surround-mode 1))
-(after! evil-nerd-commenter
-  (evilnc-default-hotkeys))
-(after! evil-embrace
-  (evil-embrace-enable-evil-surround-integration))
-(after! evil-easymotion
-  (evilem-default-keybindings "SPC"))
-(after! evil-snipe
-  (evil-snipe-mode 1)
-  (evil-snipe-override-mode 1))
-
-
-
+;;; Evil
+;; The evil-surround / evil-nerd-commenter / evil-embrace / evil-easymotion /
+;; evil-snipe packages are commented out in packages.el. Re-add their
+;; `after!' configs here if you re-enable them.
 
 ;;; ORG ------------------------------------------------------------
 
 ;; Base location (safe to set early)
 (setq org-directory (expand-file-name "~/sync/org/"))
 
-(add-hook 'org-mode-hook #'turn-on-org-cdlatex)
 (after! org
+  (add-hook 'org-mode-hook #'turn-on-org-cdlatex)
   (setq org-agenda-files (list (expand-file-name "inbox.org" org-directory)
                                (expand-file-name "agenda.org" org-directory)
                                (expand-file-name "projects.org" org-directory)
@@ -174,7 +161,24 @@
   (add-to-list 'org-latex-packages-alist '("" "selnolig" t ("lualatex"))) 
   (add-to-list 'org-latex-packages-alist '("" "cleveref" t ("lualatex"))) 
   (add-to-list 'org-latex-packages-alist '("" "booktabs" t ("lualatex"))) 
-  (add-to-list 'org-latex-packages-alist '("english" "babel" t nil)) 
+  (add-to-list 'org-latex-packages-alist '("english" "babel" t nil))
+
+  ;; MSU-branded beamer class for org-export. Use via:
+  ;;   #+LATEX_CLASS: msu-beamer
+  ;;   #+BEAMER_THEME: msu
+  ;; The two .sty files live in ~/.config/doom/templates/latex/ and are
+  ;; discoverable by latexmk thanks to the TEXINPUTS export in ~/.latexmkrc.
+  (with-eval-after-load 'ox-latex
+    (add-to-list 'org-latex-classes
+                 '("msu-beamer"
+                   "\\documentclass[presentation]{beamer}
+[NO-DEFAULT-PACKAGES]
+[PACKAGES]
+\\usepackage{msu-colors}
+\\usepackage{beamerthememsu}"
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
 
 
   ;; preview stuff
@@ -325,9 +329,11 @@
   )
 
 
+;; `+latex-viewers' is consumed by Doom's :lang latex module while it loads;
+;; it MUST be set at top level (not inside an `after! latex' block).
+(setq +latex-viewers '(pdf-tools))
+
 (after! latex
-  ;; use emacs pdf-tools for viewing compiled pdfs
-  (setq +latex-viewers '(pdf-tools))
   ;; Force AUCTeX's viewer used by C-c C-v (TeX-view)
   (setq TeX-view-program-selection
         '((output-pdf "PDF Tools")
@@ -386,11 +392,10 @@
         :desc "View"           "v" #'TeX-view))
 
 
-;; Keep your prefix style
-(setq cdlatex-math-symbol-prefix ?\;)
-
-
 (after! cdlatex
+  ;; Keep your prefix style
+  (setq cdlatex-math-symbol-prefix ?\;)
+
   (setq cdlatex-command-alist
         '(
           ("int"   "Insert integral"  "∫_{?}^{}"  cdlatex-position-cursor nil nil t)
@@ -521,8 +526,9 @@
   (setq lsp-warn-no-matched-clients nil))
 ;; ======== LLM ==========
 ;; using :llm in :tools doom block
-(setq gptel-model 'claude-3.7-sonnet
-      gptel-backend (gptel-make-gh-copilot "Copilot" :host "api.individual.githubcopilot.com"))
+(after! gptel
+  (setq gptel-model 'claude-3.7-sonnet
+        gptel-backend (gptel-make-gh-copilot "Copilot" :host "api.individual.githubcopilot.com")))
 ;; OPTIONAL configuration
 ;; ===========================================================
 ;; mu4e — General

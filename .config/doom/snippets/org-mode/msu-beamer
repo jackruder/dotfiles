@@ -1,0 +1,19 @@
+# -*- mode: snippet -*-
+# name: msu-beamer (org export)
+# key: msubeamer
+# uuid: org-msu-beamer
+# --
+#+TITLE: ${1:Presentation Title}
+#+SUBTITLE: ${2:Subtitle}
+#+AUTHOR: ${3:Jack Ruder}
+#+DATE: ${4:\today}
+#+LATEX_CLASS: msu-beamer
+#+LATEX_CLASS_OPTIONS: [presentation,aspectratio=169]
+#+BEAMER_THEME: msu
+#+BEAMER_HEADER: \institute{${5:Montana State University}}
+#+OPTIONS: H:2 toc:nil num:t
+#+STARTUP: beamer
+
+* ${6:Introduction}
+** ${7:Frame title}
+   $0
