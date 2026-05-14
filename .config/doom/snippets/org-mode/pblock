@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: tikzposter \block{title}{body}
+# key: pblock
+# uuid: org-pblock
+# --
+#+BEGIN_EXPORT latex
+\\block{${1:Title}}{
+#+END_EXPORT
+
+$0
+
+#+BEGIN_EXPORT latex
+}
+#+END_EXPORT

@@ -6,7 +6,7 @@ Host 127.0.0.1
 Port 1143
 User j@ckruder.xyz 
 PassCmd "pass show email/proton-bridge"
-SSLType STARTTLS
+TLSType STARTTLS
 CertificateFile ~/.config/protonmail/bridge-v3/cert.pem
 
 IMAPStore proton-remote

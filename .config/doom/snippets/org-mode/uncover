@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: \uncover<spec>{...} (beamer overlay, latex export)
+# key: uncover
+# uuid: org-overlay-uncover
+# --
+@@latex:\\uncover<${1:1-}>{@@${2:content}@@latex:}@@$0
