@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: \only<spec>{...} (beamer overlay, latex export)
+# key: only
+# uuid: org-overlay-only
+# --
+@@latex:\\only<${1:1-}>{@@${2:content}@@latex:}@@$0

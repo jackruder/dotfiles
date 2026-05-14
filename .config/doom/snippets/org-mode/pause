@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: \pause (beamer, latex export)
+# key: pause
+# uuid: org-overlay-pause
+# --
+@@latex:\\pause@@$0

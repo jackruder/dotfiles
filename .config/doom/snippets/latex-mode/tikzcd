@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: tikz-cd commutative diagram
+# key: tikzcd
+# uuid: tikzcd
+# --
+\\begin{tikzcd}
+    ${1:A} \\arrow[r, "${2:f}"] \\arrow[d, "${3:g}"'] & ${4:B} \\arrow[d, "${5:h}"] \\\\
+    ${6:C} \\arrow[r, "${7:k}"'] & ${8:D}
+\\end{tikzcd}
+$0
