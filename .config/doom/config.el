@@ -116,12 +116,18 @@
 
 (add-hook 'org-mode-hook #'turn-on-org-cdlatex)
 (after! org
-  (setq org-agenda-files (list (expand-file-name "inbox.org"    org-directory)
-                               (expand-file-name "agenda.org"   org-directory)
-                               (expand-file-name "projects.org" org-directory)
-                               (expand-file-name "admin.org"    org-directory)
-                               (expand-file-name "work.org"     org-directory)
-                               (expand-file-name "todo.org"     org-directory))
+  (setq org-agenda-files
+        (append (list (expand-file-name "inbox.org"    org-directory)
+                      (expand-file-name "agenda.org"   org-directory)
+                      (expand-file-name "projects.org" org-directory)
+                      (expand-file-name "admin.org"    org-directory)
+                      (expand-file-name "work.org"     org-directory)
+                      (expand-file-name "todo.org"     org-directory))
+                ;; Project-local task files — only include when present
+                ;; so agenda doesn't fail on machines without the repo.
+                (cl-loop for p in '("~/dev/PML/ddssm-pml/todos.org")
+                         for f = (expand-file-name p)
+                         when (file-exists-p f) collect f))
 
         org-default-notes-file (expand-file-name "inbox.org" org-directory))
 
