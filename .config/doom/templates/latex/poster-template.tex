@@ -1,0 +1,67 @@
+% !TEX program = lualatex
+% Build:  latexmk -lualatex -shell-escape poster-template.tex
+\documentclass[25pt,a0paper,portrait,margin=0mm,innermargin=15mm,
+    blockverticalspace=15mm,colspace=15mm,subcolspace=8mm]{tikzposter}
+
+\usepackage{fontspec}
+\usepackage[english]{babel}
+\usepackage{booktabs}
+\usepackage{cleveref}
+\usepackage{xcolor}
+\usepackage[autostyle]{csquotes}
+\usepackage{microtype}
+\usepackage{lualatex-math}
+\usepackage{unicode-math}
+\usepackage{mathtools}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepackage{tikz-cd}
+\usepackage{forest}
+\usepackage{minted}
+\usepackage[inkscapelatex=false]{svg}
+
+\usepackage{msu-colors}
+\usepackage{tikzposterthemeMSU}
+
+\usetheme{MSU}
+
+\title{\parbox{0.9\textwidth}{\centering Poster Title Goes Here}}
+\author{Jack Ruder}
+\institute{Montana State University}
+
+\begin{document}
+
+\maketitle
+
+\begin{columns}
+    \column{0.5}
+    \block{Introduction}{
+        Motivation, background, the problem statement. Math like
+        $\nabla \cdot \mathbf{E} = \rho/\varepsilon_0$ renders normally.
+    }
+    \block{Methods}{
+        Describe the approach. Inner blocks for emphasis:
+        \innerblock{Key idea}{One-line summary in a gold-tinted box.}
+    }
+
+    \column{0.5}
+    \block{Results}{
+        \begin{center}
+            \begin{tikzpicture}
+                \begin{axis}[width=0.85\linewidth, height=7cm,
+                    xlabel=$x$, ylabel=$y$]
+                    \addplot[domain=-3:3, smooth, thick, MSUBlue]
+                        {exp(-x^2)};
+                \end{axis}
+            \end{tikzpicture}
+        \end{center}
+    }
+    \block{Conclusion}{
+        Wrap-up. Contact: \texttt{jack.ruder@student.montana.edu}.
+    }
+\end{columns}
+
+\node[note, targetoffsetx=12cm, targetoffsety=-6cm,
+      rotate=8, width=10cm] at (blockbody) {Highlighted aside.};
+
+\end{document}

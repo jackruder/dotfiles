@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: \onslide<spec> ...
+# key: onslide
+# uuid: overlay-onslide
+# --
+\\onslide<${1:+-}>${2:content}$0
