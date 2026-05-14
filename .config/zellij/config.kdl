@@ -572,7 +572,7 @@ default_mode "normal"
 //   - detach (Default)
 //   - quit
 // 
-// on_force_close "quit"
+on_force_close "detach"
  
 // Configure the scroll back buffer size
 // This is the number of lines zellij stores for each pane in the scroll back
@@ -581,7 +581,7 @@ default_mode "normal"
 // Valid values: positive integers
 // Default value: 10000
 // 
-// scroll_buffer_size 10000
+scroll_buffer_size 100000
  
 // Provide a command to execute when copying text. The text will be piped to
 // the stdin of the program to perform the copy. This can be used with
@@ -624,7 +624,7 @@ session_name "default session"
 // if it is already running or creates it otherwise.
 // Default: false
 // 
-// attach_to_session true
+attach_to_session true
  
 // Toggle between having Zellij lay out panes according to a predefined set of layouts whenever possible
 // Options:
@@ -675,7 +675,7 @@ session_name "default session"
 // (Requires restart)
 // Default: true (if the host terminal supports it)
 // 
-// support_kitty_keyboard_protocol false
+support_kitty_keyboard_protocol true
  
 // Whether to stack panes when resizing beyond a certain size
 // Default: true
@@ -685,7 +685,7 @@ session_name "default session"
 // Whether to show tips on startup
 // Default: true
 // 
-show_startup_tips false
+show_startup_tips true
  
 // Whether to show release notes on first version run
 // Default: true
