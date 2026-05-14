@@ -1,4 +1,4 @@
 # latexindent searches this file for additional YAMLs to load by default
 # (see `latexindent -h` and section "User-Level Settings").
 paths:
-    - /home/user/.config/latexindent/defaultSettings.yaml
+    - ~/.config/latexindent/defaultSettings.yaml
