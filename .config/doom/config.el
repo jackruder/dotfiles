@@ -101,6 +101,7 @@
 ;; Base location (safe to set early)
 (setq org-directory (expand-file-name "~/sync/org/"))
 
+(after! org
 ;; Global macros for inline beamer overlays. Use in org with
 ;;   {{{only(1-2, important text)}}}
 ;;   {{{pause}}}
@@ -115,21 +116,92 @@
         ("onslide" . "@@latex:\\onslide<$1>@@")
         ("oalert"  . "@@latex:\\alert<$1>{@@$2@@latex:}@@")))
 
-(after! org
   (add-hook 'org-mode-hook #'turn-on-org-cdlatex)
-  (setq org-agenda-files (list (expand-file-name "inbox.org" org-directory)
-                               (expand-file-name "agenda.org" org-directory)
-                               (expand-file-name "projects.org" org-directory)
-                               (expand-file-name "admin.org" org-directory)
-                               (expand-file-name "todo.org" org-directory))
+  (setq org-agenda-files
+        (append (list (expand-file-name "inbox.org"    org-directory)
+                      (expand-file-name "agenda.org"   org-directory)
+                      (expand-file-name "projects.org" org-directory)
+                      (expand-file-name "admin.org"    org-directory)
+                      (expand-file-name "work.org"     org-directory)
+                      (expand-file-name "research.org" org-directory)
+                      (expand-file-name "todo.org"     org-directory))
+                ;; Project-local task files — only include when present
+                ;; so agenda doesn't fail on machines without the repo.
+                (cl-loop for p in '("~/dev/PML/ddssm-pml/todos.org")
+                         for f = (expand-file-name p)
+                         when (file-exists-p f) collect f))
 
         org-default-notes-file (expand-file-name "inbox.org" org-directory))
+
+  ;; --- GTD: TODO keywords (Doom defaults + NEXT) -----------------
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "NEXT(N)" "PROJ(p)" "LOOP(r)" "STRT(s)"
+                    "WAIT(w)" "HOLD(h)" "IDEA(i)"
+                    "|" "DONE(d)" "KILL(k)")
+          (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)")
+          (sequence "|" "OKAY(o)" "YES(y)" "NO(n)")))
+
+  ;; --- GTD: refile anywhere in the agenda ------------------------
+  (setq org-refile-targets '((org-agenda-files :maxlevel . 3))
+        org-refile-use-outline-path 'file
+        org-outline-path-complete-in-steps nil
+        org-refile-allow-creating-parent-nodes 'confirm)
+
+  ;; --- GTD: tags (contexts + topics) -----------------------------
+  (setq org-tag-alist
+        '((:startgroup)
+          ("@home"     . ?h) ("@work"     . ?w) ("@errand" . ?e)
+          ("@phone"    . ?p) ("@computer" . ?c) ("@email"  . ?E)
+          ("@mike"     . ?m)
+          (:endgroup)
+          ("admin"     . ?a) ("bills"     . ?b) ("car"      . ?v)
+          ("house"     . ?H) ("travel"    . ?T) ("buy"      . ?B)
+          ("research"  . ?r) ("ddssm"     . ?d) ("followup" . ?f)
+          ("shared"    . ?s) ("private"   . ?P)))
+
+  ;; --- GTD: capture templates ------------------------------------
+  ;; Override Doom's default "t" (which targets todo.org under * Inbox)
+  ;; so SPC X t captures top-level into inbox.org instead.
+  (setf (alist-get "t" org-capture-templates nil nil #'equal)
+        '("Todo (inbox)" entry
+          (file (lambda () (expand-file-name "inbox.org" org-directory)))
+          "* TODO %?\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n%i\n%a"
+          :prepend t))
+
+  ;; "e" — Email follow-up from mu4e; tags itself and links the message.
+  (add-to-list 'org-capture-templates
+               '("e" "Email follow-up" entry
+                 (file (lambda () (expand-file-name "inbox.org" org-directory)))
+                 "* TODO %? :@email:followup:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n%a\n"
+                 :prepend t))
+
   (add-to-list 'org-capture-templates
                '("M" "DDSSD meeting" entry
                  (file+headline "~/sync/org/roam/20260317175125-diffusion_driven_state_space_models.org" "Meetings")
                  "** %<%Y-%m-%d> %^{Meeting title}\n- Attendees: %?\n*** Action Items\n"
                  :prepend t)
                )
+
+  ;; --- GTD: custom agenda views ----------------------------------
+  (setq org-agenda-custom-commands
+        '(("n" "Next actions"               todo "NEXT")
+          ("w" "Waiting on"                 todo "WAIT|HOLD")
+          ("i" "Inbox to process"           tags "+CATEGORY=\"inbox\"")
+          ("p" "Stuck projects (PROJ w/o NEXT)"
+           tags-todo "/PROJ"
+           ((org-agenda-skip-function
+             '(org-agenda-skip-entry-if 'todo '("NEXT")))))
+          ("f" "Followups to schedule"      tags-todo "+followup")
+          ("b" "Shopping list (buy online)" tags-todo "+buy")
+          ("k" "For Mike (next meeting)"    tags-todo "+@mike")
+          ("R" "Weekly review"
+           ((agenda "" ((org-agenda-span 7)))
+            (todo "NEXT")
+            (todo "WAIT|HOLD")
+            (tags-todo "/PROJ"
+                       ((org-agenda-skip-function
+                         '(org-agenda-skip-entry-if 'todo '("NEXT")))))
+            (tags "+CATEGORY=\"inbox\"")))))
   ;; Open PDF links inside Emacs (so pdf-tools/doc-view handles them)
   (setf (cdr (assoc "\\.pdf\\'" org-file-apps)) 'emacs)
 

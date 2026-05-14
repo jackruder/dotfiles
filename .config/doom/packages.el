@@ -85,3 +85,6 @@
 (package! ox-reveal)
 (package! htmlize) ; strongly recommended for syntax highlighting in HTML exports
 (package! org-fragtog)
+
+                                        ; for R
+(package! ess)
