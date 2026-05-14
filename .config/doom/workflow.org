@@ -29,7 +29,8 @@ All under =~/sync/org/=.
 | agenda.org   | Appointments to schedule (e.g. =:followup:= with a SCHEDULED date).     |
 | projects.org | Multi-step projects: House, Car, Bike, Keyboards, Chainsaw, Woodworking, Travel. |
 | admin.org    | Bills, Insurance, Taxes, Financial.                                     |
-| work.org     | Non-research work TODOs.                                                |
+| work.org     | Non-research work TODOs (TA duties, admin, service).                    |
+| research.org | Private research tasks (~60% of working time). =#+filetags: :private:= so all entries inherit =:private:= automatically. Tag with project sub-tag (e.g. =:ddssm:=). |
 | todo.org     | One-off life todos that don't fit any other file.                       |
 | roam/        | Org-roam zettelkasten — knowledge notes, not tasks.                     |
 | workflow.org | This file.                                                              |
@@ -38,7 +39,22 @@ Project-local task files (versioned with the project, not in =~/sync/org/=):
 
 | Path                                  | Purpose                                  |
 |---------------------------------------+------------------------------------------|
-| =~/dev/PML/ddssm-pml/todos.org=       | DDSSM project tasks. Lives in the project git repo so it travels with the code; tag items =:ddssm:= (and =:shared:= since collaborators can see it). Wired conditionally in =org-agenda-files= — only included when the file exists locally. |
+| =~/dev/PML/ddssm-pml/todos.org=       | *Shared* DDSSM tasks — visible to collaborators. Lives in the project git repo. Set =#+filetags: :shared:ddssm:= at the top so all entries inherit those tags, and =#+CATEGORY: ddssm-shared= so the agenda labels it sensibly (instead of the default basename =todos=, which clashes visually with =todo.org=). Wired conditionally in =org-agenda-files= — only included when the file exists locally. |
+
+** Shared vs private research
+
+Two task files cover research work; pick by *who should see this*:
+
+| File                          | Audience          | Tag        | Use for                                                |
+|-------------------------------+-------------------+------------+--------------------------------------------------------|
+| =research.org=                | Just me           | =:private:=| Half-baked ideas, side experiments, my reading queue, notes-to-self. |
+| =ddssm-pml/todos.org=         | Me + collaborators| =:shared:= | "Review section 3", "fix bug in module X", coordination items. |
+
+Tag inheritance from =#+filetags:= covers this automatically, so
+you don't normally type =:private:= or =:shared:= by hand — just
+put the TODO in the right file. The tags exist as explicit slices
+so you can ask "show me everything private" or filter the agenda
+with =/= +private= when needed.
 
 * TODO keywords
 

@@ -122,6 +122,7 @@
                       (expand-file-name "projects.org" org-directory)
                       (expand-file-name "admin.org"    org-directory)
                       (expand-file-name "work.org"     org-directory)
+                      (expand-file-name "research.org" org-directory)
                       (expand-file-name "todo.org"     org-directory))
                 ;; Project-local task files — only include when present
                 ;; so agenda doesn't fail on machines without the repo.
